@@ -3,7 +3,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'app/app.dart';
-import 'l10n/app_localizations.dart';
+import 'core/theme/app_theme.dart';
+import 'widgets/go_sport_logo.dart';
+import 'core/navigation/app_navigation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,14 +44,9 @@ class GoSportApp extends ConsumerWidget {
       locale: const Locale('vi', 'VN'), // Default to Vietnamese
       
       // Theme
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF3A7BD5), // Go Sport primary blue
-          brightness: Brightness.light,
-        ),
-        fontFamily: 'Inter',
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
       
       home: const WelcomeScreen(),
     );
@@ -80,25 +78,10 @@ class WelcomeScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Go Sport Logo/Branding
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 20,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.sports_soccer,
-                    size: 60,
-                    color: Color(0xFF3A7BD5),
-                  ),
+                const GoSportLogo(
+                  size: 120,
+                  showText: false,
+                  variant: LogoVariant.primary,
                 ),
                 
                 const SizedBox(height: 32),

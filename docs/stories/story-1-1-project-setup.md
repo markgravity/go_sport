@@ -35,7 +35,7 @@
 - [x] **Task 1.1.2**: Setup Laravel API project với microservices architecture
 - [x] **Task 1.1.3**: Configure Docker development environment
 - [x] **Task 1.1.4**: Create database schema và run initial migrations
-- [ ] **Task 1.1.5**: Setup basic Flutter app shell với Go Sport branding
+- [x] **Task 1.1.5**: Setup basic Flutter app shell với Go Sport branding
 - [ ] **Task 1.1.6**: Implement API health check endpoint
 - [ ] **Task 1.1.7**: Configure API client in Flutter app
 - [ ] **Task 1.1.8**: Create development documentation
@@ -76,12 +76,12 @@
 - [x] Seed initial Vietnamese test data
 
 ### Task 1.1.5: Setup basic Flutter app shell với Go Sport branding
-- [ ] Create main app widget với Material Design 3
-- [ ] Setup Vietnamese theme với fitness app colors
-- [ ] Create basic navigation structure
-- [ ] Add Go Sport app branding and logo
-- [ ] Setup role-based navigation placeholders
-- [ ] Configure Vietnamese fonts and text rendering
+- [x] Create main app widget với Material Design 3
+- [x] Setup Vietnamese theme với fitness app colors
+- [x] Create basic navigation structure
+- [x] Add Go Sport app branding and logo
+- [x] Setup role-based navigation placeholders
+- [x] Configure Vietnamese fonts and text rendering
 
 ### Task 1.1.6: Implement API health check endpoint
 - [ ] Create health check route `/api/health`
