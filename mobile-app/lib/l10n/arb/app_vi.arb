@@ -1,0 +1,51 @@
+{
+  "@@locale": "vi",
+  "appTitle": "Go Sport",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "homeTab": "Trang chủ",
+  "@homeTab": {
+    "description": "Home tab label"
+  },
+  "groupsTab": "Nhóm",
+  "@groupsTab": {
+    "description": "Groups tab label"
+  },
+  "attendanceTab": "Điểm danh",
+  "@attendanceTab": {
+    "description": "Attendance tab label"
+  },
+  "paymentsTab": "Thanh toán",
+  "@paymentsTab": {
+    "description": "Payments tab label"
+  },
+  "profileTab": "Hồ sơ",
+  "@profileTab": {
+    "description": "Profile tab label"
+  },
+  "welcomeMessage": "Chào mừng đến với Go Sport!",
+  "@welcomeMessage": {
+    "description": "Welcome message for users"
+  },
+  "loading": "Đang tải...",
+  "@loading": {
+    "description": "Loading indicator text"
+  },
+  "error": "Có lỗi xảy ra",
+  "@error": {
+    "description": "Generic error message"
+  },
+  "retry": "Thử lại",
+  "@retry": {
+    "description": "Retry button text"
+  },
+  "cancel": "Hủy",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "confirm": "Xác nhận",
+  "@confirm": {
+    "description": "Confirm button text"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "@@locale": "en",
+  "appTitle": "Go Sport",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "homeTab": "Home",
+  "@homeTab": {
+    "description": "Home tab label"
+  },
+  "groupsTab": "Groups",
+  "@groupsTab": {
+    "description": "Groups tab label"
+  },
+  "attendanceTab": "Attendance",
+  "@attendanceTab": {
+    "description": "Attendance tab label"
+  },
+  "paymentsTab": "Payments",
+  "@paymentsTab": {
+    "description": "Payments tab label"
+  },
+  "profileTab": "Profile",
+  "@profileTab": {
+    "description": "Profile tab label"
+  },
+  "welcomeMessage": "Welcome to Go Sport!",
+  "@welcomeMessage": {
+    "description": "Welcome message for users"
+  },
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Loading indicator text"
+  },
+  "error": "An error occurred",
+  "@error": {
+    "description": "Generic error message"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button text"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm button text"
+  }
+}
