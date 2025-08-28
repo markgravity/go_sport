@@ -1,0 +1,126 @@
+version: '3.8'
+
+services:
+  # MySQL 8.0 Database with Vietnamese charset support
+  mysql:
+    image: mysql:8.0
+    container_name: go_sport_mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: go_sport_root
+      MYSQL_DATABASE: go_sport
+      MYSQL_USER: go_sport_user
+      MYSQL_PASSWORD: go_sport_password
+      MYSQL_ROOT_HOST: '%'
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - go_sport_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Redis 7.2 for caching and queues
+  redis:
+    image: redis:7.2-alpine
+    container_name: go_sport_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass go_sport_redis_password
+    volumes:
+      - redis_data:/data
+    networks:
+      - go_sport_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+
+  # PHP 8.3 with Laravel requirements
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    container_name: go_sport_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./api:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - go_sport_network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DB_HOST=mysql
+      - DB_DATABASE=go_sport
+      - DB_USERNAME=go_sport_user
+      - DB_PASSWORD=go_sport_password
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=go_sport_redis_password
+      - APP_ENV=local
+      - APP_DEBUG=true
+
+  # Nginx web server for API routing
+  nginx:
+    image: nginx:alpine
+    container_name: go_sport_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./api:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - go_sport_network
+    depends_on:
+      - app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Queue worker for background jobs
+  queue:
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    container_name: go_sport_queue
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./api:/var/www/html
+    networks:
+      - go_sport_network
+    depends_on:
+      - app
+      - redis
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=90
+    environment:
+      - DB_HOST=mysql
+      - DB_DATABASE=go_sport
+      - DB_USERNAME=go_sport_user
+      - DB_PASSWORD=go_sport_password
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=go_sport_redis_password
+
+networks:
+  go_sport_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local

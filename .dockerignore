@@ -1,0 +1,49 @@
+# Git
+.git
+.gitignore
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Documentation
+*.md
+docs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Laravel specific
+api/vendor/
+api/node_modules/
+api/.env
+api/.env.backup
+api/.env.production
+api/storage/*.key
+api/storage/logs/*
+api/storage/framework/cache/*
+api/storage/framework/sessions/*
+api/storage/framework/views/*
+api/bootstrap/cache/*
+
+# Flutter specific
+mobile-app/build/
+mobile-app/.dart_tool/
+mobile-app/.packages
+mobile-app/pubspec.lock
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
