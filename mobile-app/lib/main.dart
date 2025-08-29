@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'app/app.dart';
 import 'core/theme/app_theme.dart';
 import 'widgets/go_sport_logo.dart';
-import 'core/navigation/app_navigation.dart';
+import 'widgets/connection_status_indicator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> main() async {
@@ -61,53 +60,57 @@ class WelcomeScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF4A90E2), // Primary start
-              Color(0xFF2E5BDA), // Primary end
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Go Sport Logo/Branding
-                const GoSportLogo(
-                  size: 120,
-                  showText: false,
-                  variant: LogoVariant.primary,
+      body: Column(
+        children: [
+          const ConnectionStatusIndicator(),
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF4A90E2), // Primary start
+                    Color(0xFF2E5BDA), // Primary end
+                  ],
                 ),
-                
-                const SizedBox(height: 32),
-                
-                // App Title
-                Text(
-                  l10n.appTitle,
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                  ),
-                ),
-                
-                const SizedBox(height: 16),
-                
-                // Welcome Message
-                Text(
-                  l10n.welcomeMessage,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+              ),
+              child: SafeArea(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Go Sport Logo/Branding
+                      const GoSportLogo(
+                        size: 120,
+                        showText: false,
+                        variant: LogoVariant.primary,
+                      ),
+                      
+                      const SizedBox(height: 32),
+                      
+                      // App Title
+                      Text(
+                        l10n.appTitle,
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 16),
+                      
+                      // Welcome Message
+                      Text(
+                        l10n.welcomeMessage,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                 
                 const SizedBox(height: 48),
                 
@@ -143,9 +146,12 @@ class WelcomeScreen extends ConsumerWidget {
                   ),
                 ),
               ],
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
