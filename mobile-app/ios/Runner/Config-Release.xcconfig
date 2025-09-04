@@ -3,7 +3,7 @@
 #include "Generated.xcconfig"
 
 // App Configuration
-PRODUCT_BUNDLE_IDENTIFIER = vn.gosport.go_sport_app
+PRODUCT_BUNDLE_IDENTIFIER = dev.markg.go-sport.dev
 PRODUCT_NAME = Go Sport
 
 // Vietnamese Production Settings
