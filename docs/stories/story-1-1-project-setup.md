@@ -45,10 +45,10 @@
 ### Task 1.1.1: Initialize Flutter project structure với Vietnamese localization
 - [x] Create Flutter project with package name `vn.gosport.app`
 - [x] Setup Vietnamese localization (vi_VN locale)
-- [ ] Configure app icons and splash screen
+- [x] Configure app icons and splash screen
 - [x] Add required dependencies from architecture: Riverpod, GoRouter, Dio, Hive
 - [x] Setup folder structure according to Clean Architecture pattern
-- [ ] Configure build settings for iOS and Android
+- [x] Configure build settings for iOS and Android
 
 ### Task 1.1.2: Setup Laravel API project với microservices architecture  
 - [x] Initialize Laravel project with PHP 8.3
@@ -127,6 +127,14 @@
 - lib/core/network/exceptions/api_exception.dart
 - lib/widgets/connection_status_indicator.dart
 - lib/main.dart (modified)
+- lib/core/config/app_config.dart
+- lib/main_development.dart
+- lib/main_production.dart
+- android/app/proguard-rules.pro
+- android/app/build.gradle (modified)
+- ios/Runner/Config-Debug.xcconfig
+- ios/Runner/Config-Release.xcconfig
+- pubspec.yaml (modified - app icons and splash screen configuration)
 - docs/DEVELOPMENT_SETUP.md
 - docs/TROUBLESHOOTING.md
 - docs/API_DOCUMENTATION.md
@@ -141,7 +149,12 @@
 - Task 1.1.8 completed: Comprehensive development documentation created in Vietnamese and English
 - Complete setup guide, troubleshooting guide, API documentation, and team onboarding guide
 - Vietnamese development data examples and testing procedures documented
-- All documentation ready for new team members and development workflow 
+- All documentation ready for new team members and development workflow
+- Task 1.1.1 fully completed: App icons and splash screen configured with flutter_native_splash
+- Build settings configured for iOS and Android with Vietnamese localization support
+- Environment-specific configurations created for development/production modes
+- ProGuard rules added for Android release builds with Firebase and network library optimizations
+- iOS xcconfig files created for debug and release builds with Vietnamese settings 
 
 ### Change Log:
 | Date | Change | Developer |
@@ -150,3 +163,5 @@
 | 2025-08-29 | Task 1.1.7 completed: API client configuration | James (Dev) |
 | 2025-08-29 | Task 1.1.8 completed: Development documentation | James (Dev) |
 | 2025-08-29 | Story 1.1 completed: Project setup and development environment ready | James (Dev) |
+| 2025-09-04 | Task 1.1.1 remaining subtasks completed: App icons, splash screen, and build settings | James (Dev) |
+| 2025-09-04 | Story 1.1 fully completed: All subtasks and configurations finalized | James (Dev) |

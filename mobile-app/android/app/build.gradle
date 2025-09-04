@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId = "vn.gosport.go_sport_app"
-        minSdk = 21  // Minimum API level for modern Android features
+        minSdk = 23  // Required for Firebase messaging
         targetSdk = 34  // Latest stable API level
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -33,18 +33,46 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
+    buildFeatures {
+        buildConfig = true  // Enable BuildConfig fields
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
             debuggable = true
             minifyEnabled = false
+            shrinkResources = false
+            
+            // Vietnamese development settings
+            buildConfigField "boolean", "IS_DEBUG", "true"
+            buildConfigField "String", "API_BASE_URL", '"http://10.0.2.2:8000/api"'  // Android emulator localhost
+            buildConfigField "String", "LOCALE", '"vi"'
         }
+        
+        profile {
+            applicationIdSuffix = ".profile"
+            debuggable = false
+            minifyEnabled = true
+            shrinkResources = true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            buildConfigField "boolean", "IS_DEBUG", "false"
+            buildConfigField "String", "API_BASE_URL", '"https://api-staging.gosport.vn/api"'
+            buildConfigField "String", "LOCALE", '"vi"'
+        }
+        
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
             minifyEnabled = true
+            shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            buildConfigField "boolean", "IS_DEBUG", "false"
+            buildConfigField "String", "API_BASE_URL", '"https://api.gosport.vn/api"'
+            buildConfigField "String", "LOCALE", '"vi"'
         }
     }
 }

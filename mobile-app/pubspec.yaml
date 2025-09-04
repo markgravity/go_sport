@@ -127,30 +127,20 @@ flutter:
   # see https://flutter.dev/to/font-from-package
 
 # App icons configuration
+# Note: Configuration ready for PNG logo. SVG to PNG conversion needed for full functionality.
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/go_sport_logo.png"
-  min_sdk_android: 21
-  web:
-    generate: true
-    image_path: "assets/images/go_sport_logo.png"
-    background_color: "#2E7D32"
-    theme_color: "#2E7D32"
-  windows:
-    generate: true
-    image_path: "assets/images/go_sport_logo.png"
-    icon_size: 48
+  min_sdk_android: 23
+  remove_alpha_ios: true
+  # TODO: Add image_path when PNG logo is available
+  # image_path: "assets/images/go_sport_logo.png"
 
 # Splash screen configuration  
 flutter_native_splash:
   color: "#2E7D32"
-  image: "assets/images/go_sport_logo.png"
+  # image: "assets/images/go_sport_logo.png"  # TODO: Convert SVG to PNG
   color_dark: "#1B5E20"
-  image_dark: "assets/images/go_sport_logo.png"
   android_12:
-    image: "assets/images/go_sport_logo.png"
-    icon_background_color: "#2E7D32"
-    icon_background_color_dark: "#1B5E20"
-  ios_content_mode: center
-  web_image_mode: center
+    color: "#2E7D32"
+    color_dark: "#1B5E20"

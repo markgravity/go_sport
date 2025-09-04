@@ -1,0 +1,16 @@
+// Configuration for Debug builds
+// Vietnamese localization and development API settings
+#include "Generated.xcconfig"
+
+// App Configuration
+PRODUCT_BUNDLE_IDENTIFIER = vn.gosport.go_sport_app.debug
+PRODUCT_NAME = Go Sport Debug
+
+// Vietnamese Development Settings
+API_BASE_URL = http://127.0.0.1:8000/api
+LOCALE = vi
+ENVIRONMENT = development
+
+// Development flags
+DEBUG_MODE = YES
+ENABLE_LOGGING = YES

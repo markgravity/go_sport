@@ -1,0 +1,16 @@
+// Configuration for Release builds
+// Vietnamese localization and production API settings  
+#include "Generated.xcconfig"
+
+// App Configuration
+PRODUCT_BUNDLE_IDENTIFIER = vn.gosport.go_sport_app
+PRODUCT_NAME = Go Sport
+
+// Vietnamese Production Settings
+API_BASE_URL = https://api.gosport.vn/api
+LOCALE = vi
+ENVIRONMENT = production
+
+// Production flags
+DEBUG_MODE = NO
+ENABLE_LOGGING = NO
