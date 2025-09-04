@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'core/theme/app_theme.dart';
 import 'widgets/go_sport_logo.dart';
 import 'widgets/connection_status_indicator.dart';
+import 'features/auth/screens/phone_registration_screen.dart';
+import 'features/auth/providers/auth_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp();
 
   // Initialize Hive for local storage
   await Hive.initFlutter();
@@ -58,6 +64,7 @@ class WelcomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
+    final authState = ref.watch(authProvider);
     
     return Scaffold(
       body: Column(
@@ -114,34 +121,64 @@ class WelcomeScreen extends ConsumerWidget {
                 
                 const SizedBox(height: 48),
                 
-                // Basic Navigation Cards
+                // Authentication or Navigation Cards
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Column(
                     children: [
-                      _buildNavigationCard(
-                        l10n.groupsTab,
-                        Icons.group,
-                        () {
-                          // TODO: Navigate to groups
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      _buildNavigationCard(
-                        l10n.attendanceTab,
-                        Icons.how_to_reg,
-                        () {
-                          // TODO: Navigate to attendance
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      _buildNavigationCard(
-                        l10n.paymentsTab,
-                        Icons.payment,
-                        () {
-                          // TODO: Navigate to payments
-                        },
-                      ),
+                      if (!authState.isAuthenticated) ...[
+                        // Authentication Buttons
+                        _buildAuthButton(
+                          'Đăng ký tài khoản',
+                          Icons.person_add,
+                          Colors.white,
+                          const Color(0xFF2E5BDA),
+                          () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PhoneRegistrationScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildAuthButton(
+                          'Đăng nhập',
+                          Icons.login,
+                          Colors.transparent,
+                          Colors.white,
+                          () {
+                            // TODO: Navigate to login screen
+                          },
+                          borderColor: Colors.white,
+                        ),
+                      ] else ...[
+                        // Main Navigation Cards
+                        _buildNavigationCard(
+                          l10n.groupsTab,
+                          Icons.group,
+                          () {
+                            // TODO: Navigate to groups
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildNavigationCard(
+                          l10n.attendanceTab,
+                          Icons.how_to_reg,
+                          () {
+                            // TODO: Navigate to attendance
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildNavigationCard(
+                          l10n.paymentsTab,
+                          Icons.payment,
+                          () {
+                            // TODO: Navigate to payments
+                          },
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -198,6 +235,65 @@ class WelcomeScreen extends ConsumerWidget {
                   Icons.arrow_forward_ios,
                   size: 16,
                   color: Color(0xFF64748B),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAuthButton(
+    String title,
+    IconData icon,
+    Color backgroundColor,
+    Color textColor,
+    VoidCallback onTap, {
+    Color? borderColor,
+  }) {
+    return Container(
+      width: double.infinity,
+      height: 56,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+        border: borderColor != null 
+            ? Border.all(color: borderColor, width: 2)
+            : null,
+        boxShadow: backgroundColor != Colors.transparent
+            ? [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  spreadRadius: 1,
+                ),
+              ]
+            : null,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  size: 20,
+                  color: textColor,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                  ),
                 ),
               ],
             ),

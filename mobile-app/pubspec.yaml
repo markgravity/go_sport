@@ -40,7 +40,7 @@ dependencies:
   hive: ^2.2.3              # Local storage
   hive_flutter: ^1.1.0      # Hive Flutter integration
   firebase_messaging: ^16.0.0  # Push notifications - latest version
-  firebase_core: ^4.0.0     # Firebase core - latest version
+  firebase_core: ^4.1.0     # Firebase core - latest version
   qr_flutter: ^4.1.0        # QR code generation
   
   # UI and utilities
@@ -51,6 +51,9 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  firebase_auth: ^6.0.2
+  http: ^1.5.0
+  intl_phone_field: ^3.2.0
 
 dev_dependencies:
   flutter_test:
