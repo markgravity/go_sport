@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\FirebaseAuthController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\NotificationController;
@@ -26,9 +27,14 @@ Route::get('/health', [HealthController::class, 'check']);
 
 // Public routes (no authentication required)
 Route::prefix('auth')->group(function () {
+    // Legacy SMS-based authentication (deprecated)
     Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    
+    // Firebase-based authentication (recommended)
+    Route::post('/firebase/authenticate', [FirebaseAuthController::class, 'authenticate']);
+    Route::get('/firebase/status', [FirebaseAuthController::class, 'status']);
 });
 
 // Protected routes (authentication required)
@@ -37,6 +43,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Authentication management
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', [AuthController::class, 'me']);
+    
+    // Firebase authentication management
+    Route::post('/auth/firebase/logout', [FirebaseAuthController::class, 'logout']);
+    Route::get('/auth/firebase/me', [FirebaseAuthController::class, 'me']);
+    Route::delete('/auth/firebase/delete-account', [FirebaseAuthController::class, 'deleteAccount']);
 
     // User management
     Route::prefix('user')->group(function () {

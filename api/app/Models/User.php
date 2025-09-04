@@ -24,6 +24,7 @@ class User extends Authenticatable
         'phone',
         'phone_verified_at',
         'password',
+        'firebase_uid',
         'date_of_birth',
         'gender',
         'address',

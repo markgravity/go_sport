@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\PhoneVerification;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
@@ -58,21 +59,37 @@ class AuthController extends Controller
             // Create verification record
             $verification = PhoneVerification::createForPhone($phone, $request->ip());
 
-            // TODO: Send SMS via Vietnamese SMS provider
-            // For now, we'll just return the code in development
-            $smsCode = app()->environment('local') ? $verification->code : null;
+            // Send SMS via configured SMS service
+            $smsService = new SmsService();
+            $smsSent = $smsService->sendVerificationCode($phone, $verification->code);
 
+            if (!$smsSent && !app()->environment('local')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không thể gửi mã xác thực. Vui lòng thử lại sau.',
+                ], 500);
+            }
+
+            // Return response with development code only in local environment
             return response()->json([
                 'success' => true,
                 'message' => 'Mã xác thực đã được gửi đến số điện thoại của bạn',
                 'expires_in' => 300, // 5 minutes
-                'development_code' => $smsCode, // Remove in production
+                'sms_provider' => $smsService->getProvider(),
+                'development_code' => app()->environment('local') ? $verification->code : null,
             ]);
 
         } catch (\Exception $e) {
+            \Log::error('SMS verification code sending failed', [
+                'phone' => $phone,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Không thể gửi mã xác thực. Vui lòng thử lại.',
+                'debug' => app()->environment('local') ? $e->getMessage() : null,
             ], 500);
         }
     }
