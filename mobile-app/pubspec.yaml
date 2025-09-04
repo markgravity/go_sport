@@ -39,8 +39,8 @@ dependencies:
   dio: ^5.4.0               # HTTP client
   hive: ^2.2.3              # Local storage
   hive_flutter: ^1.1.0      # Hive Flutter integration
-  firebase_messaging: ^14.7.5  # Push notifications
-  firebase_core: ^2.24.2    # Firebase core
+  firebase_messaging: ^16.0.0  # Push notifications - latest version
+  firebase_core: ^4.0.0     # Firebase core - latest version
   qr_flutter: ^4.1.0        # QR code generation
   
   # UI and utilities
@@ -64,6 +64,10 @@ dev_dependencies:
   
   # Testing
   mockito: ^5.4.4
+  
+  # App icons and splash screen
+  flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.1
   
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -121,3 +125,32 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# App icons configuration
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/go_sport_logo.png"
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: "assets/images/go_sport_logo.png"
+    background_color: "#2E7D32"
+    theme_color: "#2E7D32"
+  windows:
+    generate: true
+    image_path: "assets/images/go_sport_logo.png"
+    icon_size: 48
+
+# Splash screen configuration  
+flutter_native_splash:
+  color: "#2E7D32"
+  image: "assets/images/go_sport_logo.png"
+  color_dark: "#1B5E20"
+  image_dark: "assets/images/go_sport_logo.png"
+  android_12:
+    image: "assets/images/go_sport_logo.png"
+    icon_background_color: "#2E7D32"
+    icon_background_color_dark: "#1B5E20"
+  ios_content_mode: center
+  web_image_mode: center
