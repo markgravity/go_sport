@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AttendanceController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\NotificationController;
@@ -25,20 +26,22 @@ Route::get('/health', [HealthController::class, 'check']);
 
 // Public routes (no authentication required)
 Route::prefix('auth')->group(function () {
-    Route::post('/register', [UserController::class, 'register']);
-    Route::post('/login', [UserController::class, 'login']);
-    Route::post('/verify-phone', [UserController::class, 'verifyPhone']);
-    Route::post('/resend-verification', [UserController::class, 'resendVerification']);
+    Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
 });
 
 // Protected routes (authentication required)
 Route::middleware(['auth:sanctum'])->group(function () {
     
+    // Authentication management
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::get('/auth/me', [AuthController::class, 'me']);
+
     // User management
     Route::prefix('user')->group(function () {
         Route::get('/profile', [UserController::class, 'profile']);
         Route::put('/profile', [UserController::class, 'updateProfile']);
-        Route::post('/logout', [UserController::class, 'logout']);
         Route::delete('/account', [UserController::class, 'deleteAccount']);
     });
 

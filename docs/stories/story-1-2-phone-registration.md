@@ -1,0 +1,143 @@
+# Story 1.2: Phone-based User Registration
+
+## Story
+**As a Vietnamese sports player,**
+**I want to register using my phone number với SMS verification,**
+**so that I have a secure, locally-appropriate account.**
+
+## Acceptance Criteria
+1. Registration screen accepts Vietnamese phone number formats (+84, 0x formats)
+2. SMS verification code sent via Vietnamese SMS provider
+3. Users enter 6-digit verification code với 5-minute expiration
+4. Account creation includes basic profile (name, phone, preferred sports)
+5. Invalid phone numbers show appropriate Vietnamese error messages
+6. SMS resend functionality với rate limiting (max 3 per 15 minutes)
+7. Successful registration navigates to onboarding flow
+8. Phone numbers stored encrypted và compliant với Vietnamese data laws
+
+## Dev Notes
+- Use Laravel Sanctum for API authentication tokens
+- Implement Twilio or Vietnamese SMS provider (Viettel, VNPT)
+- Phone number validation follows Vietnamese formats: +84xxxxxxxxx or 0xxxxxxxxx
+- Store phone numbers with proper encryption in users table
+- Create registration API endpoints with proper validation
+- Flutter UI should follow Vietnamese UX patterns
+- Implement proper error handling for network failures
+- Support Vietnamese language throughout registration flow
+- Consider offline mode for areas with poor connectivity
+
+## Testing
+- [ ] Vietnamese phone number format validation works correctly
+- [ ] SMS verification codes are sent and received
+- [ ] Account creation stores encrypted phone numbers
+- [ ] Registration flow navigates properly on success
+- [ ] Error messages display in Vietnamese
+- [ ] Rate limiting prevents SMS abuse
+- [ ] Registration works on both iOS and Android
+- [ ] API endpoints respond correctly to all scenarios
+
+## Tasks
+- [x] **Task 1.2.1**: Implement Laravel API endpoints for user registration
+- [ ] **Task 1.2.2**: Setup SMS verification service integration
+- [ ] **Task 1.2.3**: Create Flutter registration UI screens
+- [ ] **Task 1.2.4**: Implement phone number validation and formatting
+- [ ] **Task 1.2.5**: Add Vietnamese localization for registration flow
+- [ ] **Task 1.2.6**: Setup database migrations for user accounts
+- [ ] **Task 1.2.7**: Implement API authentication and session management
+- [ ] **Task 1.2.8**: Create comprehensive tests for registration flow
+
+## Subtasks
+
+### Task 1.2.1: Implement Laravel API endpoints for user registration
+- [x] Create User model with phone number encryption
+- [x] Setup user registration API route (`POST /api/auth/register`)
+- [x] Create phone verification API route (`POST /api/auth/send-verification-code`)
+- [x] Add Vietnamese phone number validation rules
+- [x] Implement SMS verification token storage
+- [x] Add rate limiting middleware for SMS requests
+- [x] Create proper API response formats
+
+### Task 1.2.2: Setup SMS verification service integration  
+- [ ] Research and select Vietnamese SMS provider (Viettel/VNPT)
+- [ ] Configure SMS service credentials and environment variables
+- [ ] Create SMS service class with send/verify methods
+- [ ] Implement 6-digit verification code generation
+- [ ] Add SMS template with Vietnamese language
+- [ ] Setup SMS sending queue for reliability
+- [ ] Add SMS delivery status tracking
+
+### Task 1.2.3: Create Flutter registration UI screens
+- [ ] Design registration screen with Vietnamese branding
+- [ ] Create phone number input with Vietnamese formatting
+- [ ] Build SMS verification code input screen
+- [ ] Add basic profile creation form (name, preferred sports)
+- [ ] Implement loading states and error handling
+- [ ] Create navigation flow between registration screens
+- [ ] Add Vietnamese sports type selection dropdown
+
+### Task 1.2.4: Implement phone number validation and formatting
+- [ ] Add Vietnamese phone number regex patterns
+- [ ] Create phone formatter for +84 and 0x formats
+- [ ] Implement client-side validation with error messages
+- [ ] Add phone number input masking
+- [ ] Create validation for different Vietnamese carrier formats
+- [ ] Add proper error states for invalid numbers
+
+### Task 1.2.5: Add Vietnamese localization for registration flow
+- [ ] Add Vietnamese text for all registration screens
+- [ ] Create error message translations
+- [ ] Add Vietnamese sports type options
+- [ ] Implement proper Vietnamese text formatting
+- [ ] Add culturally appropriate placeholder text
+- [ ] Create help text in Vietnamese
+
+### Task 1.2.6: Setup database migrations for user accounts
+- [ ] Create users table migration with phone encryption
+- [ ] Add phone_verified_at timestamp column
+- [ ] Create phone_verifications table for SMS codes
+- [ ] Add indexes for phone number lookups
+- [ ] Setup proper foreign key relationships
+- [ ] Add user profile fields (name, preferred sports)
+
+### Task 1.2.7: Implement API authentication and session management
+- [ ] Configure Laravel Sanctum for mobile app authentication
+- [ ] Create login API endpoint (`POST /api/auth/login`)
+- [ ] Implement JWT token generation and validation
+- [ ] Add token refresh mechanism
+- [ ] Create logout functionality
+- [ ] Setup middleware for protected routes
+
+### Task 1.2.8: Create comprehensive tests for registration flow
+- [ ] Unit tests for phone number validation
+- [ ] Integration tests for SMS verification
+- [ ] API tests for registration endpoints
+- [ ] Flutter widget tests for registration UI
+- [ ] End-to-end tests for complete registration flow
+- [ ] Performance tests for SMS rate limiting
+- [ ] Security tests for phone number encryption
+
+---
+
+## Dev Agent Record
+
+### Status: Draft
+
+### Agent Model Used: claude-sonnet-4-20250514 
+
+### Debug Log References:
+- 
+
+### File List:
+- (Files will be added as implementation progresses)
+
+### Completion Notes:
+- Story 1.2 created based on PRD Epic 1 requirements
+- Ready for validation and implementation
+- All acceptance criteria from PRD incorporated
+- Vietnamese market requirements addressed
+- Technical approach aligned with existing architecture
+
+### Change Log:
+| Date | Change | Developer |
+|------|--------|-----------|
+| 2025-09-04 | Story 1.2 created from PRD Epic 1 requirements | James (Dev) |
