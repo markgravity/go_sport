@@ -9,12 +9,15 @@ import 'widgets/connection_status_indicator.dart';
 import 'features/auth/screens/phone_registration_screen.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Firebase
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // Initialize Hive for local storage
   await Hive.initFlutter();
