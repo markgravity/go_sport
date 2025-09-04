@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 class ApiService {
   // TODO: Move to environment configuration
   static const String _baseUrl = kDebugMode 
-      ? 'http://localhost:8001/api'  // Development
+      ? 'http://localhost/api'  // Development
       : 'https://api.gosport.vn/api'; // Production
 
   static const Duration _timeout = Duration(seconds: 30);
@@ -160,7 +160,7 @@ class ApiService {
   Future<Map<String, dynamic>> healthCheck() async {
     return _makeRequest(
       method: 'GET',
-      endpoint: '/health',
+      endpoint: '/api/health',
     );
   }
 

@@ -5,7 +5,7 @@ import 'interceptors/error_interceptor.dart';
 import 'interceptors/retry_interceptor.dart';
 
 class ApiClient {
-  static const String _baseUrl = 'http://localhost:8000/api';
+  static const String _baseUrl = 'http://localhost/api';
   static const Duration _connectTimeout = Duration(seconds: 30);
   static const Duration _receiveTimeout = Duration(seconds: 30);
 
