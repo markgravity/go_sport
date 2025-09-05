@@ -71,6 +71,8 @@ class FirebaseAuthService {
         },
         verificationFailed: (FirebaseAuthException e) {
           debugPrint('Phone verification failed: ${e.code} - ${e.message}');
+          debugPrint('Error details: ${e.toString()}');
+          debugPrint('Phone number attempted: $formattedPhone');
           onError(e);
         },
         codeSent: (String verificationId, int? resendToken) {

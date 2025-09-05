@@ -4,23 +4,23 @@ import 'package:flutter/foundation.dart';
 
 class ApiService {
   // TODO: Move to environment configuration
-  static const String _baseUrl = kDebugMode 
-      ? 'http://localhost/api'  // Development
+  static const String _baseUrl = kDebugMode
+      ? 'http://localhost/api' // Development
       : 'https://api.gosport.vn/api'; // Production
 
   static const Duration _timeout = Duration(seconds: 30);
 
   // HTTP headers for JSON requests
   Map<String, String> get _defaultHeaders => {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  };
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
 
   // HTTP headers with authentication
   Map<String, String> _headersWithAuth(String token) => {
-    ..._defaultHeaders,
-    'Authorization': 'Bearer $token',
-  };
+        ..._defaultHeaders,
+        'Authorization': 'Bearer $token',
+      };
 
   // Generic HTTP request handler
   Future<Map<String, dynamic>> _makeRequest({
@@ -39,27 +39,33 @@ class ApiService {
       }
 
       late http.Response response;
-      
+
       switch (method.toUpperCase()) {
         case 'GET':
-          response = await http.get(uri, headers: requestHeaders).timeout(_timeout);
+          response =
+              await http.get(uri, headers: requestHeaders).timeout(_timeout);
           break;
         case 'POST':
-          response = await http.post(
-            uri, 
-            headers: requestHeaders,
-            body: body != null ? jsonEncode(body) : null,
-          ).timeout(_timeout);
+          response = await http
+              .post(
+                uri,
+                headers: requestHeaders,
+                body: body != null ? jsonEncode(body) : null,
+              )
+              .timeout(_timeout);
           break;
         case 'PUT':
-          response = await http.put(
-            uri,
-            headers: requestHeaders,
-            body: body != null ? jsonEncode(body) : null,
-          ).timeout(_timeout);
+          response = await http
+              .put(
+                uri,
+                headers: requestHeaders,
+                body: body != null ? jsonEncode(body) : null,
+              )
+              .timeout(_timeout);
           break;
         case 'DELETE':
-          response = await http.delete(uri, headers: requestHeaders).timeout(_timeout);
+          response =
+              await http.delete(uri, headers: requestHeaders).timeout(_timeout);
           break;
         default:
           throw Exception('Unsupported HTTP method: $method');
@@ -69,7 +75,7 @@ class ApiService {
       debugPrint('Response body: ${response.body}');
 
       final responseData = jsonDecode(response.body) as Map<String, dynamic>;
-      
+
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return responseData;
       } else {
@@ -187,7 +193,7 @@ class ApiService {
     Map<String, dynamic>? preferences,
   }) async {
     final body = <String, dynamic>{};
-    
+
     if (name != null) body['name'] = name;
     if (preferredSports != null) body['preferred_sports'] = preferredSports;
     if (preferences != null) body['preferences'] = preferences;
@@ -271,7 +277,7 @@ class ApiException implements Exception {
   // Get validation errors for form fields
   Map<String, List<String>> get validationErrors {
     if (errors == null) return {};
-    
+
     final Map<String, List<String>> result = {};
     errors!.forEach((key, value) {
       if (value is List) {
@@ -280,7 +286,7 @@ class ApiException implements Exception {
         result[key] = [value];
       }
     });
-    
+
     return result;
   }
 }

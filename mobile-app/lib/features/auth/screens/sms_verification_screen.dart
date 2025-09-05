@@ -15,7 +15,7 @@ class SmsVerificationScreen extends StatefulWidget {
     required this.phoneNumber,
     required this.verificationId,
     required this.userName,
-    required this.selectedSports,
+    this.selectedSports = const [],
   });
 
   @override

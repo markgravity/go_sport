@@ -3,7 +3,6 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/firebase_auth_service.dart';
 import '../widgets/loading_overlay.dart';
-import '../widgets/vietnamese_sports_selector.dart';
 import 'sms_verification_screen.dart';
 
 class PhoneRegistrationScreen extends StatefulWidget {
@@ -21,24 +20,7 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
   
   bool _isLoading = false;
   String _phoneNumber = '';
-  String _countryCode = '+84';
-  List<String> _selectedSports = [];
-  
-  // Vietnamese sports options
-  final List<String> _availableSports = [
-    'Bóng đá',
-    'Bóng chuyền',
-    'Bóng rổ',
-    'Cầu lông',
-    'Tennis',
-    'Bóng bàn',
-    'Chạy bộ',
-    'Gym/Fitness',
-    'Bơi lội',
-    'Yoga',
-    'Võ thuật',
-    'Cycling',
-  ];
+  final String _countryCode = '+84';
 
   @override
   void dispose() {
@@ -53,11 +35,6 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
     });
   }
 
-  void _onSportsChanged(List<String> sports) {
-    setState(() {
-      _selectedSports = sports;
-    });
-  }
 
   Future<void> _sendVerificationCode() async {
     if (!_formKey.currentState!.validate()) {
@@ -89,7 +66,6 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                 phoneNumber: _phoneNumber,
                 verificationId: verificationId,
                 userName: _nameController.text.trim(),
-                selectedSports: _selectedSports,
               ),
             ),
           );
@@ -124,7 +100,7 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
       if (userCredential.user != null) {
         final user = await _firebaseAuthService.authenticateWithBackend(
           name: _nameController.text.trim(),
-          preferredSports: _selectedSports,
+          preferredSports: [],
         );
 
         if (user != null && mounted) {
@@ -285,12 +261,11 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                       ),
                     ),
                     initialCountryCode: 'VN',
-                    onCountryChanged: (country) {
-                      setState(() {
-                        _countryCode = '+${country.dialCode}';
-                      });
-                    },
+                    showCountryFlag: false,
+                    showDropdownIcon: false,
+                    disableLengthCheck: true,
                     onChanged: (phone) {
+                      // Country is locked to VN, so always use +84
                       _onPhoneNumberChanged(phone.number);
                     },
                     validator: (phone) {
@@ -303,24 +278,6 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                       }
                       return null;
                     },
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Sports Selection
-                  const Text(
-                    'Môn thể thao yêu thích (tùy chọn)',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1E293B),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  VietnameseSportsSelector(
-                    availableSports: _availableSports,
-                    selectedSports: _selectedSports,
-                    onChanged: _onSportsChanged,
                   ),
                   
                   const SizedBox(height: 40),

@@ -52,5 +52,17 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleURLName</key>
+				<string>dev.markg.go-sport.dev</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.780732148769-u818l40q5im6mu5u9g512aoj748n45pk</string>
+					<string>app-1-1082764817707-ios-8adbb30b52f00ef475416e</string>
+				</array>
+			</dict>
+		</array>
 	</dict>
 </plist>
