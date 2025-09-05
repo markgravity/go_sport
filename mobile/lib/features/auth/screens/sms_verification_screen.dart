@@ -30,6 +30,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
   bool _canResend = false;
   int _resendCountdown = 60;
   Timer? _timer;
+  bool _isVerifying = false; // Prevent duplicate verification attempts
 
   @override
   void initState() {
@@ -65,6 +66,11 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
   }
 
   Future<void> _verifyCode() async {
+    // Prevent duplicate verification attempts
+    if (_isVerifying) {
+      return;
+    }
+
     final code = _codeController.text.trim();
     if (code.length != 6) {
       _showError('Vui lòng nhập đầy đủ 6 số');
@@ -73,6 +79,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
 
     setState(() {
       _isLoading = true;
+      _isVerifying = true;
     });
 
     try {
@@ -100,6 +107,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
+          _isVerifying = false;
         });
       }
     }
@@ -167,10 +175,15 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
 
   void _onCodeChanged(String code) {
     _codeController.text = code;
-    // Auto-verify when 6 digits are entered
-    if (code.length == 6) {
-      _verifyCode();
+    
+    // Reset verification state when user starts typing new code
+    if (_isVerifying && code.length < 6) {
+      setState(() {
+        _isVerifying = false;
+      });
     }
+    // Note: Auto-verification is handled by VerificationCodeInput.onCompleted
+    // No need to verify here to avoid duplicate calls
   }
 
   String get _formattedPhoneNumber {
@@ -271,7 +284,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: _isLoading ? null : _verifyCode,
+                    onPressed: _isLoading || _isVerifying ? null : _verifyCode,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2E5BDA),
                       foregroundColor: Colors.white,
