@@ -41,13 +41,12 @@ The goal is quality delivery, not just checking boxes.]]
    - [ ] No new linter errors or warnings introduced.
    - [ ] Code is well-commented where necessary (clarifying complex logic, not obvious statements).
 
-3. **Testing:**
+3. **Testing (Optional - Add Later as Needed):**
 
-   [[LLM: Testing proves your code works. Be honest about test coverage]]
-   - [ ] All required unit tests as per the story and `Operational Guidelines` Testing Strategy are implemented.
-   - [ ] All required integration tests (if applicable) as per the story and `Operational Guidelines` Testing Strategy are implemented.
-   - [ ] All tests (unit, integration, E2E if applicable) pass successfully.
-   - [ ] Test coverage meets project standards (if defined).
+   [[LLM: Tests are optional and will be added later for specific parts as needed]]
+   - [ ] If tests are required for this story (explicitly specified), they have been implemented.
+   - [ ] If tests exist, they pass successfully.
+   - [N/A] Tests not required for this story - will be added later as needed.
 
 4. **Functionality & Verification:**
 

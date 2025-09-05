@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 class VietnamesePhoneValidator {
   // Vietnamese mobile carriers and their number patterns
   static const Map<String, List<String>> _carrierPrefixes = {
-    'Viettel': ['032', '033', '034', '035', '036', '037', '038', '039'],
-    'Vinaphone': ['081', '082', '083', '084', '085', '088'],
-    'MobiFone': ['070', '071', '072', '073', '074', '075', '076', '077', '078', '079'],
-    'Vietnamobile': ['052', '056', '058'],
-    'Gmobile': ['059'],
-    'Itelecom': ['087'],
+    'Viettel': ['32', '33', '34', '35', '36', '37', '38', '39'],
+    'Vinaphone': ['81', '82', '83', '84', '85', '88'],
+    'MobiFone': ['70', '71', '72', '73', '74', '75', '76', '77', '78', '79'],
+    'Vietnamobile': ['52', '56', '58'],
+    'Gmobile': ['59'],
+    'Itelecom': ['87'],
   };
 
   // Complete regex for Vietnamese mobile numbers
@@ -48,7 +48,7 @@ class VietnamesePhoneValidator {
     final normalized = normalizePhoneNumber(phone);
     if (normalized.length < 12) return null;
 
-    final prefix = normalized.substring(3, 6); // Get the 3-digit prefix after +84
+    final prefix = normalized.substring(3, 5); // Get the 2-digit prefix after +84
 
     for (final entry in _carrierPrefixes.entries) {
       if (entry.value.contains(prefix)) {
