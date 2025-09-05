@@ -2,48 +2,25 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import '../models/user_model.dart';
 import '../models/auth_tokens.dart';
+import '../../../core/utils/phone_validator.dart';
 import 'api_service.dart';
 
 class PhoneAuthService {
   final ApiService _apiService = ApiService();
 
-  // Vietnamese phone number regex pattern
-  static final RegExp _vietnamesePhoneRegex = RegExp(r'^(\+84|84|0)[3-9][0-9]{8}$');
-
-  // Format phone number to Vietnamese standard (+84)
+  // Format phone number to Vietnamese standard (+84) - delegate to VietnamesePhoneValidator
   static String formatVietnamesePhone(String phone) {
-    // Remove all non-numeric characters
-    phone = phone.replaceAll(RegExp(r'[^0-9]'), '');
-    
-    // Convert 0x format to +84x format
-    if (phone.startsWith('0')) {
-      phone = '84${phone.substring(1)}';
-    }
-    
-    // Add + prefix if not present
-    if (!phone.startsWith('+')) {
-      phone = '+$phone';
-    }
-    
-    return phone;
+    return VietnamesePhoneValidator.normalizePhoneNumber(phone);
   }
 
-  // Format phone number for display
+  // Format phone number for display - delegate to VietnamesePhoneValidator
   static String formatPhoneForDisplay(String phone) {
-    final formatted = formatVietnamesePhone(phone);
-    if (formatted.startsWith('+84')) {
-      final number = formatted.substring(3);
-      if (number.length >= 9) {
-        return '+84 ${number.substring(0, 3)} ${number.substring(3, 6)} ${number.substring(6)}';
-      }
-    }
-    return formatted;
+    return VietnamesePhoneValidator.formatForDisplay(phone);
   }
 
-  // Validate Vietnamese phone number
+  // Validate Vietnamese phone number - delegate to VietnamesePhoneValidator
   bool isValidVietnamesePhone(String phone) {
-    final formatted = formatVietnamesePhone(phone);
-    return _vietnamesePhoneRegex.hasMatch(formatted);
+    return VietnamesePhoneValidator.isValidVietnamesePhone(phone);
   }
 
   // Send SMS verification code
@@ -53,12 +30,14 @@ class PhoneAuthService {
     required Function(String error) onError,
   }) async {
     try {
-      if (!isValidVietnamesePhone(phoneNumber)) {
-        onError('Số điện thoại không đúng định dạng Việt Nam');
+      // Use comprehensive validation with detailed error message
+      final validationError = VietnamesePhoneValidator.getValidationError(phoneNumber);
+      if (validationError != null) {
+        onError(validationError);
         return;
       }
 
-      final formattedPhone = formatVietnamesePhone(phoneNumber);
+      final formattedPhone = VietnamesePhoneValidator.normalizePhoneNumber(phoneNumber);
       
       final response = await _apiService.sendVerificationCode(
         phone: formattedPhone,

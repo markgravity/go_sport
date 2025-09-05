@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\PhoneVerification;
 use App\Services\SmsService;
+use App\Rules\VietnamesePhoneRule;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
@@ -23,7 +24,7 @@ class AuthController extends Controller
             'phone' => [
                 'required',
                 'string',
-                'regex:/^(\+84|84|0)[3-9][0-9]{8}$/', // Vietnamese phone format
+                new VietnamesePhoneRule(),
             ]
         ]);
 
@@ -103,7 +104,7 @@ class AuthController extends Controller
             'phone' => [
                 'required',
                 'string',
-                'regex:/^(\+84|84|0)[3-9][0-9]{8}$/',
+                new VietnamesePhoneRule(),
             ],
             'verification_code' => 'required|string|size:6',
             'name' => 'required|string|max:255',
@@ -219,7 +220,7 @@ class AuthController extends Controller
             'phone' => [
                 'required',
                 'string',
-                'regex:/^(\+84|84|0)[3-9][0-9]{8}$/',
+                new VietnamesePhoneRule(),
             ],
             'password' => 'required|string',
         ]);

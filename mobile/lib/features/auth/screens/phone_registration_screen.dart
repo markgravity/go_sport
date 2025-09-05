@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import '../services/phone_auth_service.dart';
 import '../widgets/loading_overlay.dart';
 import '../widgets/vietnamese_sports_selector.dart';
+import '../../../core/utils/phone_validator.dart';
 import 'sms_verification_screen.dart';
 
 class PhoneRegistrationScreen extends StatefulWidget {
@@ -22,7 +22,6 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
   
   bool _isLoading = false;
   String _phoneNumber = '';
-  final String _countryCode = '+84';
   List<String> _selectedSports = [];
   bool _showPassword = false;
   bool _showConfirmPassword = false;
@@ -38,7 +37,7 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
 
   void _onPhoneNumberChanged(String phone) {
     setState(() {
-      _phoneNumber = '$_countryCode$phone';
+      _phoneNumber = phone;
     });
   }
 
@@ -58,12 +57,15 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
       return;
     }
 
+    // Normalize the phone number before sending
+    final normalizedPhone = VietnamesePhoneValidator.normalizePhoneNumber(_phoneNumber);
+
     setState(() {
       _isLoading = true;
     });
 
     await _phoneAuthService.sendVerificationCode(
-      phoneNumber: _phoneNumber,
+      phoneNumber: normalizedPhone,
       onSuccess: (message) {
         setState(() {
           _isLoading = false;
@@ -76,7 +78,7 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => SmsVerificationScreen(
-              phoneNumber: _phoneNumber,
+              phoneNumber: normalizedPhone,
               userName: _nameController.text.trim(),
               password: _passwordController.text,
               selectedSports: _selectedSports,
@@ -215,10 +217,36 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  IntlPhoneField(
+                  TextFormField(
                     controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [
+                      VietnamesePhoneValidator.createVietnamesePhoneFormatter(),
+                    ],
                     decoration: InputDecoration(
-                      hintText: 'Nhập số điện thoại',
+                      hintText: '0XXX XXX XXX',
+                      prefixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(width: 12),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Text(
+                              '+84',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF1E293B),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: const BorderSide(color: Colors.grey),
@@ -227,26 +255,42 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                         borderRadius: BorderRadius.circular(12),
                         borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
                       ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.red),
+                      ),
                     ),
-                    initialCountryCode: 'VN',
-                    showCountryFlag: false,
-                    showDropdownIcon: false,
-                    disableLengthCheck: true,
-                    onChanged: (phone) {
-                      // Country is locked to VN, so always use +84
-                      _onPhoneNumberChanged(phone.number);
+                    onChanged: (value) {
+                      _onPhoneNumberChanged(value);
                     },
-                    validator: (phone) {
-                      if (phone == null || phone.number.isEmpty) {
-                        return 'Vui lòng nhập số điện thoại';
-                      }
-                      final fullNumber = '$_countryCode${phone.number}';
-                      if (!_phoneAuthService.isValidVietnamesePhone(fullNumber)) {
-                        return 'Số điện thoại không đúng định dạng Việt Nam';
-                      }
-                      return null;
+                    validator: (value) {
+                      return VietnamesePhoneValidator.getValidationError(value ?? '');
                     },
                   ),
+                  
+                  // Phone carrier info
+                  if (_phoneNumber.isNotEmpty && VietnamesePhoneValidator.isValidVietnameseMobile(_phoneNumber))
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            size: 16,
+                            color: Colors.blue.shade600,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Nhà mạng: ${VietnamesePhoneValidator.getCarrierName(_phoneNumber) ?? "Không xác định"}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.blue.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   
                   const SizedBox(height: 24),
                   
