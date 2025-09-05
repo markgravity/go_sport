@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../services/firebase_auth_service.dart';
+import '../services/phone_auth_service.dart';
 import '../widgets/loading_overlay.dart';
+import '../widgets/vietnamese_sports_selector.dart';
 import 'sms_verification_screen.dart';
 
 class PhoneRegistrationScreen extends StatefulWidget {
@@ -16,16 +16,23 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
   final _nameController = TextEditingController();
-  final _firebaseAuthService = FirebaseAuthService();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _phoneAuthService = PhoneAuthService();
   
   bool _isLoading = false;
   String _phoneNumber = '';
   final String _countryCode = '+84';
+  List<String> _selectedSports = [];
+  bool _showPassword = false;
+  bool _showConfirmPassword = false;
 
   @override
   void dispose() {
     _phoneController.dispose();
     _nameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -46,89 +53,50 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
       return;
     }
 
+    if (_passwordController.text != _confirmPasswordController.text) {
+      _showError('Mật khẩu xác nhận không khớp');
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
-    try {
-      await _firebaseAuthService.sendSMSVerification(
-        phoneNumber: _phoneNumber,
-        onCodeSent: (String verificationId) {
-          setState(() {
-            _isLoading = false;
-          });
-          
-          // Navigate to SMS verification screen
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SmsVerificationScreen(
-                phoneNumber: _phoneNumber,
-                verificationId: verificationId,
-                userName: _nameController.text.trim(),
-              ),
+    await _phoneAuthService.sendVerificationCode(
+      phoneNumber: _phoneNumber,
+      onSuccess: (message) {
+        setState(() {
+          _isLoading = false;
+        });
+        
+        _showSuccess(message);
+        
+        // Navigate to SMS verification screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SmsVerificationScreen(
+              phoneNumber: _phoneNumber,
+              userName: _nameController.text.trim(),
+              password: _passwordController.text,
+              selectedSports: _selectedSports,
             ),
-          );
-        },
-        onError: (FirebaseAuthException error) {
-          setState(() {
-            _isLoading = false;
-          });
-          _showError(_getErrorMessage(error));
-        },
-        onAutoVerify: (PhoneAuthCredential credential) {
-          // Handle automatic verification if supported
-          _handleAutoVerification(credential);
-        },
-      );
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      _showError('Có lỗi xảy ra: ${e.toString()}');
-    }
-  }
-
-  Future<void> _handleAutoVerification(PhoneAuthCredential credential) async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-
-      final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-      
-      if (userCredential.user != null) {
-        final user = await _firebaseAuthService.authenticateWithBackend(
-          name: _nameController.text.trim(),
-          preferredSports: [],
+          ),
         );
-
-        if (user != null && mounted) {
-          // Navigation to main app would go here
-          _showSuccess('Đăng ký thành công!');
-          Navigator.of(context).pushReplacementNamed('/home');
-        }
-      }
-    } catch (e) {
-      _showError('Xác thực tự động thất bại: ${e.toString()}');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+      },
+      onError: (error) {
+        setState(() {
+          _isLoading = false;
+        });
+        _showError(error);
+      },
+    );
   }
 
-  String _getErrorMessage(FirebaseAuthException error) {
-    switch (error.code) {
-      case 'invalid-phone-number':
-        return 'Số điện thoại không hợp lệ';
-      case 'too-many-requests':
-        return 'Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau';
-      case 'quota-exceeded':
-        return 'Hạn ngạch SMS đã vượt quá. Vui lòng thử lại sau';
-      default:
-        return error.message ?? 'Có lỗi xảy ra khi gửi mã xác thực';
-    }
+  void _onSportsChanged(List<String> sports) {
+    setState(() {
+      _selectedSports = sports;
+    });
   }
 
   void _showError(String message) {
@@ -273,11 +241,125 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                         return 'Vui lòng nhập số điện thoại';
                       }
                       final fullNumber = '$_countryCode${phone.number}';
-                      if (!_firebaseAuthService.isValidVietnamesePhone(fullNumber)) {
+                      if (!_phoneAuthService.isValidVietnamesePhone(fullNumber)) {
                         return 'Số điện thoại không đúng định dạng Việt Nam';
                       }
                       return null;
                     },
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Password Input
+                  const Text(
+                    'Mật khẩu',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1E293B),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: !_showPassword,
+                    decoration: InputDecoration(
+                      hintText: 'Nhập mật khẩu',
+                      prefixIcon: const Icon(Icons.lock_outline),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _showPassword ? Icons.visibility_off : Icons.visibility,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _showPassword = !_showPassword;
+                          });
+                        },
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Vui lòng nhập mật khẩu';
+                      }
+                      if (value.length < 8) {
+                        return 'Mật khẩu phải có ít nhất 8 ký tự';
+                      }
+                      return null;
+                    },
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Confirm Password Input
+                  const Text(
+                    'Xác nhận mật khẩu',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1E293B),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    obscureText: !_showConfirmPassword,
+                    decoration: InputDecoration(
+                      hintText: 'Nhập lại mật khẩu',
+                      prefixIcon: const Icon(Icons.lock_outline),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _showConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _showConfirmPassword = !_showConfirmPassword;
+                          });
+                        },
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Vui lòng xác nhận mật khẩu';
+                      }
+                      if (value != _passwordController.text) {
+                        return 'Mật khẩu xác nhận không khớp';
+                      }
+                      return null;
+                    },
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Sports Selection
+                  const Text(
+                    'Môn thể thao yêu thích (tùy chọn)',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1E293B),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  VietnameseSportsSelector(
+                    availableSports: PhoneAuthService.vietnameseSportsList,
+                    selectedSports: _selectedSports,
+                    onChanged: _onSportsChanged,
                   ),
                   
                   const SizedBox(height: 40),

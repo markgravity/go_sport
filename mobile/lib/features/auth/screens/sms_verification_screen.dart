@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../services/firebase_auth_service.dart';
+import '../services/phone_auth_service.dart';
 import '../widgets/loading_overlay.dart';
 import '../widgets/verification_code_input.dart';
 
 class SmsVerificationScreen extends StatefulWidget {
   final String phoneNumber;
-  final String verificationId;
   final String userName;
+  final String password;
   final List<String> selectedSports;
 
   const SmsVerificationScreen({
     super.key,
     required this.phoneNumber,
-    required this.verificationId,
     required this.userName,
+    required this.password,
     this.selectedSports = const [],
   });
 
@@ -23,14 +23,13 @@ class SmsVerificationScreen extends StatefulWidget {
 }
 
 class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
-  final _firebaseAuthService = FirebaseAuthService();
+  final _phoneAuthService = PhoneAuthService();
   final _codeController = TextEditingController();
   
   bool _isLoading = false;
   bool _canResend = false;
   int _resendCountdown = 60;
   Timer? _timer;
-  String? _newVerificationId;
 
   @override
   void initState() {
@@ -77,15 +76,12 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
     });
 
     try {
-      // Use the new verification ID if we've resent the code
-      final verificationId = _newVerificationId ?? widget.verificationId;
-      
-      // Complete the registration flow
-      final user = await _firebaseAuthService.completeRegistration(
+      // Complete the registration with Laravel API
+      final user = await _phoneAuthService.registerUser(
         phoneNumber: widget.phoneNumber,
-        verificationId: verificationId,
-        smsCode: code,
+        verificationCode: code,
         name: widget.userName,
+        password: widget.password,
         preferredSports: widget.selectedSports,
       );
 
@@ -116,30 +112,22 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
       _isLoading = true;
     });
 
-    try {
-      await _firebaseAuthService.sendSMSVerification(
-        phoneNumber: widget.phoneNumber,
-        onCodeSent: (String newVerificationId) {
-          setState(() {
-            _isLoading = false;
-            _newVerificationId = newVerificationId;
-          });
-          _startResendCountdown();
-          _showSuccess('Mã xác thực mới đã được gửi');
-        },
-        onError: (error) {
-          setState(() {
-            _isLoading = false;
-          });
-          _showError(_getErrorMessage(error.toString()));
-        },
-      );
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      _showError('Không thể gửi lại mã. Vui lòng thử lại sau');
-    }
+    await _phoneAuthService.sendVerificationCode(
+      phoneNumber: widget.phoneNumber,
+      onSuccess: (message) {
+        setState(() {
+          _isLoading = false;
+        });
+        _startResendCountdown();
+        _showSuccess('Mã xác thực mới đã được gửi');
+      },
+      onError: (error) {
+        setState(() {
+          _isLoading = false;
+        });
+        _showError(error);
+      },
+    );
   }
 
   String _getErrorMessage(String error) {
@@ -186,7 +174,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
   }
 
   String get _formattedPhoneNumber {
-    return _firebaseAuthService.formatPhoneForDisplay(widget.phoneNumber);
+    return PhoneAuthService.formatPhoneForDisplay(widget.phoneNumber);
   }
 
   @override

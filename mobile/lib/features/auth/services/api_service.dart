@@ -217,6 +217,61 @@ class ApiService {
     }
   }
 
+  // Phone-based registration methods
+
+  // Send SMS verification code
+  Future<Map<String, dynamic>> sendVerificationCode({
+    required String phone,
+  }) async {
+    return _makeRequest(
+      method: 'POST',
+      endpoint: '/auth/send-verification-code',
+      body: {'phone': phone},
+    );
+  }
+
+  // Register user with phone verification
+  Future<Map<String, dynamic>> registerWithPhone({
+    required String phone,
+    required String verificationCode,
+    required String name,
+    required String password,
+    List<String>? preferredSports,
+  }) async {
+    final body = <String, dynamic>{
+      'phone': phone,
+      'verification_code': verificationCode,
+      'name': name,
+      'password': password,
+      'password_confirmation': password,
+    };
+
+    if (preferredSports != null && preferredSports.isNotEmpty) {
+      body['preferred_sports'] = preferredSports;
+    }
+
+    return _makeRequest(
+      method: 'POST',
+      endpoint: '/auth/register',
+      body: body,
+    );
+  }
+
+  // Login with phone and password
+  Future<Map<String, dynamic>> loginWithPhone({
+    required String phone,
+    required String password,
+  }) async {
+    return _makeRequest(
+      method: 'POST',
+      endpoint: '/auth/login',
+      body: {
+        'phone': phone,
+        'password': password,
+      },
+    );
+  }
+
   // Check if API is Firebase-enabled
   Future<bool> isFirebaseEnabled() async {
     try {

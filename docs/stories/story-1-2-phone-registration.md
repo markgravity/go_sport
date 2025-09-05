@@ -40,7 +40,7 @@
 - [x] **Task 1.2.1**: Setup database migrations for user accounts
 - [x] **Task 1.2.2**: Implement Laravel API endpoints for user registration  
 - [x] **Task 1.2.3**: Setup SMS verification service integration
-- [ ] **Task 1.2.4**: Create Flutter registration UI screens
+- [x] **Task 1.2.4**: Create Flutter registration UI screens
 - [ ] **Task 1.2.5**: Implement phone number validation and formatting
 - [ ] **Task 1.2.6**: Add Vietnamese localization for registration flow
 - [x] **Task 1.2.7**: Implement API authentication and session management
@@ -75,13 +75,13 @@
 - [x] Add SMS delivery status tracking
 
 ### Task 1.2.4: Create Flutter registration UI screens
-- [ ] Design registration screen with Vietnamese branding
-- [ ] Create phone number input with Vietnamese formatting
-- [ ] Build SMS verification code input screen
-- [ ] Add basic profile creation form (name, preferred sports)
-- [ ] Implement loading states and error handling
-- [ ] Create navigation flow between registration screens
-- [ ] Add Vietnamese sports type selection dropdown
+- [x] Design registration screen with Vietnamese branding
+- [x] Create phone number input with Vietnamese formatting
+- [x] Build SMS verification code input screen
+- [x] Add basic profile creation form (name, preferred sports)
+- [x] Implement loading states and error handling
+- [x] Create navigation flow between registration screens
+- [x] Add Vietnamese sports type selection dropdown
 
 ### Task 1.2.5: Implement phone number validation and formatting
 - [ ] Add Vietnamese phone number regex patterns
@@ -135,12 +135,20 @@
 - api/app/Http/Controllers/Api/AuthController.php (updated with phone encryption support)
 - api/app/Services/SmsService.php (existing)
 - api/routes/api.php (existing)
+- mobile/lib/features/auth/services/api_service.dart (updated with phone registration methods)
+- mobile/lib/features/auth/services/phone_auth_service.dart (new)
+- mobile/lib/features/auth/screens/phone_registration_screen.dart (updated to use Laravel API)
+- mobile/lib/features/auth/screens/sms_verification_screen.dart (updated to use Laravel API)
+- mobile/lib/features/auth/widgets/vietnamese_sports_selector.dart (existing)
+- mobile/lib/features/auth/widgets/verification_code_input.dart (existing)
+- mobile/lib/features/auth/widgets/loading_overlay.dart (existing)
 
 ### Completion Notes:
 - Story 1.2 created based on PRD Epic 1 requirements
 - Task 1.2.1 completed: Database migrations for user accounts with phone encryption support
 - Task 1.2.2 completed: Laravel API endpoints with phone encryption and Vietnamese validation
 - Task 1.2.3 completed: SMS verification service with Vietnamese providers already implemented
+- Task 1.2.4 completed: Flutter registration UI screens with Laravel API integration
 - Task 1.2.7 completed: Laravel Sanctum authentication and session management already implemented
 - phone_verifications table already existed and is suitable for SMS verification
 - Added phone_hash column for secure phone number indexing (encrypted phone stored in phone column)
@@ -148,6 +156,9 @@
 - Updated User model with phone encryption/decryption mutators and accessors
 - Updated AuthController to use phone_hash for secure lookups
 - SmsService supports Viettel, VNPT, and Twilio with Vietnamese messaging
+- Created comprehensive Flutter UI with Vietnamese branding and sports selection
+- Implemented phone-based authentication service for Flutter integration
+- Updated mobile screens to use Laravel API instead of Firebase
 - All acceptance criteria from PRD incorporated
 - Vietnamese market requirements addressed
 - Technical approach aligned with existing architecture
@@ -159,4 +170,5 @@
 | 2025-09-05 | Completed Task 1.2.1: Database migrations for user accounts | James (Dev) |
 | 2025-09-05 | Completed Task 1.2.2: Laravel API endpoints with phone encryption | James (Dev) |
 | 2025-09-05 | Completed Task 1.2.3: SMS verification service integration (existing) | James (Dev) |
+| 2025-09-05 | Completed Task 1.2.4: Flutter registration UI with Laravel API integration | James (Dev) |
 | 2025-09-05 | Completed Task 1.2.7: API authentication and session management (existing) | James (Dev) |
