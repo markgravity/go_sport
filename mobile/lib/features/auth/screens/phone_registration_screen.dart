@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/phone_auth_service.dart';
 import '../widgets/loading_overlay.dart';
 import '../widgets/vietnamese_sports_selector.dart';
 import '../../../core/utils/phone_validator.dart';
+import '../../../core/services/sports_localization_service.dart';
 import 'sms_verification_screen.dart';
 
 class PhoneRegistrationScreen extends StatefulWidget {
@@ -48,12 +50,12 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
     }
 
     if (_nameController.text.trim().isEmpty) {
-      _showError('Vui lòng nhập tên của bạn');
+      _showError(AppLocalizations.of(context).errorEnterName);
       return;
     }
 
     if (_passwordController.text != _confirmPasswordController.text) {
-      _showError('Mật khẩu xác nhận không khớp');
+      _showError(AppLocalizations.of(context).errorPasswordMismatch);
       return;
     }
 
@@ -123,6 +125,8 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -132,9 +136,9 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Đăng ký tài khoản',
-          style: TextStyle(
+        title: Text(
+          l10n.registerAccount,
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.w600,
@@ -154,18 +158,18 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                   const SizedBox(height: 20),
                   
                   // Header
-                  const Text(
-                    'Tạo tài khoản Go Sport',
-                    style: TextStyle(
+                  Text(
+                    l10n.createGoSportAccount,
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF2E5BDA),
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Nhập thông tin để tạo tài khoản mới',
-                    style: TextStyle(
+                  Text(
+                    l10n.enterInfoToRegister,
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
                     ),
@@ -174,9 +178,9 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                   const SizedBox(height: 40),
                   
                   // Name Input
-                  const Text(
-                    'Tên của bạn',
-                    style: TextStyle(
+                  Text(
+                    l10n.yourName,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF1E293B),
@@ -186,7 +190,7 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                   TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(
-                      hintText: 'Nguyễn Văn A',
+                      hintText: l10n.namePlaceholder,
                       prefixIcon: const Icon(Icons.person_outline),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -199,7 +203,7 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Vui lòng nhập tên của bạn';
+                        return l10n.errorEnterName;
                       }
                       return null;
                     },
@@ -208,9 +212,9 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                   const SizedBox(height: 24),
                   
                   // Phone Input
-                  const Text(
-                    'Số điện thoại',
-                    style: TextStyle(
+                  Text(
+                    l10n.phoneNumber,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF1E293B),
@@ -264,7 +268,7 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                       _onPhoneNumberChanged(value);
                     },
                     validator: (value) {
-                      return VietnamesePhoneValidator.getValidationError(value ?? '');
+                      return VietnamesePhoneValidator.getValidationErrorWithContext(value ?? '', l10n);
                     },
                   ),
                   
@@ -281,7 +285,7 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'Nhà mạng: ${VietnamesePhoneValidator.getCarrierName(_phoneNumber) ?? "Không xác định"}',
+                            l10n.carrier(VietnamesePhoneValidator.getCarrierName(_phoneNumber) ?? l10n.unknownCarrier),
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.blue.shade600,
@@ -295,9 +299,9 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                   const SizedBox(height: 24),
                   
                   // Password Input
-                  const Text(
-                    'Mật khẩu',
-                    style: TextStyle(
+                  Text(
+                    l10n.password,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF1E293B),
@@ -308,7 +312,7 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                     controller: _passwordController,
                     obscureText: !_showPassword,
                     decoration: InputDecoration(
-                      hintText: 'Nhập mật khẩu',
+                      hintText: l10n.enterPassword,
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -331,10 +335,10 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Vui lòng nhập mật khẩu';
+                        return l10n.errorEnterPassword;
                       }
                       if (value.length < 8) {
-                        return 'Mật khẩu phải có ít nhất 8 ký tự';
+                        return l10n.errorPasswordTooShort;
                       }
                       return null;
                     },
@@ -343,9 +347,9 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                   const SizedBox(height: 24),
                   
                   // Confirm Password Input
-                  const Text(
-                    'Xác nhận mật khẩu',
-                    style: TextStyle(
+                  Text(
+                    l10n.confirmPassword,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF1E293B),
@@ -356,7 +360,7 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                     controller: _confirmPasswordController,
                     obscureText: !_showConfirmPassword,
                     decoration: InputDecoration(
-                      hintText: 'Nhập lại mật khẩu',
+                      hintText: l10n.reenterPassword,
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -379,10 +383,10 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Vui lòng xác nhận mật khẩu';
+                        return l10n.errorConfirmPassword;
                       }
                       if (value != _passwordController.text) {
-                        return 'Mật khẩu xác nhận không khớp';
+                        return l10n.errorPasswordMismatch;
                       }
                       return null;
                     },
@@ -391,9 +395,9 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                   const SizedBox(height: 24),
                   
                   // Sports Selection
-                  const Text(
-                    'Môn thể thao yêu thích (tùy chọn)',
-                    style: TextStyle(
+                  Text(
+                    l10n.favoriteSports,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF1E293B),
@@ -401,7 +405,7 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                   ),
                   const SizedBox(height: 8),
                   VietnameseSportsSelector(
-                    availableSports: PhoneAuthService.vietnameseSportsList,
+                    availableSports: SportsLocalizationService.getSportsListForLocale(l10n),
                     selectedSports: _selectedSports,
                     onChanged: _onSportsChanged,
                   ),
@@ -431,9 +435,9 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                          : const Text(
-                              'Gửi mã xác thực',
-                              style: TextStyle(
+                          : Text(
+                              l10n.sendVerificationCode,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -447,25 +451,25 @@ class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
                   Center(
                     child: Text.rich(
                       TextSpan(
-                        text: 'Bằng cách đăng ký, bạn đồng ý với ',
+                        text: l10n.agreeToTerms,
                         style: const TextStyle(fontSize: 14, color: Colors.grey),
                         children: [
                           TextSpan(
-                            text: 'Điều khoản sử dụng',
-                            style: TextStyle(
-                              color: const Color(0xFF2E5BDA),
+                            text: l10n.termsOfService,
+                            style: const TextStyle(
+                              color: Color(0xFF2E5BDA),
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          const TextSpan(text: ' và '),
+                          TextSpan(text: l10n.and),
                           TextSpan(
-                            text: 'Chính sách bảo mật',
-                            style: TextStyle(
-                              color: const Color(0xFF2E5BDA),
+                            text: l10n.privacyPolicy,
+                            style: const TextStyle(
+                              color: Color(0xFF2E5BDA),
                               decoration: TextDecoration.underline,
                             ),
                           ),
-                          const TextSpan(text: ' của chúng tôi.'),
+                          const TextSpan(text: '.'),
                         ],
                       ),
                       textAlign: TextAlign.center,

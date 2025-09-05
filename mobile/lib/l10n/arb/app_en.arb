@@ -47,5 +47,179 @@
   "confirm": "Confirm",
   "@confirm": {
     "description": "Confirm button text"
+  },
+  
+  "registerAccount": "Register Account",
+  "@registerAccount": {
+    "description": "Register account screen title"
+  },
+  "createGoSportAccount": "Create Go Sport Account",
+  "@createGoSportAccount": {
+    "description": "Create account header text"
+  },
+  "enterInfoToRegister": "Enter information to create a new account",
+  "@enterInfoToRegister": {
+    "description": "Registration instruction text"
+  },
+  "yourName": "Your Name",
+  "@yourName": {
+    "description": "Name field label"
+  },
+  "namePlaceholder": "Nguyen Van A",
+  "@namePlaceholder": {
+    "description": "Name input placeholder"
+  },
+  "phoneNumber": "Phone Number",
+  "@phoneNumber": {
+    "description": "Phone number field label"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {
+    "description": "Confirm password field label"
+  },
+  "enterPassword": "Enter password",
+  "@enterPassword": {
+    "description": "Password input placeholder"
+  },
+  "reenterPassword": "Re-enter password",
+  "@reenterPassword": {
+    "description": "Confirm password input placeholder"
+  },
+  "favoriteSports": "Favorite Sports (optional)",
+  "@favoriteSports": {
+    "description": "Sports selection field label"
+  },
+  "sendVerificationCode": "Send Verification Code",
+  "@sendVerificationCode": {
+    "description": "Send verification button text"
+  },
+  "agreeToTerms": "By registering, you agree to our ",
+  "@agreeToTerms": {
+    "description": "Terms agreement text part 1"
+  },
+  "termsOfService": "Terms of Service",
+  "@termsOfService": {
+    "description": "Terms of service link text"
+  },
+  "and": " and ",
+  "@and": {
+    "description": "Conjunction between terms and privacy"
+  },
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy policy link text"
+  },
+  
+  "verifyPhoneNumber": "Verify Phone Number",
+  "@verifyPhoneNumber": {
+    "description": "SMS verification screen title"
+  },
+  "enterVerificationCode": "Enter Verification Code",
+  "@enterVerificationCode": {
+    "description": "SMS verification header"
+  },
+  "codeSentTo": "We've sent a 6-digit verification code to",
+  "@codeSentTo": {
+    "description": "Code sent message"
+  },
+  "verify": "Verify",
+  "@verify": {
+    "description": "Verify button text"
+  },
+  "didNotReceiveCode": "Didn't receive the code? ",
+  "@didNotReceiveCode": {
+    "description": "Resend code prompt"
+  },
+  "resend": "Resend",
+  "@resend": {
+    "description": "Resend code button text"
+  },
+  "resendAfter": "Resend after {seconds}s",
+  "@resendAfter": {
+    "description": "Resend countdown text",
+    "placeholders": {
+      "seconds": {
+        "type": "int",
+        "description": "Countdown seconds"
+      }
+    }
+  },
+  "codeValidInfo": "The verification code is valid for 5 minutes. Check your spam folder if you don't see the message.",
+  "@codeValidInfo": {
+    "description": "Code validity information"
+  },
+  "carrier": "Carrier: {carrier}",
+  "@carrier": {
+    "description": "Phone carrier display",
+    "placeholders": {
+      "carrier": {
+        "type": "String",
+        "description": "Phone carrier name"
+      }
+    }
+  },
+  
+  "errorEnterName": "Please enter your name",
+  "@errorEnterName": {
+    "description": "Name validation error"
+  },
+  "errorEnterPhone": "Please enter phone number",
+  "@errorEnterPhone": {
+    "description": "Phone validation error"
+  },
+  "errorPhoneTooShort": "Phone number is too short",
+  "@errorPhoneTooShort": {
+    "description": "Phone too short error"
+  },
+  "errorPhoneTooLong": "Phone number is too long", 
+  "@errorPhoneTooLong": {
+    "description": "Phone too long error"
+  },
+  "errorInvalidVietnamesePhone": "Phone number is not in Vietnamese format",
+  "@errorInvalidVietnamesePhone": {
+    "description": "Invalid Vietnamese phone error"
+  },
+  "errorEnterPassword": "Please enter password",
+  "@errorEnterPassword": {
+    "description": "Password validation error"
+  },
+  "errorPasswordTooShort": "Password must be at least 8 characters",
+  "@errorPasswordTooShort": {
+    "description": "Password too short error"
+  },
+  "errorConfirmPassword": "Please confirm your password",
+  "@errorConfirmPassword": {
+    "description": "Password confirmation error"
+  },
+  "errorPasswordMismatch": "Password confirmation does not match",
+  "@errorPasswordMismatch": {
+    "description": "Password mismatch error"
+  },
+  "errorEnterFullCode": "Please enter all 6 digits",
+  "@errorEnterFullCode": {
+    "description": "Verification code validation error"
+  },
+  "unknownCarrier": "Unknown",
+  "@unknownCarrier": {
+    "description": "Unknown carrier text"
+  },
+  
+  "successRegistration": "Registration successful! Welcome {name}",
+  "@successRegistration": {
+    "description": "Registration success message",
+    "placeholders": {
+      "name": {
+        "type": "String", 
+        "description": "User name"
+      }
+    }
+  },
+  "successVerificationCodeSent": "New verification code has been sent",
+  "@successVerificationCodeSent": {
+    "description": "Code sent success message"
   }
 }

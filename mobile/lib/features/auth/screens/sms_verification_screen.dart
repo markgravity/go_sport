@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 import '../services/phone_auth_service.dart';
 import '../widgets/loading_overlay.dart';
@@ -73,7 +74,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
 
     final code = _codeController.text.trim();
     if (code.length != 6) {
-      _showError('Vui lòng nhập đầy đủ 6 số');
+      _showError(AppLocalizations.of(context).errorEnterFullCode);
       return;
     }
 
@@ -93,7 +94,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
       );
 
       if (mounted) {
-        _showSuccess('Đăng ký thành công! Chào mừng ${user.name}');
+        _showSuccess(AppLocalizations.of(context).successRegistration(user.name));
         
         // Navigate to home screen or onboarding
         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -127,7 +128,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
           _isLoading = false;
         });
         _startResendCountdown();
-        _showSuccess('Mã xác thực mới đã được gửi');
+        _showSuccess(AppLocalizations.of(context).successVerificationCodeSent);
       },
       onError: (error) {
         setState(() {
@@ -192,6 +193,8 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -201,9 +204,9 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Xác thực số điện thoại',
-          style: TextStyle(
+        title: Text(
+          l10n.verifyPhoneNumber,
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.w600,
@@ -238,9 +241,9 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
                 const SizedBox(height: 32),
                 
                 // Title
-                const Text(
-                  'Nhập mã xác thực',
-                  style: TextStyle(
+                Text(
+                  l10n.enterVerificationCode,
+                  style: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF2E5BDA),
@@ -251,7 +254,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
                 
                 // Description
                 Text(
-                  'Chúng tôi đã gửi mã xác thực 6 số đến',
+                  l10n.codeSentTo,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey[600],
@@ -293,9 +296,9 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
                       ),
                       elevation: 2,
                     ),
-                    child: const Text(
-                      'Xác thực',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.verify,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -310,7 +313,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Không nhận được mã? ',
+                      l10n.didNotReceiveCode,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],
@@ -319,9 +322,9 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
                     if (_canResend)
                       GestureDetector(
                         onTap: _resendCode,
-                        child: const Text(
-                          'Gửi lại',
-                          style: TextStyle(
+                        child: Text(
+                          l10n.resend,
+                          style: const TextStyle(
                             fontSize: 14,
                             color: Color(0xFF2E5BDA),
                             fontWeight: FontWeight.w600,
@@ -331,7 +334,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
                       )
                     else
                       Text(
-                        'Gửi lại sau ${_resendCountdown}s',
+                        l10n.resendAfter(_resendCountdown),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[400],
@@ -359,7 +362,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Mã xác thực có hiệu lực trong 5 phút. Kiểm tra hộp thư spam nếu không thấy tin nhắn.',
+                          l10n.codeValidInfo,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[700],

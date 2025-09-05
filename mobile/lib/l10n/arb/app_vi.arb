@@ -47,5 +47,179 @@
   "confirm": "Xác nhận",
   "@confirm": {
     "description": "Confirm button text"
+  },
+  
+  "registerAccount": "Đăng ký tài khoản",
+  "@registerAccount": {
+    "description": "Register account screen title"
+  },
+  "createGoSportAccount": "Tạo tài khoản Go Sport",
+  "@createGoSportAccount": {
+    "description": "Create account header text"
+  },
+  "enterInfoToRegister": "Nhập thông tin để tạo tài khoản mới",
+  "@enterInfoToRegister": {
+    "description": "Registration instruction text"
+  },
+  "yourName": "Tên của bạn",
+  "@yourName": {
+    "description": "Name field label"
+  },
+  "namePlaceholder": "Nguyễn Văn A",
+  "@namePlaceholder": {
+    "description": "Name input placeholder"
+  },
+  "phoneNumber": "Số điện thoại",
+  "@phoneNumber": {
+    "description": "Phone number field label"
+  },
+  "password": "Mật khẩu",
+  "@password": {
+    "description": "Password field label"
+  },
+  "confirmPassword": "Xác nhận mật khẩu",
+  "@confirmPassword": {
+    "description": "Confirm password field label"
+  },
+  "enterPassword": "Nhập mật khẩu",
+  "@enterPassword": {
+    "description": "Password input placeholder"
+  },
+  "reenterPassword": "Nhập lại mật khẩu",
+  "@reenterPassword": {
+    "description": "Confirm password input placeholder"
+  },
+  "favoriteSports": "Môn thể thao yêu thích (tùy chọn)",
+  "@favoriteSports": {
+    "description": "Sports selection field label"
+  },
+  "sendVerificationCode": "Gửi mã xác thực",
+  "@sendVerificationCode": {
+    "description": "Send verification button text"
+  },
+  "agreeToTerms": "Bằng cách đăng ký, bạn đồng ý với ",
+  "@agreeToTerms": {
+    "description": "Terms agreement text part 1"
+  },
+  "termsOfService": "Điều khoản sử dụng",
+  "@termsOfService": {
+    "description": "Terms of service link text"
+  },
+  "and": " và ",
+  "@and": {
+    "description": "Conjunction between terms and privacy"
+  },
+  "privacyPolicy": "Chính sách bảo mật",
+  "@privacyPolicy": {
+    "description": "Privacy policy link text"
+  },
+  
+  "verifyPhoneNumber": "Xác thực số điện thoại",
+  "@verifyPhoneNumber": {
+    "description": "SMS verification screen title"
+  },
+  "enterVerificationCode": "Nhập mã xác thực",
+  "@enterVerificationCode": {
+    "description": "SMS verification header"
+  },
+  "codeSentTo": "Chúng tôi đã gửi mã xác thực 6 số đến",
+  "@codeSentTo": {
+    "description": "Code sent message"
+  },
+  "verify": "Xác thực",
+  "@verify": {
+    "description": "Verify button text"
+  },
+  "didNotReceiveCode": "Không nhận được mã? ",
+  "@didNotReceiveCode": {
+    "description": "Resend code prompt"
+  },
+  "resend": "Gửi lại",
+  "@resend": {
+    "description": "Resend code button text"
+  },
+  "resendAfter": "Gửi lại sau {seconds}s",
+  "@resendAfter": {
+    "description": "Resend countdown text",
+    "placeholders": {
+      "seconds": {
+        "type": "int",
+        "description": "Countdown seconds"
+      }
+    }
+  },
+  "codeValidInfo": "Mã xác thực có hiệu lực trong 5 phút. Kiểm tra hộp thư spam nếu không thấy tin nhắn.",
+  "@codeValidInfo": {
+    "description": "Code validity information"
+  },
+  "carrier": "Nhà mạng: {carrier}",
+  "@carrier": {
+    "description": "Phone carrier display",
+    "placeholders": {
+      "carrier": {
+        "type": "String",
+        "description": "Phone carrier name"
+      }
+    }
+  },
+  
+  "errorEnterName": "Vui lòng nhập tên của bạn",
+  "@errorEnterName": {
+    "description": "Name validation error"
+  },
+  "errorEnterPhone": "Vui lòng nhập số điện thoại",
+  "@errorEnterPhone": {
+    "description": "Phone validation error"
+  },
+  "errorPhoneTooShort": "Số điện thoại quá ngắn",
+  "@errorPhoneTooShort": {
+    "description": "Phone too short error"
+  },
+  "errorPhoneTooLong": "Số điện thoại quá dài", 
+  "@errorPhoneTooLong": {
+    "description": "Phone too long error"
+  },
+  "errorInvalidVietnamesePhone": "Số điện thoại không đúng định dạng Việt Nam",
+  "@errorInvalidVietnamesePhone": {
+    "description": "Invalid Vietnamese phone error"
+  },
+  "errorEnterPassword": "Vui lòng nhập mật khẩu",
+  "@errorEnterPassword": {
+    "description": "Password validation error"
+  },
+  "errorPasswordTooShort": "Mật khẩu phải có ít nhất 8 ký tự",
+  "@errorPasswordTooShort": {
+    "description": "Password too short error"
+  },
+  "errorConfirmPassword": "Vui lòng xác nhận mật khẩu",
+  "@errorConfirmPassword": {
+    "description": "Password confirmation error"
+  },
+  "errorPasswordMismatch": "Mật khẩu xác nhận không khớp",
+  "@errorPasswordMismatch": {
+    "description": "Password mismatch error"
+  },
+  "errorEnterFullCode": "Vui lòng nhập đầy đủ 6 số",
+  "@errorEnterFullCode": {
+    "description": "Verification code validation error"
+  },
+  "unknownCarrier": "Không xác định",
+  "@unknownCarrier": {
+    "description": "Unknown carrier text"
+  },
+  
+  "successRegistration": "Đăng ký thành công! Chào mừng {name}",
+  "@successRegistration": {
+    "description": "Registration success message",
+    "placeholders": {
+      "name": {
+        "type": "String", 
+        "description": "User name"
+      }
+    }
+  },
+  "successVerificationCodeSent": "Mã xác thực mới đã được gửi",
+  "@successVerificationCodeSent": {
+    "description": "Code sent success message"
   }
 }

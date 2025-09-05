@@ -132,6 +132,33 @@ class VietnamesePhoneValidator {
     return null; // Valid
   }
 
+  /// Gets validation error message using localization context
+  static String? getValidationErrorWithContext(String phone, dynamic localizations) {
+    if (localizations == null) {
+      return getValidationError(phone); // Fallback to Vietnamese
+    }
+    
+    if (phone.isEmpty) {
+      return localizations.errorEnterPhone;
+    }
+
+    final cleaned = _cleanPhoneNumber(phone);
+    
+    if (cleaned.length < 9) {
+      return localizations.errorPhoneTooShort;
+    }
+    
+    if (cleaned.length > 12) {
+      return localizations.errorPhoneTooLong;
+    }
+
+    if (!isValidVietnamesePhone(phone)) {
+      return localizations.errorInvalidVietnamesePhone;
+    }
+
+    return null; // Valid
+  }
+
   /// Gets the phone number type (mobile/landline)
   static PhoneType getPhoneType(String phone) {
     if (isValidVietnameseMobile(phone)) {
