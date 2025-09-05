@@ -116,9 +116,10 @@ class PhoneAuthService {
         
         // Store auth tokens (you might want to use secure storage)
         final authTokens = AuthTokens(
-          accessToken: token,
-          tokenType: 'Bearer',
-          expiresIn: null, // Laravel Sanctum tokens don't expire by default
+          firebaseIdToken: '', // Not using Firebase
+          laravelToken: token,
+          firebaseUid: user.id.toString(), // Use user ID as UID
+          expiresAt: DateTime.now().add(const Duration(days: 30)), // 30 days default
         );
         
         // Store tokens in secure storage or state management
@@ -160,9 +161,10 @@ class PhoneAuthService {
         
         // Store auth tokens
         final authTokens = AuthTokens(
-          accessToken: token,
-          tokenType: 'Bearer',
-          expiresIn: null,
+          firebaseIdToken: '', // Not using Firebase
+          laravelToken: token,
+          firebaseUid: user.id.toString(), // Use user ID as UID
+          expiresAt: DateTime.now().add(const Duration(days: 30)), // 30 days default
         );
         
         await _storeAuthTokens(authTokens);
@@ -190,7 +192,7 @@ class PhoneAuthService {
       final response = await _apiService.authenticatedRequest(
         method: 'GET',
         endpoint: '/auth/me',
-        laravelToken: authTokens.accessToken,
+        laravelToken: authTokens.laravelToken,
       );
 
       if (response['success'] == true) {
@@ -213,7 +215,7 @@ class PhoneAuthService {
         await _apiService.authenticatedRequest(
           method: 'POST',
           endpoint: '/auth/logout',
-          laravelToken: authTokens.accessToken,
+          laravelToken: authTokens.laravelToken,
         );
       }
     } catch (e) {
@@ -233,7 +235,7 @@ class PhoneAuthService {
   // Private methods for token storage (implement with flutter_secure_storage)
   Future<void> _storeAuthTokens(AuthTokens tokens) async {
     // TODO: Implement secure token storage
-    debugPrint('Storing auth tokens: ${tokens.accessToken}');
+    debugPrint('Storing auth tokens: ${tokens.laravelToken}');
   }
 
   Future<AuthTokens?> _getStoredAuthTokens() async {
