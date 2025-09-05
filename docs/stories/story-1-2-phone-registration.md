@@ -37,18 +37,26 @@
 - [ ] API endpoints respond correctly to all scenarios
 
 ## Tasks
-- [x] **Task 1.2.1**: Implement Laravel API endpoints for user registration
-- [ ] **Task 1.2.2**: Setup SMS verification service integration
-- [ ] **Task 1.2.3**: Create Flutter registration UI screens
-- [ ] **Task 1.2.4**: Implement phone number validation and formatting
-- [ ] **Task 1.2.5**: Add Vietnamese localization for registration flow
-- [ ] **Task 1.2.6**: Setup database migrations for user accounts
+- [ ] **Task 1.2.1**: Setup database migrations for user accounts
+- [ ] **Task 1.2.2**: Implement Laravel API endpoints for user registration  
+- [ ] **Task 1.2.3**: Setup SMS verification service integration
+- [ ] **Task 1.2.4**: Create Flutter registration UI screens
+- [ ] **Task 1.2.5**: Implement phone number validation and formatting
+- [ ] **Task 1.2.6**: Add Vietnamese localization for registration flow
 - [ ] **Task 1.2.7**: Implement API authentication and session management
 - [ ] **Task 1.2.8**: Create comprehensive tests for registration flow
 
 ## Subtasks
 
-### Task 1.2.1: Implement Laravel API endpoints for user registration
+### Task 1.2.1: Setup database migrations for user accounts
+- [ ] Create users table migration with phone encryption
+- [ ] Add phone_verified_at timestamp column
+- [ ] Create phone_verifications table for SMS codes
+- [ ] Add indexes for phone number lookups
+- [ ] Setup proper foreign key relationships
+- [ ] Add user profile fields (name, preferred sports)
+
+### Task 1.2.2: Implement Laravel API endpoints for user registration
 - [x] Create User model with phone number encryption
 - [x] Setup user registration API route (`POST /api/auth/register`)
 - [x] Create phone verification API route (`POST /api/auth/send-verification-code`)
@@ -57,7 +65,7 @@
 - [x] Add rate limiting middleware for SMS requests
 - [x] Create proper API response formats
 
-### Task 1.2.2: Setup SMS verification service integration  
+### Task 1.2.3: Setup SMS verification service integration  
 - [ ] Research and select Vietnamese SMS provider (Viettel/VNPT)
 - [ ] Configure SMS service credentials and environment variables
 - [ ] Create SMS service class with send/verify methods
@@ -66,7 +74,7 @@
 - [ ] Setup SMS sending queue for reliability
 - [ ] Add SMS delivery status tracking
 
-### Task 1.2.3: Create Flutter registration UI screens
+### Task 1.2.4: Create Flutter registration UI screens
 - [ ] Design registration screen with Vietnamese branding
 - [ ] Create phone number input with Vietnamese formatting
 - [ ] Build SMS verification code input screen
@@ -75,7 +83,7 @@
 - [ ] Create navigation flow between registration screens
 - [ ] Add Vietnamese sports type selection dropdown
 
-### Task 1.2.4: Implement phone number validation and formatting
+### Task 1.2.5: Implement phone number validation and formatting
 - [ ] Add Vietnamese phone number regex patterns
 - [ ] Create phone formatter for +84 and 0x formats
 - [ ] Implement client-side validation with error messages
@@ -83,21 +91,13 @@
 - [ ] Create validation for different Vietnamese carrier formats
 - [ ] Add proper error states for invalid numbers
 
-### Task 1.2.5: Add Vietnamese localization for registration flow
+### Task 1.2.6: Add Vietnamese localization for registration flow
 - [ ] Add Vietnamese text for all registration screens
 - [ ] Create error message translations
 - [ ] Add Vietnamese sports type options
 - [ ] Implement proper Vietnamese text formatting
 - [ ] Add culturally appropriate placeholder text
 - [ ] Create help text in Vietnamese
-
-### Task 1.2.6: Setup database migrations for user accounts
-- [ ] Create users table migration with phone encryption
-- [ ] Add phone_verified_at timestamp column
-- [ ] Create phone_verifications table for SMS codes
-- [ ] Add indexes for phone number lookups
-- [ ] Setup proper foreign key relationships
-- [ ] Add user profile fields (name, preferred sports)
 
 ### Task 1.2.7: Implement API authentication and session management
 - [ ] Configure Laravel Sanctum for mobile app authentication
@@ -120,7 +120,7 @@
 
 ## Dev Agent Record
 
-### Status: Draft
+### Status: Ready for Development
 
 ### Agent Model Used: claude-sonnet-4-20250514 
 

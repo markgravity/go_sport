@@ -46,7 +46,7 @@ go_sport/
 
 3. **Setup Flutter dependencies:**
    ```bash
-   cd mobile-app
+   cd mobile
    flutter pub get
    ```
 
@@ -95,7 +95,7 @@ The Flutter app connects to the local API server running on Docker.
 #### Running the app
 
 ```bash
-cd mobile-app
+cd mobile
 
 # Install dependencies
 flutter pub get
@@ -196,7 +196,7 @@ go_sport/
 
 3. **Cài đặt dependencies cho Flutter:**
    ```bash
-   cd mobile-app
+   cd mobile
    flutter pub get
    ```
 
@@ -245,7 +245,7 @@ Laravel API chạy trong Docker containers với các services:
 #### Chạy ứng dụng
 
 ```bash
-cd mobile-app
+cd mobile
 
 # Cài đặt dependencies
 flutter pub get

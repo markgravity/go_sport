@@ -72,7 +72,7 @@ This guide will help new team members get up to speed with our development envir
    ./scripts/dev.sh artisan test
    
    # Frontend tests
-   cd mobile-app
+   cd mobile
    flutter test
    ```
 

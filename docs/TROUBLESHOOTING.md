@@ -253,7 +253,7 @@ If all else fails, reset the entire development environment:
 ./scripts/dev.sh clean
 
 # Remove Flutter build files
-cd mobile-app
+cd mobile
 flutter clean
 rm -rf .dart_tool/
 rm -rf build/
@@ -261,7 +261,7 @@ rm -rf build/
 # Restart from scratch
 cd ..
 ./scripts/dev.sh start
-cd mobile-app
+cd mobile
 flutter pub get
 flutter run
 ```
@@ -516,7 +516,7 @@ Nếu tất cả đều thất bại, reset toàn bộ môi trường phát tri�
 ./scripts/dev.sh clean
 
 # Xóa Flutter build files
-cd mobile-app
+cd mobile
 flutter clean
 rm -rf .dart_tool/
 rm -rf build/
@@ -524,7 +524,7 @@ rm -rf build/
 # Khởi động lại từ đầu
 cd ..
 ./scripts/dev.sh start
-cd mobile-app
+cd mobile
 flutter pub get
 flutter run
 ```
