@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'phone',
+        'phone_hash',
         'phone_verified_at',
         'password',
         'firebase_uid',
@@ -34,6 +35,7 @@ class User extends Authenticatable
         'status',
         'fcm_token',
         'preferences',
+        'preferred_sports',
     ];
 
     /**
@@ -44,6 +46,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'phone_hash', // Hide phone_hash for security
     ];
 
     /**
@@ -59,6 +62,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'date_of_birth' => 'date',
             'preferences' => 'array',
+            'preferred_sports' => 'array',
         ];
     }
 
@@ -98,5 +102,55 @@ class User extends Authenticatable
     {
         $this->phone_verified_at = now();
         $this->save();
+    }
+
+    /**
+     * Generate phone hash for secure indexing
+     */
+    public static function generatePhoneHash(string $phone): string
+    {
+        return hash('sha256', $phone . config('app.key'));
+    }
+
+    /**
+     * Set phone attribute with encryption and hashing
+     */
+    public function setPhoneAttribute(string $value): void
+    {
+        $formattedPhone = self::formatVietnamesePhone($value);
+        
+        // Store encrypted phone number
+        $this->attributes['phone'] = encrypt($formattedPhone);
+        
+        // Generate and store phone hash for indexing
+        $this->attributes['phone_hash'] = self::generatePhoneHash($formattedPhone);
+    }
+
+    /**
+     * Get phone attribute with decryption
+     */
+    public function getPhoneAttribute($value): ?string
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        try {
+            return decrypt($value);
+        } catch (\Exception $e) {
+            // If decryption fails, assume it's plain text (for backward compatibility)
+            return $value;
+        }
+    }
+
+    /**
+     * Find user by phone number (using hash for performance)
+     */
+    public static function findByPhone(string $phone): ?User
+    {
+        $formattedPhone = self::formatVietnamesePhone($phone);
+        $phoneHash = self::generatePhoneHash($formattedPhone);
+        
+        return self::where('phone_hash', $phoneHash)->first();
     }
 }

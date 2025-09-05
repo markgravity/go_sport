@@ -47,7 +47,7 @@ class AuthController extends Controller
         }
 
         // Check if phone is already registered
-        $existingUser = User::where('phone', $phone)->first();
+        $existingUser = User::findByPhone($phone);
         if ($existingUser && $existingUser->isPhoneVerified()) {
             return response()->json([
                 'success' => false,
@@ -150,7 +150,7 @@ class AuthController extends Controller
         }
 
         // Check if user already exists
-        $existingUser = User::where('phone', $phone)->first();
+        $existingUser = User::findByPhone($phone);
         if ($existingUser) {
             return response()->json([
                 'success' => false,
@@ -165,8 +165,8 @@ class AuthController extends Controller
                 'phone' => $phone,
                 'email' => null, // Phone-based registration doesn't require email
                 'password' => Hash::make($request->password),
+                'preferred_sports' => $request->preferred_sports ?? [],
                 'preferences' => [
-                    'sports' => $request->preferred_sports ?? [],
                     'language' => 'vi',
                 ],
                 'status' => 'active',
@@ -189,6 +189,7 @@ class AuthController extends Controller
                     'name' => $user->name,
                     'phone' => $user->phone,
                     'phone_verified' => true,
+                    'preferred_sports' => $user->preferred_sports,
                     'preferences' => $user->preferences,
                 ],
                 'token' => $token,
@@ -233,7 +234,7 @@ class AuthController extends Controller
 
         $phone = User::formatVietnamesePhone($request->phone);
         
-        $user = User::where('phone', $phone)->first();
+        $user = User::findByPhone($phone);
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
@@ -270,6 +271,7 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'phone' => $user->phone,
                 'phone_verified' => $user->isPhoneVerified(),
+                'preferred_sports' => $user->preferred_sports,
                 'preferences' => $user->preferences,
             ],
             'token' => $token,
@@ -304,6 +306,7 @@ class AuthController extends Controller
                 'phone' => $user->phone,
                 'phone_verified' => $user->isPhoneVerified(),
                 'email' => $user->email,
+                'preferred_sports' => $user->preferred_sports,
                 'preferences' => $user->preferences,
                 'created_at' => $user->created_at,
             ],

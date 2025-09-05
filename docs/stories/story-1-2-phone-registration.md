@@ -37,24 +37,24 @@
 - [ ] API endpoints respond correctly to all scenarios
 
 ## Tasks
-- [ ] **Task 1.2.1**: Setup database migrations for user accounts
-- [ ] **Task 1.2.2**: Implement Laravel API endpoints for user registration  
-- [ ] **Task 1.2.3**: Setup SMS verification service integration
+- [x] **Task 1.2.1**: Setup database migrations for user accounts
+- [x] **Task 1.2.2**: Implement Laravel API endpoints for user registration  
+- [x] **Task 1.2.3**: Setup SMS verification service integration
 - [ ] **Task 1.2.4**: Create Flutter registration UI screens
 - [ ] **Task 1.2.5**: Implement phone number validation and formatting
 - [ ] **Task 1.2.6**: Add Vietnamese localization for registration flow
-- [ ] **Task 1.2.7**: Implement API authentication and session management
+- [x] **Task 1.2.7**: Implement API authentication and session management
 - [ ] **Task 1.2.8**: Create comprehensive tests for registration flow
 
 ## Subtasks
 
 ### Task 1.2.1: Setup database migrations for user accounts
-- [ ] Create users table migration with phone encryption
-- [ ] Add phone_verified_at timestamp column
-- [ ] Create phone_verifications table for SMS codes
-- [ ] Add indexes for phone number lookups
-- [ ] Setup proper foreign key relationships
-- [ ] Add user profile fields (name, preferred sports)
+- [x] Create users table migration with phone encryption
+- [x] Add phone_verified_at timestamp column
+- [x] Create phone_verifications table for SMS codes
+- [x] Add indexes for phone number lookups
+- [x] Setup proper foreign key relationships
+- [x] Add user profile fields (name, preferred sports)
 
 ### Task 1.2.2: Implement Laravel API endpoints for user registration
 - [x] Create User model with phone number encryption
@@ -66,13 +66,13 @@
 - [x] Create proper API response formats
 
 ### Task 1.2.3: Setup SMS verification service integration  
-- [ ] Research and select Vietnamese SMS provider (Viettel/VNPT)
-- [ ] Configure SMS service credentials and environment variables
-- [ ] Create SMS service class with send/verify methods
-- [ ] Implement 6-digit verification code generation
-- [ ] Add SMS template with Vietnamese language
-- [ ] Setup SMS sending queue for reliability
-- [ ] Add SMS delivery status tracking
+- [x] Research and select Vietnamese SMS provider (Viettel/VNPT)
+- [x] Configure SMS service credentials and environment variables
+- [x] Create SMS service class with send/verify methods
+- [x] Implement 6-digit verification code generation
+- [x] Add SMS template with Vietnamese language
+- [x] Setup SMS sending queue for reliability
+- [x] Add SMS delivery status tracking
 
 ### Task 1.2.4: Create Flutter registration UI screens
 - [ ] Design registration screen with Vietnamese branding
@@ -100,12 +100,12 @@
 - [ ] Create help text in Vietnamese
 
 ### Task 1.2.7: Implement API authentication and session management
-- [ ] Configure Laravel Sanctum for mobile app authentication
-- [ ] Create login API endpoint (`POST /api/auth/login`)
-- [ ] Implement JWT token generation and validation
-- [ ] Add token refresh mechanism
-- [ ] Create logout functionality
-- [ ] Setup middleware for protected routes
+- [x] Configure Laravel Sanctum for mobile app authentication
+- [x] Create login API endpoint (`POST /api/auth/login`)
+- [x] Implement JWT token generation and validation
+- [x] Add token refresh mechanism
+- [x] Create logout functionality
+- [x] Setup middleware for protected routes
 
 ### Task 1.2.8: Create comprehensive tests for registration flow
 - [ ] Unit tests for phone number validation
@@ -128,11 +128,26 @@
 - 
 
 ### File List:
-- (Files will be added as implementation progresses)
+- api/database/migrations/2025_09_05_100618_add_phone_encryption_to_users_table.php
+- api/database/migrations/2025_09_04_140237_create_phone_verifications_table.php (existing)
+- api/app/Models/User.php (updated with phone encryption and preferred_sports)
+- api/app/Models/PhoneVerification.php (existing)
+- api/app/Http/Controllers/Api/AuthController.php (updated with phone encryption support)
+- api/app/Services/SmsService.php (existing)
+- api/routes/api.php (existing)
 
 ### Completion Notes:
 - Story 1.2 created based on PRD Epic 1 requirements
-- Ready for validation and implementation
+- Task 1.2.1 completed: Database migrations for user accounts with phone encryption support
+- Task 1.2.2 completed: Laravel API endpoints with phone encryption and Vietnamese validation
+- Task 1.2.3 completed: SMS verification service with Vietnamese providers already implemented
+- Task 1.2.7 completed: Laravel Sanctum authentication and session management already implemented
+- phone_verifications table already existed and is suitable for SMS verification
+- Added phone_hash column for secure phone number indexing (encrypted phone stored in phone column)
+- Added preferred_sports JSON field for Vietnamese sports preferences
+- Updated User model with phone encryption/decryption mutators and accessors
+- Updated AuthController to use phone_hash for secure lookups
+- SmsService supports Viettel, VNPT, and Twilio with Vietnamese messaging
 - All acceptance criteria from PRD incorporated
 - Vietnamese market requirements addressed
 - Technical approach aligned with existing architecture
@@ -141,3 +156,7 @@
 | Date | Change | Developer |
 |------|--------|-----------|
 | 2025-09-04 | Story 1.2 created from PRD Epic 1 requirements | James (Dev) |
+| 2025-09-05 | Completed Task 1.2.1: Database migrations for user accounts | James (Dev) |
+| 2025-09-05 | Completed Task 1.2.2: Laravel API endpoints with phone encryption | James (Dev) |
+| 2025-09-05 | Completed Task 1.2.3: SMS verification service integration (existing) | James (Dev) |
+| 2025-09-05 | Completed Task 1.2.7: API authentication and session management (existing) | James (Dev) |
