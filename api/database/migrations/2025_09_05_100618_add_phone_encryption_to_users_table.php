@@ -11,14 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Step 1: Drop the existing index on phone first
         Schema::table('users', function (Blueprint $table) {
-            // Add phone_hash for secure indexing (phone column will be encrypted at app level)
-            $table->string('phone_hash', 64)->nullable()->after('phone'); // For secure indexing
+            $table->dropIndex(['phone']);
+        });
+        
+        // Step 2: Modify phone column to TEXT and add new fields
+        Schema::table('users', function (Blueprint $table) {
+            // Change phone column to TEXT to support encrypted data
+            $table->text('phone')->change();
+            
+            // Add phone_hash for secure indexing
+            $table->string('phone_hash', 64)->nullable()->after('phone');
             
             // Add sports preferences for Vietnamese market
-            $table->json('preferred_sports')->nullable()->after('preferences'); // Vietnamese sports preferences
-            
-            // Add indexes for phone hash lookup
+            $table->json('preferred_sports')->nullable()->after('preferences');
+        });
+        
+        // Step 3: Add new indexes
+        Schema::table('users', function (Blueprint $table) {
             $table->index(['phone_hash']);
             $table->unique(['phone_hash']); // Make phone_hash unique for lookups
         });
