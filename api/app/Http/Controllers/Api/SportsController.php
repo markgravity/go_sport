@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\SportsConfigService;
+use App\Services\SportsConfigurationService;
+use App\SportType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -12,14 +13,14 @@ class SportsController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $sports = SportsConfigService::getAvailableSports();
+            $sports = SportsConfigurationService::getSupportedSports();
             
             return response()->json([
                 'success' => true,
                 'data' => [
                     'sports' => $sports,
-                    'popular' => SportsConfigService::getPopularSports(),
-                    'categories' => SportsConfigService::getSportsByCategory()
+                    'options' => SportType::options(),
+                    'sport_types' => SportType::values()
                 ]
             ]);
         } catch (\Exception $e) {
@@ -34,7 +35,7 @@ class SportsController extends Controller
     public function show(string $sportType): JsonResponse
     {
         try {
-            $config = SportsConfigService::getSportConfig($sportType);
+            $config = SportsConfigurationService::getSportConfig($sportType);
             
             if (!$config) {
                 return response()->json([
@@ -59,7 +60,7 @@ class SportsController extends Controller
     public function getDefaults(string $sportType): JsonResponse
     {
         try {
-            $defaults = SportsConfigService::getSportDefaults($sportType);
+            $defaults = SportsConfigurationService::getDefaultSettings($sportType);
             
             if (empty($defaults)) {
                 return response()->json([
@@ -84,8 +85,7 @@ class SportsController extends Controller
     public function getLocationSuggestions(string $sportType, Request $request): JsonResponse
     {
         try {
-            $city = $request->query('city');
-            $locations = SportsConfigService::getLocationSuggestions($sportType, $city);
+            $locations = SportsConfigurationService::getTypicalLocations($sportType);
             
             return response()->json([
                 'success' => true,
@@ -95,6 +95,25 @@ class SportsController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Không thể lấy gợi ý địa điểm',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getNameSuggestions(string $sportType, Request $request): JsonResponse
+    {
+        try {
+            $city = $request->query('city', '');
+            $nameSuggestions = SportsConfigurationService::getVietnameseNameSuggestions($sportType, $city);
+            
+            return response()->json([
+                'success' => true,
+                'data' => $nameSuggestions
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể lấy gợi ý tên nhóm',
                 'error' => $e->getMessage()
             ], 500);
         }

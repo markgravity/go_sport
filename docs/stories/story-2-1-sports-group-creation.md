@@ -38,7 +38,7 @@
 ## Tasks
 - [x] **Task 2.1.1**: Create Group database model and migrations
 - [x] **Task 2.1.2**: Implement sports configuration with Vietnamese defaults
-- [ ] **Task 2.1.3**: Create group creation API endpoints
+- [x] **Task 2.1.3**: Create group creation API endpoints
 - [ ] **Task 2.1.4**: Build Flutter group creation UI screens
 - [ ] **Task 2.1.5**: Add image upload and content filtering
 - [ ] **Task 2.1.6**: Implement role assignment system
@@ -66,13 +66,13 @@
 - [x] Implement sport icons and visual branding
 
 ### Task 2.1.3: Create group creation API endpoints
-- [ ] Create POST /api/groups endpoint với validation
-- [ ] Add GET /api/sports endpoint for available sports
-- [ ] Implement group ownership validation
-- [ ] Add proper error handling với Vietnamese messages
-- [ ] Create group settings management endpoints
-- [ ] Add rate limiting for group creation
-- [ ] Implement group discovery API endpoints
+- [x] Create POST /api/groups endpoint với validation
+- [x] Add GET /api/sports endpoint for available sports
+- [x] Implement group ownership validation
+- [x] Add proper error handling với Vietnamese messages
+- [x] Create group settings management endpoints
+- [x] Add rate limiting for group creation
+- [x] Implement group discovery API endpoints
 
 ### Task 2.1.4: Build Flutter group creation UI screens
 - [ ] Create GroupCreationScreen với sport selection
@@ -136,10 +136,14 @@
 - api/app/Models/Group.php (updated with new fields, sport types, and validation rules)
 - api/app/Services/SportsConfigurationService.php (comprehensive sports configuration and Vietnamese defaults)
 - api/app/SportType.php (enum for type-safe sport types with Vietnamese names)
+- api/app/Http/Controllers/Api/GroupController.php (updated with new validation and sports integration)
+- api/app/Http/Controllers/Api/SportsController.php (comprehensive sports API endpoints)
+- api/routes/api.php (updated with new endpoints and rate limiting)
 
 ### Completion Notes:
 - **Task 2.1.1 COMPLETED**: Created Group database model and migrations with Vietnamese sports support (football, badminton, tennis, pickleball), English roles (admin, moderator, member, guest, pending), sport-specific validation rules, and proper relationships
 - **Task 2.1.2 COMPLETED**: Implemented comprehensive sports configuration service with Vietnamese defaults, location suggestions, naming conventions, sport-specific settings, and type-safe SportType enum
+- **Task 2.1.3 COMPLETED**: Created comprehensive group creation API endpoints with Vietnamese error handling, rate limiting (5 groups/hour), sports integration, group ownership validation, and complete CRUD operations
 
 ### Change Log:
 | Date | Change | Developer |

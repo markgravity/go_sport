@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
 use App\Models\User;
-use App\Services\SportsConfigService;
+use App\Services\SportsConfigurationService;
+use App\SportType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,7 +74,7 @@ class GroupController extends Controller
                 'description' => 'nullable|string|max:1000',
                 'sport_type' => [
                     'required',
-                    Rule::in(['bong_da', 'bong_ro', 'cau_long', 'tennis', 'bong_chuyen', 'bong_ban', 'chay_bo', 'dap_xe', 'boi_loi', 'yoga', 'gym', 'khac'])
+                    Rule::in(SportType::values())
                 ],
                 'skill_level' => [
                     'required',
@@ -96,7 +97,7 @@ class GroupController extends Controller
             ]);
 
             // Get sport defaults for validation and fallbacks
-            $sportDefaults = SportsConfigService::getSportDefaults($validated['sport_type']);
+            $sportDefaults = SportsConfigurationService::getDefaultSettings($validated['sport_type']);
             
             // Apply sport-specific defaults if not provided
             if (!isset($validated['max_members'])) {

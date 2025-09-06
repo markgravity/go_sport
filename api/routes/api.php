@@ -32,6 +32,7 @@ Route::prefix('sports')->group(function () {
     Route::get('/{sportType}', [SportsController::class, 'show']);
     Route::get('/{sportType}/defaults', [SportsController::class, 'getDefaults']);
     Route::get('/{sportType}/locations', [SportsController::class, 'getLocationSuggestions']);
+    Route::get('/{sportType}/name-suggestions', [SportsController::class, 'getNameSuggestions']);
 });
 
 // Public routes (no authentication required)
@@ -70,8 +71,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('/account', [UserController::class, 'deleteAccount']);
     });
 
-    // Group management
-    Route::apiResource('groups', GroupController::class);
+    // Group management  
+    Route::apiResource('groups', GroupController::class)->except(['store']);
+    Route::post('groups', [GroupController::class, 'store'])->middleware('throttle:5,60'); // 5 groups per hour
     Route::prefix('groups/{group}')->group(function () {
         Route::post('/join', [GroupController::class, 'join']);
         Route::post('/leave', [GroupController::class, 'leave']);
