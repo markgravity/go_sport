@@ -33,11 +33,35 @@ class SmsService
     }
 
     /**
+     * Send SMS password reset code to Vietnamese phone number
+     */
+    public function sendPasswordResetCode(string $phone, string $code): bool
+    {
+        $message = $this->buildPasswordResetMessage($code);
+
+        return match ($this->provider) {
+            'viettel' => $this->sendViaViettel($phone, $message),
+            'vnpt' => $this->sendViaVNPT($phone, $message),
+            'twilio' => $this->sendViaTwilio($phone, $message),
+            'log' => $this->sendViaLog($phone, $message),
+            default => $this->sendViaLog($phone, $message),
+        };
+    }
+
+    /**
      * Build Vietnamese verification message
      */
     protected function buildVerificationMessage(string $code): string
     {
         return "Ma xac thuc Go Sport cua ban la: {$code}. Ma co hieu luc trong 5 phut. Khong chia se ma nay voi bat ki ai.";
+    }
+
+    /**
+     * Build Vietnamese password reset message
+     */
+    protected function buildPasswordResetMessage(string $code): string
+    {
+        return "Ma dat lai mat khau Go Sport: {$code}. Ma co hieu luc trong 15 phut. Khong chia se ma nay voi bat ki ai.";
     }
 
     /**

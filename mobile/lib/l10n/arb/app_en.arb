@@ -77,6 +77,10 @@
   "@password": {
     "description": "Password field label"
   },
+  "newPassword": "New Password",
+  "@newPassword": {
+    "description": "New password field label"
+  },
   "confirmPassword": "Confirm Password",
   "@confirmPassword": {
     "description": "Confirm password field label"
@@ -283,5 +287,46 @@
   "logout": "Logout",
   "@logout": {
     "description": "Logout button text"
+  },
+
+  "resetPassword": "Reset Password",
+  "@resetPassword": {
+    "description": "Reset password screen title"
+  },
+  "enterPhoneToReset": "Enter your phone number to reset your password",
+  "@enterPhoneToReset": {
+    "description": "Password reset instruction text"
+  },
+  "sendResetCode": "Send Reset Code",
+  "@sendResetCode": {
+    "description": "Send reset code button text"
+  },
+  "resetCodeSent": "Password reset code sent to your phone",
+  "@resetCodeSent": {
+    "description": "Reset code sent success message"
+  },
+  "enterResetCode": "Enter Reset Code",
+  "@enterResetCode": {
+    "description": "Enter reset code instruction"
+  },
+  "enterNewPassword": "Enter your new password",
+  "@enterNewPassword": {
+    "description": "New password instruction"
+  },
+  "confirmNewPassword": "Confirm new password",
+  "@confirmNewPassword": {
+    "description": "Confirm new password instruction"
+  },
+  "updatePassword": "Update Password",
+  "@updatePassword": {
+    "description": "Update password button text"
+  },
+  "passwordResetSuccess": "Password reset successful! Please login with your new password.",
+  "@passwordResetSuccess": {
+    "description": "Password reset success message"
+  },
+  "backToLogin": "Back to Login",
+  "@backToLogin": {
+    "description": "Back to login button text"
   }
 }

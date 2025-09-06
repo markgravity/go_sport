@@ -4,6 +4,7 @@ import '../services/auth_service.dart';
 import '../widgets/loading_overlay.dart';
 import '../../../core/utils/phone_validator.dart';
 import 'phone_registration_screen.dart';
+import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -315,7 +316,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Spacer(),
                       TextButton(
                         onPressed: () {
-                          // TODO: Navigate to forgot password
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ForgotPasswordScreen(),
+                            ),
+                          );
                         },
                         child: Text(
                           l10n.forgotPassword,
