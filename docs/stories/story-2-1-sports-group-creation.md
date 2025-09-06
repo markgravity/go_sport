@@ -39,7 +39,7 @@
 - [x] **Task 2.1.1**: Create Group database model and migrations
 - [x] **Task 2.1.2**: Implement sports configuration with Vietnamese defaults
 - [x] **Task 2.1.3**: Create group creation API endpoints
-- [ ] **Task 2.1.4**: Build Flutter group creation UI screens
+- [x] **Task 2.1.4**: Build Flutter group creation UI screens
 - [ ] **Task 2.1.5**: Add image upload and content filtering
 - [ ] **Task 2.1.6**: Implement role assignment system
 - [ ] **Task 2.1.7**: Add Vietnamese localization for group management
@@ -75,13 +75,13 @@
 - [x] Implement group discovery API endpoints
 
 ### Task 2.1.4: Build Flutter group creation UI screens
-- [ ] Create GroupCreationScreen với sport selection
-- [ ] Add group name input với Vietnamese character support
-- [ ] Implement sport-specific settings forms
-- [ ] Create group avatar selection interface
-- [ ] Add visibility settings toggle (public/private)
-- [ ] Implement location input với Vietnamese addresses
-- [ ] Create group creation confirmation flow
+- [x] Create GroupCreationScreen với sport selection
+- [x] Add group name input với Vietnamese character support
+- [x] Implement sport-specific settings forms
+- [x] Create group avatar selection interface
+- [x] Add visibility settings toggle (public/private)
+- [x] Implement location input với Vietnamese addresses
+- [x] Create group creation confirmation flow
 
 ### Task 2.1.5: Add image upload and content filtering
 - [ ] Integrate image picker for group avatars
@@ -139,11 +139,15 @@
 - api/app/Http/Controllers/Api/GroupController.php (updated with new validation and sports integration)
 - api/app/Http/Controllers/Api/SportsController.php (comprehensive sports API endpoints)
 - api/routes/api.php (updated with new endpoints and rate limiting)
+- mobile/lib/features/groups/models/sport.dart (updated to work with new API structure)
+- mobile/lib/features/groups/services/groups_service.dart (enhanced with name suggestions API)
+- mobile/lib/features/groups/screens/create_group_screen.dart (enhanced with Vietnamese name suggestions)
 
 ### Completion Notes:
 - **Task 2.1.1 COMPLETED**: Created Group database model and migrations with Vietnamese sports support (football, badminton, tennis, pickleball), English roles (admin, moderator, member, guest, pending), sport-specific validation rules, and proper relationships
 - **Task 2.1.2 COMPLETED**: Implemented comprehensive sports configuration service with Vietnamese defaults, location suggestions, naming conventions, sport-specific settings, and type-safe SportType enum
 - **Task 2.1.3 COMPLETED**: Created comprehensive group creation API endpoints with Vietnamese error handling, rate limiting (5 groups/hour), sports integration, group ownership validation, and complete CRUD operations
+- **Task 2.1.4 COMPLETED**: Built comprehensive Flutter group creation UI with 3-step wizard, sport selection, Vietnamese name suggestions, sport-specific settings, location input, and confirmation flow
 
 ### Change Log:
 | Date | Change | Developer |

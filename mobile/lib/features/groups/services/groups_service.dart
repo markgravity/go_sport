@@ -70,6 +70,24 @@ class GroupsService {
     }
   }
 
+  static Future<List<String>> getNameSuggestions(String sportType, {String? city}) async {
+    try {
+      final queryParams = city != null ? {'city': city} : <String, String>{};
+      final response = await ApiClient.instance.get(
+        '$_sportsUrl/$sportType/name-suggestions',
+        queryParameters: queryParams,
+      );
+      
+      if (response.data['success'] == true) {
+        return List<String>.from(response.data['data']);
+      } else {
+        throw Exception('Failed to load name suggestions: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching name suggestions: $e');
+    }
+  }
+
   // Group management methods
   static Future<List<Group>> getGroups({
     String? sportType,

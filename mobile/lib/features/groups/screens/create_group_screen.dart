@@ -37,6 +37,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   bool _isLoading = false;
   List<Sport> _availableSports = [];
+  List<String> _nameSuggestions = [];
+  bool _showNameSuggestions = false;
 
   @override
   void initState() {
@@ -72,6 +74,23 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       // Apply sport defaults
       _maxMembers ??= sport.defaults.maxMembers;
     });
+    _loadNameSuggestions();
+  }
+
+  Future<void> _loadNameSuggestions() async {
+    if (_selectedSportType == null) return;
+    
+    try {
+      final suggestions = await GroupsService.getNameSuggestions(
+        _selectedSportType!,
+        city: _city.isNotEmpty ? _city : null,
+      );
+      setState(() {
+        _nameSuggestions = suggestions;
+      });
+    } catch (e) {
+      // Silently fail for name suggestions
+    }
   }
 
   void _nextStep() {
@@ -233,23 +252,67 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Group name
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Tên nhóm *',
-                hintText: 'VD: Nhóm cầu lông Hà Nội',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Vui lòng nhập tên nhóm';
-                }
-                if (value.trim().length < 3) {
-                  return 'Tên nhóm phải có ít nhất 3 ký tự';
-                }
-                return null;
-              },
-              onChanged: (value) => _groupName = value.trim(),
+            // Group name with suggestions
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Tên nhóm *',
+                    hintText: 'VD: Nhóm cầu lông Hà Nội',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: _nameSuggestions.isNotEmpty 
+                      ? IconButton(
+                          icon: Icon(_showNameSuggestions ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
+                          onPressed: () => setState(() => _showNameSuggestions = !_showNameSuggestions),
+                        )
+                      : null,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Vui lòng nhập tên nhóm';
+                    }
+                    if (value.trim().length < 3) {
+                      return 'Tên nhóm phải có ít nhất 3 ký tự';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) => setState(() => _groupName = value.trim()),
+                ),
+                if (_showNameSuggestions && _nameSuggestions.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Theme.of(context).colorScheme.outline),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Text(
+                            'Gợi ý tên nhóm:',
+                            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                        ...(_nameSuggestions.take(5).map((suggestion) => ListTile(
+                          dense: true,
+                          title: Text(suggestion),
+                          onTap: () {
+                            setState(() {
+                              _groupName = suggestion;
+                              _showNameSuggestions = false;
+                            });
+                          },
+                        ))),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
             ),
             const SizedBox(height: 16),
 
