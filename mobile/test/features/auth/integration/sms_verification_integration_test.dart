@@ -293,7 +293,7 @@ void main() {
 
         // Test password mismatch
         await tester.enterText(find.byType(TextFormField).first, 'Nguyễn Văn A');
-        await tester.enterText(find.byType(TextFormField).at(1, '0323456789');
+        await tester.enterText(find.byType(TextFormField).at(1), '0323456789');
         await tester.enterText(find.byType(TextFormField).at(2), 'password123');
         await tester.enterText(find.byType(TextFormField).at(3), 'different123');
         await tester.pumpAndSettle();
@@ -424,7 +424,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Check semantic tree is properly built
-        final semantics = tester.binding.pipelineOwner.semanticsOwner!;
+        final semantics = tester.binding.rootPipelineOwner.semanticsOwner!;
         expect(semantics.rootSemanticsNode, isNotNull);
 
         // Key interactive elements should be accessible

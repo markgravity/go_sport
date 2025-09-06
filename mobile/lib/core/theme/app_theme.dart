@@ -64,7 +64,7 @@ class AppTheme {
     // Card theme
     cardTheme: CardTheme(
       elevation: 2,
-      shadowColor: Colors.black.withOpacity(0.1),
+      shadowColor: Colors.black.withValues(alpha: 0.1),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
@@ -77,7 +77,7 @@ class AppTheme {
         backgroundColor: primaryBlue,
         foregroundColor: Colors.white,
         elevation: 2,
-        shadowColor: Colors.black.withOpacity(0.15),
+        shadowColor: Colors.black.withValues(alpha: 0.15),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -178,7 +178,7 @@ class AppTheme {
     
     cardTheme: CardTheme(
       elevation: 2,
-      shadowColor: Colors.black.withOpacity(0.3),
+      shadowColor: Colors.black.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
@@ -271,7 +271,7 @@ class AppTheme {
       bodySmall: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w400,
-        color: baseColor.withOpacity(0.8),
+        color: baseColor.withValues(alpha: 0.8),
         height: 1.4,
       ),
       
@@ -291,7 +291,7 @@ class AppTheme {
       labelSmall: TextStyle(
         fontSize: 11,
         fontWeight: FontWeight.w500,
-        color: baseColor.withOpacity(0.8),
+        color: baseColor.withValues(alpha: 0.8),
         height: 1.4,
       ),
     );

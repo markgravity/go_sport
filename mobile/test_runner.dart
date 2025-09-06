@@ -1,6 +1,7 @@
 #!/usr/bin/env dart
 // Test runner script for Go Sport mobile app
 // Run with: dart test_runner.dart
+// ignore_for_file: avoid_print
 
 import 'dart:io';
 

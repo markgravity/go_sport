@@ -24,8 +24,7 @@ final firebaseUserProvider = StreamProvider<firebase_auth.User?>((ref) {
 // Authentication State Provider
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   final firebaseAuthService = ref.watch(firebaseAuthServiceProvider);
-  final apiService = ref.watch(apiServiceProvider);
-  return AuthNotifier(firebaseAuthService, apiService);
+  return AuthNotifier(firebaseAuthService);
 });
 
 // Authentication State
@@ -103,9 +102,8 @@ class AuthState {
 // Authentication State Notifier
 class AuthNotifier extends StateNotifier<AuthState> {
   final FirebaseAuthService _firebaseAuthService;
-  final ApiService _apiService;
 
-  AuthNotifier(this._firebaseAuthService, this._apiService) 
+  AuthNotifier(this._firebaseAuthService) 
       : super(const AuthState()) {
     _initializeAuth();
   }

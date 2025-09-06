@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/network/network_status.dart';
 
 class ConnectionStatusIndicator extends ConsumerWidget {
-  const ConnectionStatusIndicator({Key? key}) : super(key: key);
+  const ConnectionStatusIndicator({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -155,9 +155,9 @@ class ConnectionStatusAppBar extends ConsumerWidget implements PreferredSizeWidg
   final AppBar appBar;
   
   const ConnectionStatusAppBar({
-    Key? key,
+    super.key,
     required this.appBar,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

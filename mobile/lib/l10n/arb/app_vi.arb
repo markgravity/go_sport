@@ -221,5 +221,67 @@
   "successVerificationCodeSent": "Mã xác thực mới đã được gửi",
   "@successVerificationCodeSent": {
     "description": "Code sent success message"
+  },
+  
+  "login": "Đăng nhập",
+  "@login": {
+    "description": "Login button text"
+  },
+  "welcomeBack": "Chào mừng trở lại",
+  "@welcomeBack": {
+    "description": "Login screen welcome message"
+  },
+  "loginToYourAccount": "Đăng nhập vào tài khoản Go Sport của bạn",
+  "@loginToYourAccount": {
+    "description": "Login instruction text"
+  },
+  "rememberMe": "Ghi nhớ đăng nhập",
+  "@rememberMe": {
+    "description": "Remember me checkbox label"
+  },
+  "forgotPassword": "Quên mật khẩu?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "loginWithBiometric": "Đăng nhập bằng sinh trắc học",
+  "@loginWithBiometric": {
+    "description": "Biometric login button text"
+  },
+  "dontHaveAccount": "Chưa có tài khoản? ",
+  "@dontHaveAccount": {
+    "description": "Register prompt text"
+  },
+  "registerNow": "Đăng ký ngay",
+  "@registerNow": {
+    "description": "Register link text"
+  },
+  
+  "logoutConfirmation": "Xác nhận đăng xuất",
+  "@logoutConfirmation": {
+    "description": "Logout confirmation dialog title"
+  },
+  "logoutConfirmationMessage": "Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?",
+  "@logoutConfirmationMessage": {
+    "description": "Logout confirmation dialog message"
+  },
+  "sessionTimeout": "Phiên làm việc hết hạn",
+  "@sessionTimeout": {
+    "description": "Session timeout dialog title"
+  },
+  "sessionTimeoutMessage": "Phiên làm việc của bạn sẽ hết hạn do không hoạt động. Bạn có muốn gia hạn phiên làm việc?",
+  "@sessionTimeoutMessage": {
+    "description": "Session timeout dialog message"
+  },
+  "logoutNow": "Đăng xuất ngay",
+  "@logoutNow": {
+    "description": "Logout now button text"
+  },
+  "extendSession": "Gia hạn phiên",
+  "@extendSession": {
+    "description": "Extend session button text"
+  },
+  "logout": "Đăng xuất",
+  "@logout": {
+    "description": "Logout button text"
   }
 }

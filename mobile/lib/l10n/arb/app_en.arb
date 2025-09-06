@@ -221,5 +221,67 @@
   "successVerificationCodeSent": "New verification code has been sent",
   "@successVerificationCodeSent": {
     "description": "Code sent success message"
+  },
+  
+  "login": "Login",
+  "@login": {
+    "description": "Login button text"
+  },
+  "welcomeBack": "Welcome Back",
+  "@welcomeBack": {
+    "description": "Login screen welcome message"
+  },
+  "loginToYourAccount": "Login to your Go Sport account",
+  "@loginToYourAccount": {
+    "description": "Login instruction text"
+  },
+  "rememberMe": "Remember me",
+  "@rememberMe": {
+    "description": "Remember me checkbox label"
+  },
+  "forgotPassword": "Forgot password?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  "loginWithBiometric": "Login with biometric",
+  "@loginWithBiometric": {
+    "description": "Biometric login button text"
+  },
+  "dontHaveAccount": "Don't have an account? ",
+  "@dontHaveAccount": {
+    "description": "Register prompt text"
+  },
+  "registerNow": "Register now",
+  "@registerNow": {
+    "description": "Register link text"
+  },
+  
+  "logoutConfirmation": "Logout Confirmation",
+  "@logoutConfirmation": {
+    "description": "Logout confirmation dialog title"
+  },
+  "logoutConfirmationMessage": "Are you sure you want to logout from your account?",
+  "@logoutConfirmationMessage": {
+    "description": "Logout confirmation dialog message"
+  },
+  "sessionTimeout": "Session Timeout",
+  "@sessionTimeout": {
+    "description": "Session timeout dialog title"
+  },
+  "sessionTimeoutMessage": "Your session will expire soon due to inactivity. Would you like to extend your session?",
+  "@sessionTimeoutMessage": {
+    "description": "Session timeout dialog message"
+  },
+  "logoutNow": "Logout Now",
+  "@logoutNow": {
+    "description": "Logout now button text"
+  },
+  "extendSession": "Extend Session",
+  "@extendSession": {
+    "description": "Extend session button text"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button text"
   }
 }

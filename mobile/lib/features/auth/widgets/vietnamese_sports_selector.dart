@@ -130,10 +130,10 @@ class VietnameseSportsSelector extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFF2E5BDA).withOpacity(0.05),
+              color: const Color(0xFF2E5BDA).withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: const Color(0xFF2E5BDA).withOpacity(0.2),
+                color: const Color(0xFF2E5BDA).withValues(alpha: 0.2),
               ),
             ),
             child: Column(

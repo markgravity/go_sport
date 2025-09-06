@@ -228,7 +228,7 @@ class _SmsVerificationScreenState extends State<SmsVerificationScreen> {
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF2E5BDA).withOpacity(0.1),
+                    color: const Color(0xFF2E5BDA).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(40),
                   ),
                   child: const Icon(

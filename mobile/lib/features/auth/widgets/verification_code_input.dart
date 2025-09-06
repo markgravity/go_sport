@@ -163,14 +163,14 @@ class _VerificationCodeInputState extends State<VerificationCodeInput> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: _controllers[index].text.isNotEmpty
-                        ? const Color(0xFF2E5BDA).withOpacity(0.3)
+                        ? const Color(0xFF2E5BDA).withValues(alpha: 0.3)
                         : Colors.grey.shade300,
                     width: 1,
                   ),
                 ),
                 filled: true,
                 fillColor: _controllers[index].text.isNotEmpty
-                    ? const Color(0xFF2E5BDA).withOpacity(0.05)
+                    ? const Color(0xFF2E5BDA).withValues(alpha: 0.05)
                     : Colors.grey.shade50,
               ),
               onChanged: (value) => _onChanged(value, index),

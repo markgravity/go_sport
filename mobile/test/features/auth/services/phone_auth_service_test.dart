@@ -3,7 +3,6 @@ import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:go_sport_app/features/auth/services/phone_auth_service.dart';
 import 'package:go_sport_app/features/auth/services/api_service.dart';
-import 'package:go_sport_app/features/auth/models/user_model.dart';
 
 // Generate mocks
 @GenerateMocks([ApiService])
@@ -143,6 +142,7 @@ void main() {
 
         expect(successMessage, isNotNull);
         expect(successMessage, contains('5 phút')); // Minutes from expires_in
+        expect(errorMessage, isNull); // Should be no error
         
         // In debug mode, should include development code
         // This would need to be tested with proper debug flag mocking

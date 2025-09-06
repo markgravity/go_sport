@@ -29,7 +29,7 @@ class GoSportLogo extends StatelessWidget {
             borderRadius: BorderRadius.circular(size * 0.2),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.15),
+                color: Colors.black.withValues(alpha: 0.15),
                 blurRadius: size * 0.15,
                 spreadRadius: 2,
                 offset: Offset(0, size * 0.05),
@@ -61,7 +61,7 @@ class GoSportLogo extends StatelessWidget {
           width: iconSize * 1.2,
           height: iconSize * 1.2,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             shape: BoxShape.circle,
           ),
         ),
@@ -85,7 +85,7 @@ class GoSportLogo extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -123,7 +123,7 @@ class GoSportLogo extends StatelessWidget {
           style: TextStyle(
             fontSize: textSize * 0.45,
             fontWeight: FontWeight.w500,
-            color: _getTextColor(theme.colorScheme).withOpacity(0.8),
+            color: _getTextColor(theme.colorScheme).withValues(alpha: 0.8),
             letterSpacing: 0.5,
           ),
         ),

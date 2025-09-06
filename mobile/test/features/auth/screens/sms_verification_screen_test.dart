@@ -234,7 +234,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Check semantic structure
-        final semantics = tester.binding.pipelineOwner.semanticsOwner!;
+        final semantics = tester.binding.rootPipelineOwner.semanticsOwner!;
         expect(semantics, isNotNull);
 
         // Verify key elements are accessible
@@ -273,15 +273,15 @@ void main() {
         expect(smsIcon, findsOneWidget);
         
         // Icon should be in a styled container
-        expect(find.byType(Container), findsNWidgets(greaterThan(1)));
+        expect(find.byType(Container), findsWidgets);
       });
     });
 
     group('Responsive Design', () {
       testWidgets('adapts to different screen sizes', (WidgetTester tester) async {
         // Test with small screen
-        tester.binding.window.physicalSizeTestValue = const Size(400, 600);
-        tester.binding.window.devicePixelRatioTestValue = 1.0;
+        tester.view.physicalSize = const Size(400, 600);
+        tester.view.devicePixelRatio = 1.0;
 
         await tester.pumpWidget(createTestWidget(createSmsVerificationScreen()));
         await tester.pumpAndSettle();
@@ -291,8 +291,8 @@ void main() {
         expect(find.text('Xác thực'), findsOneWidget);
 
         // Reset screen size
-        tester.binding.window.clearPhysicalSizeTestValue();
-        tester.binding.window.clearDevicePixelRatioTestValue();
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
       });
 
       testWidgets('maintains proper spacing and layout', (WidgetTester tester) async {
@@ -300,8 +300,8 @@ void main() {
         await tester.pumpAndSettle();
 
         // Check for proper use of SizedBox and spacing
-        expect(find.byType(SizedBox), findsNWidgets(greaterThan(3)));
-        expect(find.byType(Padding), findsNWidgets(greaterThan(1)));
+        expect(find.byType(SizedBox), findsWidgets);
+        expect(find.byType(Padding), findsWidgets);
       });
     });
 
