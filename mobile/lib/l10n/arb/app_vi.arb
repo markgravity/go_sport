@@ -77,6 +77,10 @@
   "@password": {
     "description": "Password field label"
   },
+  "newPassword": "Mật khẩu mới",
+  "@newPassword": {
+    "description": "New password field label"
+  },
   "confirmPassword": "Xác nhận mật khẩu",
   "@confirmPassword": {
     "description": "Confirm password field label"
@@ -283,5 +287,199 @@
   "logout": "Đăng xuất",
   "@logout": {
     "description": "Logout button text"
+  },
+
+  "resetPassword": "Đặt Lại Mật Khẩu",
+  "@resetPassword": {
+    "description": "Reset password screen title"
+  },
+  "enterPhoneToReset": "Nhập số điện thoại để đặt lại mật khẩu",
+  "@enterPhoneToReset": {
+    "description": "Password reset instruction text"
+  },
+  "sendResetCode": "Gửi Mã Đặt Lại",
+  "@sendResetCode": {
+    "description": "Send reset code button text"
+  },
+  "resetCodeSent": "Mã đặt lại mật khẩu đã được gửi đến số điện thoại của bạn",
+  "@resetCodeSent": {
+    "description": "Reset code sent success message"
+  },
+  "enterResetCode": "Nhập Mã Đặt Lại",
+  "@enterResetCode": {
+    "description": "Enter reset code instruction"
+  },
+  "enterNewPassword": "Nhập mật khẩu mới",
+  "@enterNewPassword": {
+    "description": "New password instruction"
+  },
+  "confirmNewPassword": "Xác nhận mật khẩu mới",
+  "@confirmNewPassword": {
+    "description": "Confirm new password instruction"
+  },
+  "updatePassword": "Cập Nhật Mật Khẩu",
+  "@updatePassword": {
+    "description": "Update password button text"
+  },
+  "passwordResetSuccess": "Đặt lại mật khẩu thành công! Vui lòng đăng nhập với mật khẩu mới.",
+  "@passwordResetSuccess": {
+    "description": "Password reset success message"
+  },
+  "backToLogin": "Trở Về Đăng Nhập",
+  "@backToLogin": {
+    "description": "Back to login button text"
+  },
+
+  "createGroup": "Tạo Nhóm",
+  "@createGroup": {
+    "description": "Create group screen title"
+  },
+  "chooseGroupSport": "Chọn môn thể thao",
+  "@chooseGroupSport": {
+    "description": "Choose sport for group"
+  },
+  "popularSports": "Phổ biến",
+  "@popularSports": {
+    "description": "Popular sports section"
+  },
+  "allSports": "Tất cả môn thể thao",
+  "@allSports": {
+    "description": "All sports section"
+  },
+  "selected": "Đã chọn",
+  "@selected": {
+    "description": "Selected indicator"
+  },
+  "basicInfo": "Thông tin cơ bản",
+  "@basicInfo": {
+    "description": "Basic information section"
+  },
+  "groupName": "Tên nhóm",
+  "@groupName": {
+    "description": "Group name field"
+  },
+  "groupNameRequired": "Tên nhóm *",
+  "@groupNameRequired": {
+    "description": "Required group name field"
+  },
+  "groupNameHint": "VD: Nhóm cầu lông Hà Nội",
+  "@groupNameHint": {
+    "description": "Group name hint"
+  },
+  "groupDescription": "Mô tả nhóm",
+  "@groupDescription": {
+    "description": "Group description field"
+  },
+  "groupDescriptionHint": "Mô tả về nhóm của bạn...",
+  "@groupDescriptionHint": {
+    "description": "Group description hint"
+  },
+  "skillLevel": "Trình độ",
+  "@skillLevel": {
+    "description": "Skill level field"
+  },
+  "skillLevelRequired": "Trình độ *",
+  "@skillLevelRequired": {
+    "description": "Required skill level field"
+  },
+  "cityRequired": "Thành phố *",
+  "@cityRequired": {
+    "description": "Required city field"
+  },
+  "cityHint": "VD: Hà Nội",
+  "@cityHint": {
+    "description": "City hint"
+  },
+  "district": "Quận/Huyện",
+  "@district": {
+    "description": "District field"
+  },
+  "districtHint": "VD: Ba Đình",
+  "@districtHint": {
+    "description": "District hint"
+  },
+  "locationRequired": "Địa điểm *",
+  "@locationRequired": {
+    "description": "Required location field"
+  },
+  "locationHint": "VD: Sân cầu lông ABC, 123 Đường XYZ",
+  "@locationHint": {
+    "description": "Location hint"
+  },
+  "groupSettings": "Cài đặt nhóm",
+  "@groupSettings": {
+    "description": "Group settings section"
+  },
+  "maxMembers": "Số thành viên tối đa",
+  "@maxMembers": {
+    "description": "Max members field"
+  },
+  "membershipFee": "Phí thành viên (VND/tháng)",
+  "@membershipFee": {
+    "description": "Membership fee field"
+  },
+  "privacy": "Quyền riêng tư",
+  "@privacy": {
+    "description": "Privacy settings"
+  },
+  "publicGroup": "Công khai",
+  "@publicGroup": {
+    "description": "Public group option"
+  },
+  "privateGroup": "Riêng tư",
+  "@privateGroup": {
+    "description": "Private group option"
+  },
+  "publicGroupDesc": "Mọi người có thể tìm thấy và tham gia nhóm",
+  "@publicGroupDesc": {
+    "description": "Public group description"
+  },
+  "privateGroupDesc": "Chỉ có thể tham gia bằng lời mời hoặc yêu cầu",
+  "@privateGroupDesc": {
+    "description": "Private group description"
+  },
+  "groupRules": "Nội quy nhóm",
+  "@groupRules": {
+    "description": "Group rules section"
+  },
+  "addRule": "Thêm quy tắc",
+  "@addRule": {
+    "description": "Add rule button"
+  },
+  "enterNewRule": "Nhập quy tắc mới...",
+  "@enterNewRule": {
+    "description": "Enter new rule hint"
+  },
+  "back": "Trở lại",
+  "@back": {
+    "description": "Back button"
+  },
+  "continue": "Tiếp tục",
+  "@continue": {
+    "description": "Continue button"
+  },
+  "finish": "Hoàn thành",
+  "@finish": {
+    "description": "Finish button"
+  },
+  "errorMinGroupName": "Tên nhóm phải có ít nhất 3 ký tự",
+  "@errorMinGroupName": {
+    "description": "Minimum group name length error"
+  },
+  "errorEnterGroupName": "Vui lòng nhập tên nhóm",
+  "@errorEnterGroupName": {
+    "description": "Enter group name error"
+  },
+  "errorSelectSkillLevel": "Vui lòng chọn trình độ",
+  "@errorSelectSkillLevel": {
+    "description": "Select skill level error"
+  },
+  "errorEnterCity": "Vui lòng nhập thành phố",
+  "@errorEnterCity": {
+    "description": "Enter city error"
+  },
+  "errorEnterLocation": "Vui lòng nhập địa điểm",
+  "@errorEnterLocation": {
+    "description": "Enter location error"
   }
 }

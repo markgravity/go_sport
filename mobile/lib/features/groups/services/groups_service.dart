@@ -1,0 +1,249 @@
+import 'dart:convert';
+import '../../../core/network/api_client.dart';
+import '../models/group.dart';
+import '../models/sport.dart';
+
+class GroupsService {
+  static const String _baseUrl = '/groups';
+  static const String _sportsUrl = '/sports';
+
+  // Sports configuration methods
+  static Future<List<Sport>> getAvailableSports() async {
+    try {
+      final response = await ApiClient.instance.get(_sportsUrl);
+      
+      if (response.data['success'] == true) {
+        final Map<String, dynamic> sportsData = response.data['data']['sports'];
+        return sportsData.entries.map((entry) => 
+          Sport.fromJson(entry.key, entry.value)
+        ).toList();
+      } else {
+        throw Exception('Failed to load sports: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching sports: $e');
+    }
+  }
+
+  static Future<Sport> getSportDetails(String sportType) async {
+    try {
+      final response = await ApiClient.instance.get('$_sportsUrl/$sportType');
+      
+      if (response.data['success'] == true) {
+        return Sport.fromJson(sportType, response.data['data']);
+      } else {
+        throw Exception('Failed to load sport details: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching sport details: $e');
+    }
+  }
+
+  static Future<SportDefaults> getSportDefaults(String sportType) async {
+    try {
+      final response = await ApiClient.instance.get('$_sportsUrl/$sportType/defaults');
+      
+      if (response.data['success'] == true) {
+        return SportDefaults.fromJson(response.data['data']);
+      } else {
+        throw Exception('Failed to load sport defaults: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching sport defaults: $e');
+    }
+  }
+
+  static Future<List<String>> getLocationSuggestions(String sportType, {String? city}) async {
+    try {
+      final queryParams = city != null ? {'city': city} : <String, String>{};
+      final response = await ApiClient.instance.get(
+        '$_sportsUrl/$sportType/locations',
+        queryParameters: queryParams,
+      );
+      
+      if (response.data['success'] == true) {
+        return List<String>.from(response.data['data']);
+      } else {
+        throw Exception('Failed to load location suggestions: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching location suggestions: $e');
+    }
+  }
+
+  // Group management methods
+  static Future<List<Group>> getGroups({
+    String? sportType,
+    String? city,
+    String? privacy,
+    String? search,
+    int page = 1,
+    int perPage = 15,
+  }) async {
+    try {
+      final queryParams = <String, dynamic>{
+        'page': page,
+        'per_page': perPage,
+      };
+      
+      if (sportType != null) queryParams['sport_type'] = sportType;
+      if (city != null) queryParams['city'] = city;
+      if (privacy != null) queryParams['privacy'] = privacy;
+      if (search != null) queryParams['search'] = search;
+
+      final response = await ApiClient.instance.get(
+        _baseUrl,
+        queryParameters: queryParams,
+      );
+      
+      if (response.data['success'] == true) {
+        final List<dynamic> groupsData = response.data['data']['data'];
+        return groupsData.map((json) => Group.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load groups: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching groups: $e');
+    }
+  }
+
+  static Future<Group> createGroup({
+    required String name,
+    String? description,
+    required String sportType,
+    required String skillLevel,
+    required String location,
+    required String city,
+    String? district,
+    double? latitude,
+    double? longitude,
+    Map<String, dynamic>? schedule,
+    int? maxMembers,
+    double? membershipFee,
+    required String privacy,
+    String? avatar,
+    Map<String, dynamic>? rules,
+  }) async {
+    try {
+      final data = {
+        'name': name,
+        'description': description,
+        'sport_type': sportType,
+        'skill_level': skillLevel,
+        'location': location,
+        'city': city,
+        'district': district,
+        'latitude': latitude,
+        'longitude': longitude,
+        'schedule': schedule,
+        'max_members': maxMembers,
+        'membership_fee': membershipFee,
+        'privacy': privacy,
+        'avatar': avatar,
+        'rules': rules,
+      };
+
+      // Remove null values
+      data.removeWhere((key, value) => value == null);
+
+      final response = await ApiClient.instance.post(_baseUrl, data);
+      
+      if (response.data['success'] == true) {
+        return Group.fromJson(response.data['data']);
+      } else {
+        throw Exception('Failed to create group: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error creating group: $e');
+    }
+  }
+
+  static Future<Group> getGroup(int groupId) async {
+    try {
+      final response = await ApiClient.instance.get('$_baseUrl/$groupId');
+      
+      if (response.data['success'] == true) {
+        return Group.fromJson(response.data['data']);
+      } else {
+        throw Exception('Failed to load group: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching group: $e');
+    }
+  }
+
+  static Future<Group> updateGroup(
+    int groupId,
+    Map<String, dynamic> updates,
+  ) async {
+    try {
+      final response = await ApiClient.instance.put('$_baseUrl/$groupId', updates);
+      
+      if (response.data['success'] == true) {
+        return Group.fromJson(response.data['data']);
+      } else {
+        throw Exception('Failed to update group: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error updating group: $e');
+    }
+  }
+
+  static Future<void> deleteGroup(int groupId) async {
+    try {
+      final response = await ApiClient.instance.delete('$_baseUrl/$groupId');
+      
+      if (response.data['success'] != true) {
+        throw Exception('Failed to delete group: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error deleting group: $e');
+    }
+  }
+
+  static Future<Map<String, dynamic>> joinGroup(int groupId, {String? joinReason}) async {
+    try {
+      final data = joinReason != null ? {'join_reason': joinReason} : <String, dynamic>{};
+      final response = await ApiClient.instance.post('$_baseUrl/$groupId/join', data);
+      
+      if (response.data['success'] == true) {
+        return {
+          'message': response.data['message'],
+          'status': response.data['data']['status'],
+          'role': response.data['data']['role'],
+        };
+      } else {
+        throw Exception('Failed to join group: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error joining group: $e');
+    }
+  }
+
+  static Future<void> leaveGroup(int groupId) async {
+    try {
+      final response = await ApiClient.instance.post('$_baseUrl/$groupId/leave');
+      
+      if (response.data['success'] != true) {
+        throw Exception('Failed to leave group: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error leaving group: $e');
+    }
+  }
+
+  static Future<List<User>> getGroupMembers(int groupId) async {
+    try {
+      final response = await ApiClient.instance.get('$_baseUrl/$groupId/members');
+      
+      if (response.data['success'] == true) {
+        final List<dynamic> membersData = response.data['data'];
+        return membersData.map((json) => User.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load members: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching members: $e');
+    }
+  }
+}

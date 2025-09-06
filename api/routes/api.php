@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\SportsController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,12 +26,24 @@ use Illuminate\Support\Facades\Route;
 // Health Check Endpoint
 Route::get('/health', [HealthController::class, 'check']);
 
+// Sports configuration (public endpoint)
+Route::prefix('sports')->group(function () {
+    Route::get('/', [SportsController::class, 'index']);
+    Route::get('/{sportType}', [SportsController::class, 'show']);
+    Route::get('/{sportType}/defaults', [SportsController::class, 'getDefaults']);
+    Route::get('/{sportType}/locations', [SportsController::class, 'getLocationSuggestions']);
+});
+
 // Public routes (no authentication required)
 Route::prefix('auth')->group(function () {
     // SMS-based authentication with rate limiting
     Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login'])->middleware('rate_limit_login');
+    
+    // Password reset with rate limiting
+    Route::post('/password-reset-request', [AuthController::class, 'requestPasswordReset'])->middleware('rate_limit_login');
+    Route::post('/password-reset-confirm', [AuthController::class, 'confirmPasswordReset']);
     
     // Firebase-based authentication (recommended)
     Route::post('/firebase/authenticate', [FirebaseAuthController::class, 'authenticate']);
