@@ -261,8 +261,8 @@ class AuthController extends Controller
         // Revoke existing tokens for security
         $user->tokens()->delete();
 
-        // Create new token
-        $token = $user->createToken('mobile-app')->plainTextToken;
+        // Create new token with 7-day expiration
+        $token = $user->createToken('mobile-app', ['*'], now()->addDays(7))->plainTextToken;
 
         return response()->json([
             'success' => true,
@@ -276,6 +276,7 @@ class AuthController extends Controller
                 'preferences' => $user->preferences,
             ],
             'token' => $token,
+            'expires_in' => 7 * 24 * 60 * 60, // 7 days in seconds
         ]);
     }
 
@@ -311,6 +312,27 @@ class AuthController extends Controller
                 'preferences' => $user->preferences,
                 'created_at' => $user->created_at,
             ],
+        ]);
+    }
+
+    /**
+     * Refresh authentication token
+     */
+    public function refresh(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        // Revoke current token
+        $request->user()->currentAccessToken()->delete();
+
+        // Create new token with 7-day expiration
+        $token = $user->createToken('mobile-app', ['*'], now()->addDays(7))->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Token đã được làm mới',
+            'token' => $token,
+            'expires_in' => 7 * 24 * 60 * 60, // 7 days in seconds
         ]);
     }
 }

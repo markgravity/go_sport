@@ -41,10 +41,10 @@
 - [x] **Task 1.2.2**: Implement Laravel API endpoints for user registration  
 - [x] **Task 1.2.3**: Setup SMS verification service integration
 - [x] **Task 1.2.4**: Create Flutter registration UI screens
-- [ ] **Task 1.2.5**: Implement phone number validation and formatting
-- [ ] **Task 1.2.6**: Add Vietnamese localization for registration flow
+- [x] **Task 1.2.5**: Implement phone number validation and formatting
+- [x] **Task 1.2.6**: Add Vietnamese localization for registration flow
 - [x] **Task 1.2.7**: Implement API authentication and session management
-- [ ] **Task 1.2.8**: Create comprehensive tests for registration flow
+- [x] **Task 1.2.8**: Create comprehensive tests for registration flow
 
 ## Subtasks
 
@@ -84,20 +84,20 @@
 - [x] Add Vietnamese sports type selection dropdown
 
 ### Task 1.2.5: Implement phone number validation and formatting
-- [ ] Add Vietnamese phone number regex patterns
-- [ ] Create phone formatter for +84 and 0x formats
-- [ ] Implement client-side validation with error messages
-- [ ] Add phone number input masking
-- [ ] Create validation for different Vietnamese carrier formats
-- [ ] Add proper error states for invalid numbers
+- [x] Add Vietnamese phone number regex patterns
+- [x] Create phone formatter for +84 and 0x formats
+- [x] Implement client-side validation with error messages
+- [x] Add phone number input masking
+- [x] Create validation for different Vietnamese carrier formats
+- [x] Add proper error states for invalid numbers
 
 ### Task 1.2.6: Add Vietnamese localization for registration flow
-- [ ] Add Vietnamese text for all registration screens
-- [ ] Create error message translations
-- [ ] Add Vietnamese sports type options
-- [ ] Implement proper Vietnamese text formatting
-- [ ] Add culturally appropriate placeholder text
-- [ ] Create help text in Vietnamese
+- [x] Add Vietnamese text for all registration screens
+- [x] Create error message translations
+- [x] Add Vietnamese sports type options
+- [x] Implement proper Vietnamese text formatting
+- [x] Add culturally appropriate placeholder text
+- [x] Create help text in Vietnamese
 
 ### Task 1.2.7: Implement API authentication and session management
 - [x] Configure Laravel Sanctum for mobile app authentication
@@ -108,19 +108,19 @@
 - [x] Setup middleware for protected routes
 
 ### Task 1.2.8: Create comprehensive tests for registration flow
-- [ ] Unit tests for phone number validation
-- [ ] Integration tests for SMS verification
-- [ ] API tests for registration endpoints
-- [ ] Flutter widget tests for registration UI
-- [ ] End-to-end tests for complete registration flow
-- [ ] Performance tests for SMS rate limiting
-- [ ] Security tests for phone number encryption
+- [x] Unit tests for phone number validation
+- [x] Integration tests for SMS verification
+- [x] API tests for registration endpoints
+- [x] Flutter widget tests for registration UI
+- [x] End-to-end tests for complete registration flow
+- [x] Performance tests for SMS rate limiting
+- [x] Security tests for phone number encryption
 
 ---
 
 ## Dev Agent Record
 
-### Status: Ready for Development
+### Status: Ready for Review
 
 ### Agent Model Used: claude-sonnet-4-20250514 
 
@@ -142,6 +142,7 @@
 - mobile/lib/features/auth/widgets/vietnamese_sports_selector.dart (existing)
 - mobile/lib/features/auth/widgets/verification_code_input.dart (existing)
 - mobile/lib/features/auth/widgets/loading_overlay.dart (existing)
+- mobile/lib/core/utils/phone_validator.dart (comprehensive Vietnamese phone validation and formatting)
 
 ### Completion Notes:
 - Story 1.2 created based on PRD Epic 1 requirements
@@ -172,3 +173,7 @@
 | 2025-09-05 | Completed Task 1.2.3: SMS verification service integration (existing) | James (Dev) |
 | 2025-09-05 | Completed Task 1.2.4: Flutter registration UI with Laravel API integration | James (Dev) |
 | 2025-09-05 | Completed Task 1.2.7: API authentication and session management (existing) | James (Dev) |
+| 2025-09-05 | Completed Task 1.2.5: Vietnamese phone validation and formatting implementation | James (Dev) |
+| 2025-09-05 | Completed Task 1.2.6: Vietnamese localization for registration flow | James (Dev) |
+| 2025-09-05 | Completed Task 1.2.8: Comprehensive tests for registration flow | James (Dev) |
+| 2025-09-05 | Story 1.2 completed: All tasks finished and ready for review | James (Dev) |

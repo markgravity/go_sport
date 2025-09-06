@@ -27,10 +27,10 @@ Route::get('/health', [HealthController::class, 'check']);
 
 // Public routes (no authentication required)
 Route::prefix('auth')->group(function () {
-    // Legacy SMS-based authentication (deprecated)
+    // SMS-based authentication with rate limiting
     Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode']);
     Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('rate_limit_login');
     
     // Firebase-based authentication (recommended)
     Route::post('/firebase/authenticate', [FirebaseAuthController::class, 'authenticate']);
@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     
     // Authentication management
     Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::post('/auth/refresh', [AuthController::class, 'refresh']);
     Route::get('/auth/me', [AuthController::class, 'me']);
     
     // Firebase authentication management
