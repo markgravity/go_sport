@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../services/auth_service.dart';
+import '../presentation/auth_wrapper.dart';
 import '../widgets/loading_overlay.dart';
 import '../../../core/utils/phone_validator.dart';
 import 'phone_registration_screen.dart';
@@ -19,9 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _authService = AuthService();
   
-  bool _isLoading = false;
   bool _showPassword = false;
   bool _rememberMe = false;
   String _phoneNumber = '';
@@ -40,82 +37,37 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-    if (kDebugMode) {
-      print('_login method called');
-    }
-    
     if (!_formKey.currentState!.validate()) {
-      if (kDebugMode) {
-        print('Form validation failed');
-      }
       return;
     }
 
     final normalizedPhone = VietnamesePhoneValidator.normalizePhoneNumber(_phoneNumber);
+    final authController = AuthController(context);
     
-    if (kDebugMode) {
-      print('Form validated, normalized phone: $normalizedPhone');
-      print('Password length: ${_passwordController.text.length}');
+    try {
+      final success = await authController.loginWithPassword(
+        phoneNumber: normalizedPhone,
+        password: _passwordController.text,
+        rememberMe: _rememberMe,
+      );
+      
+      if (success) {
+        _showSuccess('Mã xác thực đã được gửi đến số điện thoại của bạn');
+      } else {
+        _showError('Đăng nhập thất bại. Vui lòng kiểm tra thông tin và thử lại.');
+      }
+    } catch (error) {
+      _showError('Có lỗi xảy ra khi đăng nhập: $error');
     }
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    if (kDebugMode) {
-      print('Calling _authService.login...');
-    }
-
-    await _authService.login(
-      phoneNumber: normalizedPhone,
-      password: _passwordController.text,
-      rememberMe: _rememberMe,
-      onSuccess: (user, message) {
-        setState(() {
-          _isLoading = false;
-        });
-        
-        _showSuccess(message);
-        
-        // Navigate back to welcome screen which will show authenticated state
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-          (route) => false,
-        );
-      },
-      onError: (error) {
-        setState(() {
-          _isLoading = false;
-        });
-        _showError(error);
-      },
-    );
   }
 
   Future<void> _loginWithBiometric() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    await _authService.loginWithBiometric(
-      onSuccess: (user, message) {
-        setState(() {
-          _isLoading = false;
-        });
-        
-        _showSuccess(message);
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-          (route) => false,
-        );
-      },
-      onError: (error) {
-        setState(() {
-          _isLoading = false;
-        });
-        _showError(error);
-      },
-    );
+    try {
+      // Biometric login would need to be implemented in AuthController
+      _showError('Đăng nhập sinh trắc học chưa được triển khai trong kiến trúc mới');
+    } catch (error) {
+      _showError('Có lỗi xảy ra với đăng nhập sinh trắc học: $error');
+    }
   }
 
   void _showError(String message) {
@@ -142,30 +94,50 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          l10n.login,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
+    return AuthWrapper(
+      builder: (context, authState) {
+        // Handle authentication state changes
+        if (authState.isAuthenticated) {
+          // Navigate to welcome screen when authenticated
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+              (route) => false,
+            );
+          });
+        }
+
+        if (authState.hasError) {
+          // Show error message
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _showError(authState.displayMessage ?? 'Có lỗi xảy ra');
+          });
+        }
+
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: Text(
+              l10n.login,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
-        ),
-      ),
-      body: LoadingOverlay(
-        isLoading: _isLoading,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+          body: LoadingOverlay(
+            isLoading: authState.isLoading,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   const SizedBox(height: 20),
                   
                   // Header
@@ -365,7 +337,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: _isLoading ? null : _login,
+                      onPressed: authState.isLoading ? null : _login,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF2E5BDA),
                         foregroundColor: Colors.white,
@@ -374,7 +346,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         elevation: 2,
                       ),
-                      child: _isLoading
+                      child: authState.isLoading
                           ? const SizedBox(
                               height: 20,
                               width: 20,
@@ -441,12 +413,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                ],
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

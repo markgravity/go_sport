@@ -13,6 +13,9 @@ import '../../features/auth/services/auth_service.dart';
 import '../../features/auth/services/firebase_auth_service.dart';
 import '../../features/auth/services/phone_auth_service.dart';
 
+// Auth Cubit (New architecture)
+import '../../features/auth/presentation/viewmodels/auth_cubit.dart';
+
 // Groups services
 import '../../features/groups/services/groups_service.dart';
 import '../../features/groups/services/image_upload_service.dart';
@@ -57,6 +60,12 @@ Future<void> _registerExistingServices() async {
   getIt.registerLazySingleton<FirebaseAuthService>(() => FirebaseAuthService());
   getIt.registerLazySingleton<PhoneAuthService>(() => PhoneAuthService());
   
+  // Auth Cubit - New Cubit architecture for authentication
+  getIt.registerFactory<AuthCubit>(() => AuthCubit(
+    firebaseAuthService: getIt<FirebaseAuthService>(),
+    apiService: getIt<ApiService>(),
+  ));
+  
   // Groups services - Handle group management and interactions
   getIt.registerLazySingleton<GroupsService>(() => GroupsService());
   getIt.registerLazySingleton<ImageUploadService>(() => ImageUploadService());
@@ -82,6 +91,10 @@ bool verifyDependencies() {
     getIt<FirebaseAuthService>();
     getIt<PhoneAuthService>();
     
+    // Test auth cubit (factory registration)
+    final authCubit = getIt<AuthCubit>();
+    authCubit.close(); // Close immediately after testing
+    
     // Test groups services
     getIt<GroupsService>();
     getIt<ImageUploadService>();
@@ -106,6 +119,9 @@ extension GetItExtension on GetIt {
   AuthService get authService => get<AuthService>();
   FirebaseAuthService get firebaseAuthService => get<FirebaseAuthService>();
   PhoneAuthService get phoneAuthService => get<PhoneAuthService>();
+  
+  // Auth Cubit - Factory registration (creates new instance each time)
+  AuthCubit createAuthCubit() => get<AuthCubit>();
   
   // Groups services
   GroupsService get groupsService => get<GroupsService>();

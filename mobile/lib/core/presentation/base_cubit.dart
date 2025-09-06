@@ -5,7 +5,7 @@ import 'base_state.dart';
 /// Base Cubit cho tất cả các Cubit trong ứng dụng Go Sport
 /// 
 /// Template này cung cấp:
-/// - Quản lý state với BaseState<T>
+/// - Quản lý state với BaseState[T]
 /// - Error handling thống nhất
 /// - Logging cho debug
 /// - Extension methods tiện ích
@@ -27,7 +27,7 @@ import 'base_state.dart';
 abstract class BaseCubit<T> extends Cubit<BaseState<T>> {
   BaseCubit() : super(const BaseState.initial()) {
     if (kDebugMode) {
-      debugPrint('${runtimeType} initialized');
+      debugPrint('$runtimeType initialized');
     }
   }
 
@@ -49,7 +49,7 @@ abstract class BaseCubit<T> extends Cubit<BaseState<T>> {
       final result = await operation();
       
       if (kDebugMode) {
-        debugPrint('${runtimeType} operation succeeded');
+        debugPrint('$runtimeType operation succeeded');
       }
       
       emit(BaseState.success(
@@ -61,7 +61,7 @@ abstract class BaseCubit<T> extends Cubit<BaseState<T>> {
                           _getVietnameseErrorMessage(error);
       
       if (kDebugMode) {
-        debugPrint('${runtimeType} operation failed: $error');
+        debugPrint('$runtimeType operation failed: $error');
         debugPrint('Stack trace: $stackTrace');
       }
       
@@ -148,14 +148,14 @@ abstract class BaseCubit<T> extends Cubit<BaseState<T>> {
     super.onChange(change);
     
     if (kDebugMode) {
-      debugPrint('${runtimeType} state changed: ${change.currentState.runtimeType} -> ${change.nextState.runtimeType}');
+      debugPrint('$runtimeType state changed: ${change.currentState.runtimeType} -> ${change.nextState.runtimeType}');
     }
   }
 
   @override
   Future<void> close() {
     if (kDebugMode) {
-      debugPrint('${runtimeType} closed');
+      debugPrint('$runtimeType closed');
     }
     return super.close();
   }
@@ -187,7 +187,7 @@ abstract class BaseListCubit<T> extends Cubit<ListState<T>> {
       emit(ListState.success(data: result));
       
       if (kDebugMode) {
-        debugPrint('${runtimeType} loaded ${result.length} items');
+        debugPrint('$runtimeType loaded ${result.length} items');
       }
     } catch (error) {
       final errorMessage = _getVietnameseErrorMessage(error);
@@ -199,7 +199,7 @@ abstract class BaseListCubit<T> extends Cubit<ListState<T>> {
       ));
       
       if (kDebugMode) {
-        debugPrint('${runtimeType} load failed: $error');
+        debugPrint('$runtimeType load failed: $error');
       }
     }
   }
@@ -287,7 +287,7 @@ abstract class BaseListCubit<T> extends Cubit<ListState<T>> {
     super.onChange(change);
     
     if (kDebugMode) {
-      debugPrint('${runtimeType} state changed: ${change.currentState.runtimeType} -> ${change.nextState.runtimeType}');
+      debugPrint('$runtimeType state changed: ${change.currentState.runtimeType} -> ${change.nextState.runtimeType}');
     }
   }
 }
