@@ -16,6 +16,10 @@ import '../../features/auth/services/phone_auth_service.dart';
 // Auth Cubit (New architecture)
 import '../../features/auth/presentation/viewmodels/auth_cubit.dart';
 
+// Groups Cubits (New architecture)
+import '../../features/groups/presentation/viewmodels/groups_cubit.dart';
+import '../../features/groups/presentation/viewmodels/create_group_cubit.dart';
+
 // Groups services
 import '../../features/groups/services/groups_service.dart';
 import '../../features/groups/services/image_upload_service.dart';
@@ -66,6 +70,10 @@ Future<void> _registerExistingServices() async {
     apiService: getIt<ApiService>(),
   ));
   
+  // Groups Cubits - New Cubit architecture for group management
+  getIt.registerFactory<GroupsCubit>(() => GroupsCubit());
+  getIt.registerFactory<CreateGroupCubit>(() => CreateGroupCubit());
+  
   // Groups services - Handle group management and interactions
   getIt.registerLazySingleton<GroupsService>(() => GroupsService());
   getIt.registerLazySingleton<ImageUploadService>(() => ImageUploadService());
@@ -95,6 +103,12 @@ bool verifyDependencies() {
     final authCubit = getIt<AuthCubit>();
     authCubit.close(); // Close immediately after testing
     
+    // Test groups cubits (factory registrations)
+    final groupsCubit = getIt<GroupsCubit>();
+    final createGroupCubit = getIt<CreateGroupCubit>();
+    groupsCubit.close(); // Close immediately after testing
+    createGroupCubit.close(); // Close immediately after testing
+    
     // Test groups services
     getIt<GroupsService>();
     getIt<ImageUploadService>();
@@ -122,6 +136,10 @@ extension GetItExtension on GetIt {
   
   // Auth Cubit - Factory registration (creates new instance each time)
   AuthCubit createAuthCubit() => get<AuthCubit>();
+  
+  // Groups Cubits - Factory registrations (create new instances each time)
+  GroupsCubit createGroupsCubit() => get<GroupsCubit>();
+  CreateGroupCubit createCreateGroupCubit() => get<CreateGroupCubit>();
   
   // Groups services
   GroupsService get groupsService => get<GroupsService>();
