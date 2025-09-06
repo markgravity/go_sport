@@ -13,6 +13,7 @@ class Group extends Model
 
     protected $fillable = [
         'name',
+        'vietnamese_name',
         'description',
         'sport_type',
         'skill_level',
@@ -23,23 +24,33 @@ class Group extends Model
         'longitude',
         'schedule',
         'max_members',
+        'min_players',
         'current_members',
         'membership_fee',
         'privacy',
+        'auto_approve_members',
         'status',
         'avatar',
         'rules',
+        'notification_hours_before',
+        'default_locations',
+        'sport_specific_settings',
         'creator_id'
     ];
 
     protected $casts = [
         'schedule' => 'array',
         'rules' => 'array',
+        'default_locations' => 'array',
+        'sport_specific_settings' => 'array',
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
         'membership_fee' => 'decimal:2',
         'max_members' => 'integer',
+        'min_players' => 'integer',
         'current_members' => 'integer',
+        'notification_hours_before' => 'integer',
+        'auto_approve_members' => 'boolean',
     ];
 
     public function creator(): BelongsTo
@@ -67,18 +78,10 @@ class Group extends Model
     public function getSportNameAttribute(): string
     {
         return match($this->sport_type) {
-            'cau_long' => 'Cầu lông',
-            'bong_da' => 'Bóng đá',
-            'bong_ro' => 'Bóng rổ',
+            'badminton' => 'Cầu lông',
+            'football' => 'Bóng đá',
             'tennis' => 'Tennis',
-            'bong_chuyen' => 'Bóng chuyền',
-            'bong_ban' => 'Bóng bàn',
-            'chay_bo' => 'Chạy bộ',
-            'dap_xe' => 'Đạp xe',
-            'boi_loi' => 'Bơi lội',
-            'yoga' => 'Yoga',
-            'gym' => 'Gym',
-            'khac' => 'Khác',
+            'pickleball' => 'Pickleball',
             default => $this->sport_type
         };
     }
@@ -116,23 +119,23 @@ class Group extends Model
     public function getDefaultSettings(): array
     {
         return match($this->sport_type) {
-            'cau_long' => [
+            'badminton' => [
                 'min_players' => 2,
                 'max_players' => 4,
                 'notification_hours' => 24,
                 'typical_locations' => ['Sân cầu lông', 'Trung tâm thể thao']
             ],
-            'bong_da' => [
+            'football' => [
                 'min_players' => 10,
                 'max_players' => 22,
                 'notification_hours' => 48,
                 'typical_locations' => ['Sân bóng đá', 'Sân cỏ nhân tạo']
             ],
-            'bong_ro' => [
-                'min_players' => 8,
-                'max_players' => 12,
-                'notification_hours' => 24,
-                'typical_locations' => ['Sân bóng rổ', 'Nhà thi đấu']
+            'pickleball' => [
+                'min_players' => 2,
+                'max_players' => 4,
+                'notification_hours' => 12,
+                'typical_locations' => ['Sân pickleball', 'Sân tennis đa năng']
             ],
             'tennis' => [
                 'min_players' => 2,
@@ -187,5 +190,72 @@ class Group extends Model
     public function canManage(User $user): bool
     {
         return $user->id === $this->creator_id || $this->isAdmin($user) || $this->isModerator($user);
+    }
+
+    /**
+     * Get validation rules for group creation
+     */
+    public static function getValidationRules(): array
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'vietnamese_name' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'sport_type' => 'required|in:football,badminton,tennis,pickleball',
+            'skill_level' => 'required|in:moi_bat_dau,trung_binh,gioi,chuyen_nghiep',
+            'location' => 'required|string|max:500',
+            'city' => 'required|string|max:100',
+            'district' => 'nullable|string|max:100',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'schedule' => 'nullable|array',
+            'max_members' => 'required|integer|min:2|max:50',
+            'min_players' => 'nullable|integer|min:1',
+            'membership_fee' => 'nullable|numeric|min:0',
+            'privacy' => 'required|in:cong_khai,rieng_tu',
+            'auto_approve_members' => 'nullable|boolean',
+            'status' => 'in:hoat_dong,tam_dung,dong_cua',
+            'rules' => 'nullable|array',
+            'notification_hours_before' => 'nullable|integer|min:1|max:168',
+            'default_locations' => 'nullable|array',
+            'sport_specific_settings' => 'nullable|array',
+        ];
+    }
+
+    /**
+     * Get sport-specific validation rules
+     */
+    public static function getSportSpecificValidationRules(string $sportType): array
+    {
+        $baseRules = self::getValidationRules();
+        
+        return match($sportType) {
+            'football' => array_merge($baseRules, [
+                'min_players' => 'nullable|integer|min:6|max:11',
+                'max_members' => 'required|integer|min:10|max:30',
+            ]),
+            'badminton' => array_merge($baseRules, [
+                'min_players' => 'nullable|integer|min:2|max:2',
+                'max_members' => 'required|integer|min:2|max:8',
+            ]),
+            'tennis' => array_merge($baseRules, [
+                'min_players' => 'nullable|integer|min:2|max:2',
+                'max_members' => 'required|integer|min:2|max:6',
+            ]),
+            'pickleball' => array_merge($baseRules, [
+                'min_players' => 'nullable|integer|min:2|max:2',
+                'max_members' => 'required|integer|min:2|max:8',
+            ]),
+            default => $baseRules
+        };
+    }
+
+    /**
+     * Validate Vietnamese name pattern
+     */
+    public static function isValidVietnameseName(string $name): bool
+    {
+        // Allow Vietnamese characters, numbers, spaces, and common punctuation
+        return preg_match('/^[\p{L}\p{N}\s\-_.()]+$/u', $name) === 1;
     }
 }

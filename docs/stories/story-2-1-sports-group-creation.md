@@ -36,7 +36,7 @@
 - [ ] Data persistence and retrieval work reliably
 
 ## Tasks
-- [ ] **Task 2.1.1**: Create Group database model and migrations
+- [x] **Task 2.1.1**: Create Group database model and migrations
 - [ ] **Task 2.1.2**: Implement sports configuration with Vietnamese defaults
 - [ ] **Task 2.1.3**: Create group creation API endpoints
 - [ ] **Task 2.1.4**: Build Flutter group creation UI screens
@@ -48,13 +48,13 @@
 ## Subtasks
 
 ### Task 2.1.1: Create Group database model and migrations
-- [ ] Create groups table with Vietnamese sports support
-- [ ] Add group_members pivot table with roles
-- [ ] Create group_settings table for customizations
-- [ ] Add proper indexes and foreign key constraints
-- [ ] Create Group Eloquent model with relationships
-- [ ] Add sport-specific validation rules
-- [ ] Implement group visibility and discovery settings
+- [x] Create groups table with Vietnamese sports support
+- [x] Add group_members pivot table with roles
+- [x] Create group_settings table for customizations
+- [x] Add proper indexes and foreign key constraints
+- [x] Create Group Eloquent model with relationships
+- [x] Add sport-specific validation rules
+- [x] Implement group visibility and discovery settings
 
 ### Task 2.1.2: Implement sports configuration with Vietnamese defaults
 - [ ] Define sport types (cầu lông, pickleball, bóng đá) với defaults
@@ -123,7 +123,7 @@
 
 ## Dev Agent Record
 
-### Status: Draft
+### Status: In Progress
 
 ### Agent Model Used: claude-sonnet-4-20250514 
 
@@ -131,10 +131,12 @@
 - 
 
 ### File List:
-- (To be populated as development progresses)
+- api/database/migrations/2025_09_06_110349_add_pickleball_and_vietnamese_settings_to_groups_table.php (modified groups table)
+- api/database/migrations/2025_09_06_110441_update_group_membership_roles_to_vietnamese.php (added guest role)
+- api/app/Models/Group.php (updated with new fields, sport types, and validation rules)
 
 ### Completion Notes:
-- (To be populated as tasks are completed)
+- **Task 2.1.1 COMPLETED**: Created Group database model and migrations with Vietnamese sports support (football, badminton, tennis, pickleball), English roles (admin, moderator, member, guest, pending), sport-specific validation rules, and proper relationships
 
 ### Change Log:
 | Date | Change | Developer |
