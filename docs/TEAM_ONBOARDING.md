@@ -139,6 +139,7 @@ return new GroupResource($group);
 
 #### Flutter Standards
 
+**Current State Management (Riverpod):**
 ```dart
 // Use proper naming conventions
 class ConnectionStatusIndicator extends ConsumerWidget {
@@ -150,10 +151,51 @@ class ConnectionStatusIndicator extends ConsumerWidget {
   }
 }
 
-// Use Riverpod for state management
+// Use Riverpod for state management (existing features)
 final apiClientProvider = Provider<ApiClient>((ref) {
   return ApiClient();
 });
+```
+
+**New State Management (Cubit Architecture - Migration):**
+```dart
+// Use Cubit for new features
+class UserProfileCubit extends BaseCubit<UserProfile> {
+  UserProfileCubit({required this.authService});
+  
+  final AuthService authService;
+  
+  Future<void> loadUserProfile() async {
+    await safeExecute(
+      () => authService.getCurrentUser(),
+      loadingMessage: "Đang tải thông tin cá nhân...",
+    );
+  }
+}
+
+// Use BlocBuilder for UI
+BlocBuilder<UserProfileCubit, BaseState<UserProfile>>(
+  builder: (context, state) {
+    return state.when(
+      initial: () => const SizedBox.shrink(),
+      loading: (_) => const CircularProgressIndicator(),
+      success: (data, _) => UserProfileWidget(user: data),
+      error: (message, _) => ErrorWidget(message: message),
+    );
+  },
+)
+```
+
+**Dependency Injection (GetIt):**
+```dart
+// Register services with GetIt
+await configureDependencies();
+
+// Access services anywhere
+final authService = getIt<AuthService>();
+
+// Or use extension
+final healthService = getIt.healthService;
 ```
 
 #### Vietnamese Localization
@@ -172,15 +214,35 @@ Text(AppLocalizations.of(context).welcomeMessage)
 
 ```
 lib/
-├── main.dart              # App entry point
-├── app/                   # App configuration
-├── core/                  # Core utilities
-│   ├── network/          # API client and networking
-│   ├── theme/            # App theming
-│   └── navigation/       # App navigation
-├── widgets/              # Reusable widgets
-└── l10n/                 # Localization files
+├── main.dart                    # App entry point
+├── app/                         # App configuration
+│   ├── app.dart                # AutoRoute app config
+│   ├── app_router.dart         # Route configuration
+│   └── guards/                 # Route guards
+├── core/                        # Core utilities
+│   ├── network/               # API client and networking
+│   ├── theme/                 # App theming
+│   ├── navigation/            # App navigation (GoRouter - legacy)
+│   ├── dependency_injection/  # GetIt DI setup
+│   └── presentation/          # Base architecture templates
+│       ├── base_cubit.dart    # Base Cubit class
+│       ├── base_state.dart    # Freezed state classes
+│       └── base_view_model.dart # MVVM templates
+├── features/                   # Feature modules
+│   └── auth/                  # Example: Authentication
+│       ├── screens/           # UI screens
+│       ├── providers/         # Riverpod providers (legacy)
+│       ├── cubits/            # Cubit state management (new)
+│       ├── services/          # Business logic services
+│       └── models/            # Data models
+├── widgets/                    # Reusable widgets
+└── l10n/                      # Localization files
 ```
+
+**Architecture Migration Status:**
+- ✅ **Foundation Ready**: Cubit, GetIt DI, AutoRoute
+- 🔄 **In Progress**: Coexistence with Riverpod 
+- ⏳ **Future**: Incremental feature migration
 
 ### Backend API (Laravel)
 
