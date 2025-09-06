@@ -37,7 +37,7 @@
 
 ## Tasks
 - [x] **Task 2.1.1**: Create Group database model and migrations
-- [ ] **Task 2.1.2**: Implement sports configuration with Vietnamese defaults
+- [x] **Task 2.1.2**: Implement sports configuration with Vietnamese defaults
 - [ ] **Task 2.1.3**: Create group creation API endpoints
 - [ ] **Task 2.1.4**: Build Flutter group creation UI screens
 - [ ] **Task 2.1.5**: Add image upload and content filtering
@@ -57,13 +57,13 @@
 - [x] Implement group visibility and discovery settings
 
 ### Task 2.1.2: Implement sports configuration with Vietnamese defaults
-- [ ] Define sport types (cầu lông, pickleball, bóng đá) với defaults
-- [ ] Create sport-specific minimum player requirements
-- [ ] Add default notification timing cho each sport
-- [ ] Implement location suggestions for common Vietnamese venues
-- [ ] Create sport-specific group settings templates
-- [ ] Add Vietnamese naming conventions for sports
-- [ ] Implement sport icons and visual branding
+- [x] Define sport types (cầu lông, pickleball, bóng đá) với defaults
+- [x] Create sport-specific minimum player requirements
+- [x] Add default notification timing cho each sport
+- [x] Implement location suggestions for common Vietnamese venues
+- [x] Create sport-specific group settings templates
+- [x] Add Vietnamese naming conventions for sports
+- [x] Implement sport icons and visual branding
 
 ### Task 2.1.3: Create group creation API endpoints
 - [ ] Create POST /api/groups endpoint với validation
@@ -134,9 +134,12 @@
 - api/database/migrations/2025_09_06_110349_add_pickleball_and_vietnamese_settings_to_groups_table.php (modified groups table)
 - api/database/migrations/2025_09_06_110441_update_group_membership_roles_to_vietnamese.php (added guest role)
 - api/app/Models/Group.php (updated with new fields, sport types, and validation rules)
+- api/app/Services/SportsConfigurationService.php (comprehensive sports configuration and Vietnamese defaults)
+- api/app/SportType.php (enum for type-safe sport types with Vietnamese names)
 
 ### Completion Notes:
 - **Task 2.1.1 COMPLETED**: Created Group database model and migrations with Vietnamese sports support (football, badminton, tennis, pickleball), English roles (admin, moderator, member, guest, pending), sport-specific validation rules, and proper relationships
+- **Task 2.1.2 COMPLETED**: Implemented comprehensive sports configuration service with Vietnamese defaults, location suggestions, naming conventions, sport-specific settings, and type-safe SportType enum
 
 ### Change Log:
 | Date | Change | Developer |
