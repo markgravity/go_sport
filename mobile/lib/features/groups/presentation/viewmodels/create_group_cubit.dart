@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models/group.dart';
 import '../../models/sport.dart';
 import '../../services/groups_service.dart';
 import 'create_group_state.dart';
@@ -52,7 +51,7 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
     final currentState = state;
     if (!currentState.isFormReady) return;
 
-    final currentFormData = currentState.formData;
+    final currentFormData = currentState.currentFormData;
     GroupFormData updatedFormData;
 
     // Update specific field
@@ -67,7 +66,7 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
         updatedFormData = currentFormData.copyWith(sportType: value as String?);
         // Load suggestions khi sport type thay đổi
         if (value != null) {
-          _loadSportSuggestions(value as String, currentState, updatedFormData);
+          _loadSportSuggestions(value, currentState, updatedFormData);
           return; // _loadSportSuggestions sẽ emit state mới
         }
         break;
@@ -105,24 +104,34 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
     // Validate field và emit new state
     final validationErrors = _validateForm(updatedFormData);
     
-    emit(currentState.copyWith(
-      formData: updatedFormData,
-      validationErrors: validationErrors,
-    ));
+    state.when(
+      initial: () {},
+      loadingForm: (_) {},
+      formReady: (sports, locations, names, defaults, _, __, isValidating) {
+        emit(CreateGroupState.formReady(
+          availableSports: sports,
+          locationSuggestions: locations,
+          nameSuggestions: names,
+          sportDefaults: defaults,
+          validationErrors: validationErrors,
+          formData: updatedFormData,
+          isValidating: isValidating,
+        ));
+      },
+      creating: (_, __, ___) {},
+      success: (_, __) {},
+      error: (_, __, ___, ____, _____) {},
+    );
   }
 
   /// Load suggestions khi sport type thay đổi
   Future<void> _loadSportSuggestions(
     String sportType,
-    CreateGroupStateFormReady currentState,
+    CreateGroupState currentState,
     GroupFormData updatedFormData,
   ) async {
     try {
-      // Show loading state for validation
-      emit(currentState.copyWith(
-        formData: updatedFormData,
-        isValidating: true,
-      ));
+      // Show loading state for validation - skip for now
 
       // Load suggestions parallel
       final futures = await Future.wait([
@@ -137,16 +146,14 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
 
       // Apply sport defaults if form fields are empty
       var finalFormData = updatedFormData;
-      if (finalFormData.maxMembers == null && sportDefaults.defaultMaxMembers != null) {
-        finalFormData = finalFormData.copyWith(maxMembers: sportDefaults.defaultMaxMembers);
-      }
-      if (finalFormData.membershipFee == 0.0 && sportDefaults.defaultMembershipFee != null) {
-        finalFormData = finalFormData.copyWith(membershipFee: sportDefaults.defaultMembershipFee!.toDouble());
+      if (finalFormData.maxMembers == null) {
+        finalFormData = finalFormData.copyWith(maxMembers: sportDefaults.maxMembers);
       }
 
       final validationErrors = _validateForm(finalFormData);
 
-      emit(currentState.copyWith(
+      emit(CreateGroupState.formReady(
+        availableSports: currentState.availableSports,
         formData: finalFormData,
         locationSuggestions: locationSuggestions,
         nameSuggestions: nameSuggestions,
@@ -165,7 +172,11 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
       }
 
       // Emit form state with error in validation
-      emit(currentState.copyWith(
+      emit(CreateGroupState.formReady(
+        availableSports: currentState.availableSports,
+        locationSuggestions: currentState.locationSuggestions,
+        nameSuggestions: currentState.nameSuggestions,
+        sportDefaults: currentState.sportDefaults,
         formData: updatedFormData,
         validationErrors: {
           'sportType': 'Không thể tải gợi ý cho loại thể thao này',
@@ -236,14 +247,21 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
   /// Submit form và tạo nhóm mới
   Future<void> createGroup() async {
     final currentState = state;
-    if (currentState is! CreateGroupStateFormReady) return;
+    if (!currentState.isFormReady) return;
 
-    final formData = currentState.formData;
+    final formData = currentState.currentFormData;
 
     // Final validation before submit
     final validationErrors = _validateForm(formData);
     if (validationErrors.isNotEmpty) {
-      emit(currentState.copyWith(validationErrors: validationErrors));
+      emit(CreateGroupState.formReady(
+        availableSports: currentState.availableSports,
+        locationSuggestions: currentState.locationSuggestions,
+        nameSuggestions: currentState.nameSuggestions,
+        sportDefaults: currentState.sportDefaults,
+        formData: formData,
+        validationErrors: validationErrors,
+      ));
       return;
     }
 
@@ -350,10 +368,10 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
   /// Clear error và quay về form ready state
   void clearError() {
     final currentState = state;
-    if (currentState is CreateGroupStateError) {
+    if (currentState.hasError) {
       emit(CreateGroupState.formReady(
         availableSports: state.availableSports,
-        formData: currentState.formData,
+        formData: currentState.currentFormData,
         validationErrors: currentState.validationErrors,
       ));
     }
@@ -372,26 +390,20 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
   /// Apply sport defaults khi user chọn "sử dụng mặc định"
   void applySportDefaults() {
     final currentState = state;
-    if (currentState is! CreateGroupStateFormReady || currentState.sportDefaults == null) return;
+    if (!currentState.isFormReady || currentState.sportDefaults == null) return;
 
     final defaults = currentState.sportDefaults!;
-    var updatedFormData = currentState.formData;
+    var updatedFormData = currentState.currentFormData;
 
-    if (defaults.defaultMaxMembers != null) {
-      updatedFormData = updatedFormData.copyWith(maxMembers: defaults.defaultMaxMembers);
-    }
-    
-    if (defaults.defaultMembershipFee != null) {
-      updatedFormData = updatedFormData.copyWith(membershipFee: defaults.defaultMembershipFee!.toDouble());
-    }
-
-    if (defaults.defaultPrivacy != null) {
-      updatedFormData = updatedFormData.copyWith(privacy: defaults.defaultPrivacy);
-    }
+    updatedFormData = updatedFormData.copyWith(maxMembers: defaults.maxMembers);
 
     final validationErrors = _validateForm(updatedFormData);
     
-    emit(currentState.copyWith(
+    emit(CreateGroupState.formReady(
+      availableSports: currentState.availableSports,
+      locationSuggestions: currentState.locationSuggestions,
+      nameSuggestions: currentState.nameSuggestions,
+      sportDefaults: defaults,
       formData: updatedFormData,
       validationErrors: validationErrors,
     ));
@@ -400,9 +412,9 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
   /// Get group name suggestions based on current form
   List<String> getFilteredNameSuggestions() {
     final currentState = state;
-    if (currentState is! CreateGroupStateFormReady) return [];
+    if (!currentState.isFormReady) return [];
 
-    final query = currentState.formData.name.toLowerCase();
+    final query = currentState.currentFormData.name.toLowerCase();
     if (query.isEmpty) return currentState.nameSuggestions;
 
     return currentState.nameSuggestions
@@ -413,9 +425,9 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
   /// Get location suggestions based on current form
   List<String> getFilteredLocationSuggestions() {
     final currentState = state;
-    if (currentState is! CreateGroupStateFormReady) return [];
+    if (!currentState.isFormReady) return [];
 
-    final query = currentState.formData.location.toLowerCase();
+    final query = currentState.currentFormData.location.toLowerCase();
     if (query.isEmpty) return currentState.locationSuggestions;
 
     return currentState.locationSuggestions

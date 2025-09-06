@@ -93,17 +93,17 @@ class GroupsCubit extends Cubit<GroupsState> {
       emit(GroupsState.loadingMore(
         currentGroups: currentState.currentGroups,
         loadingPage: nextPage,
-        searchQuery: currentState.searchQuery,
-        sportTypeFilter: currentState.sportTypeFilter,
-        cityFilter: currentState.cityFilter,
-        privacyFilter: currentState.privacyFilter,
+        searchQuery: currentState.currentSearchQuery,
+        sportTypeFilter: currentState.currentSportTypeFilter,
+        cityFilter: currentState.currentCityFilter,
+        privacyFilter: currentState.currentPrivacyFilter,
       ));
 
       final newGroups = await GroupsService.getGroups(
-        sportType: currentState.sportTypeFilter,
-        city: currentState.cityFilter,
-        privacy: currentState.privacyFilter,
-        search: currentState.searchQuery,
+        sportType: currentState.currentSportTypeFilter,
+        city: currentState.currentCityFilter,
+        privacy: currentState.currentPrivacyFilter,
+        search: currentState.currentSearchQuery,
         page: nextPage,
         perPage: _pageSize,
       );
@@ -132,7 +132,7 @@ class GroupsCubit extends Cubit<GroupsState> {
       // Rollback to previous loaded state with error message
       emit(GroupsState.error(
         message: _getVietnameseErrorMessage(error),
-        currentGroups: currentState.groups,
+        currentGroups: currentState.currentGroups,
         exception: error,
         errorCode: 'LOAD_MORE_ERROR',
       ));
@@ -141,13 +141,13 @@ class GroupsCubit extends Cubit<GroupsState> {
       await Future.delayed(const Duration(seconds: 2));
       if (!isClosed) {
         emit(GroupsState.loaded(
-          groups: currentState.groups,
-          searchQuery: currentState.searchQuery,
-          sportTypeFilter: currentState.sportTypeFilter,
-          cityFilter: currentState.cityFilter,
-          privacyFilter: currentState.privacyFilter,
+          groups: currentState.currentGroups,
+          searchQuery: currentState.currentSearchQuery,
+          sportTypeFilter: currentState.currentSportTypeFilter,
+          cityFilter: currentState.currentCityFilter,
+          privacyFilter: currentState.currentPrivacyFilter,
           currentPage: currentState.currentPage,
-          hasMorePages: currentState.hasMorePages,
+          hasMorePages: currentState.canLoadMore,
         ));
       }
     }

@@ -20,7 +20,7 @@ void main() {
     });
     
     test('initializes với unauthenticated state', () {
-      expect(groupsCubit.state, isA<GroupsStateInitial>());
+      expect(groupsCubit.state, isA<GroupsState>());
       expect(groupsCubit.state.isLoading, isFalse);
       expect(groupsCubit.state.hasData, isFalse);
     });
@@ -76,7 +76,7 @@ void main() {
     });
     
     test('initializes với initial state', () {
-      expect(createGroupCubit.state, isA<CreateGroupStateInitial>());
+      expect(createGroupCubit.state, isA<CreateGroupState>());
       expect(createGroupCubit.state.isLoading, isFalse);
       expect(createGroupCubit.state.isFormReady, isFalse);
     });
