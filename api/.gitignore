@@ -22,3 +22,14 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+\n+# Ignore Laravel cache and storage contents, but keep placeholder .gitignore files
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+
+/storage/*
+!/storage/app/
+!/storage/framework/
+!/storage/logs/
+!/storage/**/.gitignore
+\n+# Common temporary files in storage
+/storage/**/*.tmp
