@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../widgets/loading_overlay.dart';
 import '../../../core/utils/phone_validator.dart';
 import 'phone_registration_screen.dart';
 import 'forgot_password_screen.dart';
+import '../../../main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,15 +40,31 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
+    if (kDebugMode) {
+      print('_login method called');
+    }
+    
     if (!_formKey.currentState!.validate()) {
+      if (kDebugMode) {
+        print('Form validation failed');
+      }
       return;
     }
 
     final normalizedPhone = VietnamesePhoneValidator.normalizePhoneNumber(_phoneNumber);
+    
+    if (kDebugMode) {
+      print('Form validated, normalized phone: $normalizedPhone');
+      print('Password length: ${_passwordController.text.length}');
+    }
 
     setState(() {
       _isLoading = true;
     });
+
+    if (kDebugMode) {
+      print('Calling _authService.login...');
+    }
 
     await _authService.login(
       phoneNumber: normalizedPhone,
@@ -59,8 +77,11 @@ class _LoginScreenState extends State<LoginScreen> {
         
         _showSuccess(message);
         
-        // Navigate to main app
-        Navigator.of(context).pushReplacementNamed('/home');
+        // Navigate back to welcome screen which will show authenticated state
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+          (route) => false,
+        );
       },
       onError: (error) {
         setState(() {
@@ -83,7 +104,10 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         
         _showSuccess(message);
-        Navigator.of(context).pushReplacementNamed('/home');
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const WelcomeScreen()),
+          (route) => false,
+        );
       },
       onError: (error) {
         setState(() {

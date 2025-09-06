@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:http/http.dart' as http;
-import '../../../core/config/app_config.dart';
+import 'package:dio/dio.dart';
+import '../../../core/network/api_client.dart';
 import '../models/user_model.dart';
 
 class AuthService {
@@ -22,7 +22,7 @@ class AuthService {
   static const String _biometricPhoneKey = 'biometric_phone';
   
   final LocalAuthentication _localAuth = LocalAuthentication();
-  final String baseUrl = AppConfig.apiBaseUrl;
+  final ApiClient _apiClient = ApiClient.instance;
 
   /// Login with phone and password
   Future<void> login({
@@ -33,16 +33,25 @@ class AuthService {
     required Function(String error) onError,
   }) async {
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/api/auth/login'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
+      if (kDebugMode) {
+        print('AuthService.login called with phone: $phoneNumber');
+        print('Using ApiClient for login request');
+      }
+
+      final response = await _apiClient.post(
+        '/auth/login',
+        data: {
           'phone': phoneNumber,
           'password': password,
-        }),
+        },
       );
 
-      final data = jsonDecode(response.body);
+      if (kDebugMode) {
+        print('Login response status: ${response.statusCode}');
+        print('Login response data: ${response.data}');
+      }
+
+      final data = response.data as Map<String, dynamic>;
 
       if (response.statusCode == 200 && data['success'] == true) {
         // Store authentication data
@@ -128,13 +137,20 @@ class AuthService {
       final token = await getAuthToken();
       if (token != null) {
         // Call logout API
-        await http.post(
-          Uri.parse('$baseUrl/api/auth/logout'),
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
-          },
-        );
+        try {
+          await _apiClient.post(
+            '/auth/logout',
+            options: Options(
+              headers: {
+                'Authorization': 'Bearer $token',
+              },
+            ),
+          );
+        } catch (e) {
+          if (kDebugMode) {
+            print('Logout API error: $e');
+          }
+        }
       }
     } catch (e) {
       if (kDebugMode) {
@@ -153,15 +169,16 @@ class AuthService {
       final token = await getAuthToken();
       if (token == null) return false;
 
-      final response = await http.post(
-        Uri.parse('$baseUrl/api/auth/refresh'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+      final response = await _apiClient.post(
+        '/auth/refresh',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
       );
 
-      final data = jsonDecode(response.body);
+      final data = response.data as Map<String, dynamic>;
 
       if (response.statusCode == 200 && data['success'] == true) {
         // Store new token

@@ -7,6 +7,7 @@ import 'core/theme/app_theme.dart';
 import 'widgets/go_sport_logo.dart';
 import 'widgets/connection_status_indicator.dart';
 import 'features/auth/screens/phone_registration_screen.dart';
+import 'features/auth/screens/login_screen.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'firebase_options.dart';
@@ -152,7 +153,12 @@ class WelcomeScreen extends ConsumerWidget {
                           Colors.transparent,
                           Colors.white,
                           () {
-                            // TODO: Navigate to login screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            );
                           },
                           borderColor: Colors.white,
                         ),

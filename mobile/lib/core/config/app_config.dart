@@ -15,12 +15,12 @@ class AppConfig {
   // API Configuration
   static String get apiBaseUrl {
     if (isDebug) {
-      // Local development - Laravel API
-      return 'http://10.0.2.2:8000/api'; // Android emulator
-      // For iOS simulator use: 'http://127.0.0.1:8000/api'
+      // Local development - Laravel Sail
+      return 'http://10.0.2.2:80'; // Android emulator
+      // For iOS simulator use: 'http://127.0.0.1:80'
     }
     // Production API endpoint
-    return 'https://api.gosport.vn/api';
+    return 'https://api.gosport.vn';
   }
   
   // Localization
