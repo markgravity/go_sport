@@ -4,6 +4,7 @@ import '../services/groups_service.dart';
 import '../widgets/sport_selection_widget.dart';
 import '../widgets/location_input_widget.dart';
 import '../widgets/group_settings_widget.dart';
+import '../widgets/avatar_selection_widget.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   const CreateGroupScreen({super.key});
@@ -34,6 +35,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   double _membershipFee = 0.0;
   String _privacy = 'cong_khai';
   List<String> _rules = [];
+  String? _selectedAvatarUrl;
+  String? _uploadedImageUrl;
 
   bool _isLoading = false;
   List<Sport> _availableSports = [];
@@ -139,6 +142,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         maxMembers: _maxMembers,
         membershipFee: _membershipFee,
         privacy: _privacy,
+        avatar: _uploadedImageUrl ?? _selectedAvatarUrl,
         rules: _rules.isNotEmpty ? {'rules': _rules} : null,
       );
 
@@ -249,6 +253,22 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
+            ),
+            const SizedBox(height: 24),
+
+            // Avatar selection
+            AvatarSelectionWidget(
+              selectedAvatarUrl: _selectedAvatarUrl,
+              uploadedImagePath: null,
+              sportType: _selectedSportType,
+              onAvatarSelected: (url) => setState(() {
+                _selectedAvatarUrl = url;
+                _uploadedImageUrl = null;
+              }),
+              onImageUploaded: (url) => setState(() {
+                _uploadedImageUrl = url;
+                _selectedAvatarUrl = null;
+              }),
             ),
             const SizedBox(height: 24),
 

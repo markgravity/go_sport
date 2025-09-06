@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FirebaseAuthController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\ImageUploadController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SportsController;
@@ -33,6 +34,11 @@ Route::prefix('sports')->group(function () {
     Route::get('/{sportType}/defaults', [SportsController::class, 'getDefaults']);
     Route::get('/{sportType}/locations', [SportsController::class, 'getLocationSuggestions']);
     Route::get('/{sportType}/name-suggestions', [SportsController::class, 'getNameSuggestions']);
+});
+
+// Image upload (public endpoint for default avatars)
+Route::prefix('images')->group(function () {
+    Route::get('/default-avatars', [ImageUploadController::class, 'getDefaultAvatars']);
 });
 
 // Public routes (no authentication required)
@@ -112,6 +118,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/{notification}/read', [NotificationController::class, 'markAsRead']);
         Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead']);
         Route::delete('/{notification}', [NotificationController::class, 'delete']);
+    });
+
+    // Image upload management
+    Route::prefix('images')->group(function () {
+        Route::post('/upload/group-avatar', [ImageUploadController::class, 'uploadGroupAvatar'])->middleware('throttle:10,60'); // 10 uploads per hour
+        Route::delete('/delete', [ImageUploadController::class, 'deleteImage']);
     });
 });
 
