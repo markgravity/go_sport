@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'rate_limit_login' => \App\Http\Middleware\RateLimitLogin::class,
+            'group.permission' => \App\Http\Middleware\GroupPermission::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

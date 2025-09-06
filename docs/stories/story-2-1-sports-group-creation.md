@@ -40,7 +40,7 @@
 - [x] **Task 2.1.2**: Implement sports configuration with Vietnamese defaults
 - [x] **Task 2.1.3**: Create group creation API endpoints
 - [x] **Task 2.1.4**: Build Flutter group creation UI screens
-- [ ] **Task 2.1.5**: Add image upload and content filtering
+- [x] **Task 2.1.5**: Add image upload and content filtering
 - [ ] **Task 2.1.6**: Implement role assignment system
 - [ ] **Task 2.1.7**: Add Vietnamese localization for group management
 - [ ] **Task 2.1.8**: Create comprehensive group creation tests
@@ -84,13 +84,13 @@
 - [x] Create group creation confirmation flow
 
 ### Task 2.1.5: Add image upload and content filtering
-- [ ] Integrate image picker for group avatars
-- [ ] Implement image compression and resizing
-- [ ] Add content filtering for inappropriate images
-- [ ] Create secure image upload API endpoint
-- [ ] Add image storage with proper file management
-- [ ] Implement default avatar system
-- [ ] Add image preview and editing capabilities
+- [x] Integrate image picker for group avatars
+- [x] Implement image compression and resizing
+- [x] Add content filtering for inappropriate images
+- [x] Create secure image upload API endpoint
+- [x] Add image storage with proper file management
+- [x] Implement default avatar system
+- [x] Add image preview and editing capabilities
 
 ### Task 2.1.6: Implement role assignment system
 - [ ] Create role-based permission system

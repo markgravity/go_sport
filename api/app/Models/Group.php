@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\GroupPermission;
+use App\Enums\GroupRole;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -190,6 +192,153 @@ class Group extends Model
     public function canManage(User $user): bool
     {
         return $user->id === $this->creator_id || $this->isAdmin($user) || $this->isModerator($user);
+    }
+
+    /**
+     * Get user's role in this group
+     */
+    public function getUserRole(User $user): ?GroupRole
+    {
+        $membership = $this->memberships()
+            ->where('user_id', $user->id)
+            ->wherePivot('status', 'hoat_dong')
+            ->first();
+
+        if (!$membership) {
+            return null;
+        }
+
+        return GroupRole::from($membership->pivot->role);
+    }
+
+    /**
+     * Check if user has a specific permission in this group
+     */
+    public function userHasPermission(User $user, GroupPermission $permission): bool
+    {
+        $role = $this->getUserRole($user);
+        
+        if (!$role) {
+            return false;
+        }
+
+        return $role->hasPermission($permission);
+    }
+
+    /**
+     * Get all permissions for a user in this group
+     */
+    public function getUserPermissions(User $user): array
+    {
+        $role = $this->getUserRole($user);
+        
+        if (!$role) {
+            return [];
+        }
+
+        return $role->permissions();
+    }
+
+    /**
+     * Check if user can assign a role to another user
+     */
+    public function userCanAssignRole(User $assigner, GroupRole $targetRole): bool
+    {
+        $assignerRole = $this->getUserRole($assigner);
+        
+        if (!$assignerRole) {
+            return false;
+        }
+
+        return in_array($targetRole, $assignerRole->assignableRoles());
+    }
+
+    /**
+     * Assign creator as admin automatically
+     */
+    public function assignCreatorAsAdmin(): void
+    {
+        if (!$this->creator_id) {
+            return;
+        }
+
+        // Check if creator is already a member
+        $existingMembership = $this->memberships()
+            ->where('user_id', $this->creator_id)
+            ->first();
+
+        if ($existingMembership) {
+            // Update existing membership to admin role
+            $this->memberships()->updateExistingPivot($this->creator_id, [
+                'role' => GroupRole::ADMIN->value,
+                'status' => 'hoat_dong',
+                'joined_at' => now(),
+            ]);
+        } else {
+            // Create new membership with admin role
+            $this->memberships()->attach($this->creator_id, [
+                'role' => GroupRole::ADMIN->value,
+                'status' => 'hoat_dong',
+                'joined_at' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        // Update member count
+        $this->increment('current_members');
+    }
+
+    /**
+     * Change user role in the group
+     */
+    public function changeUserRole(User $user, GroupRole $newRole, ?User $changedBy = null): bool
+    {
+        if ($changedBy && !$this->userCanAssignRole($changedBy, $newRole)) {
+            return false;
+        }
+
+        $membership = $this->memberships()
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (!$membership) {
+            return false;
+        }
+
+        $this->memberships()->updateExistingPivot($user->id, [
+            'role' => $newRole->value,
+            'updated_at' => now(),
+        ]);
+
+        // Log role change if needed
+        if ($changedBy) {
+            $this->logRoleChange($user, $newRole, $changedBy);
+        }
+
+        return true;
+    }
+
+    /**
+     * Log role changes for audit purposes
+     */
+    private function logRoleChange(User $user, GroupRole $newRole, User $changedBy): void
+    {
+        // This would typically log to a role_changes table
+        // For now, we'll add it to member_notes
+        $membership = $this->memberships()->where('user_id', $user->id)->first();
+        $currentNotes = $membership->pivot->member_notes ?? '';
+        
+        $logEntry = sprintf(
+            "[%s] Vai trò được thay đổi thành %s bởi %s\n",
+            now()->format('Y-m-d H:i:s'),
+            $newRole->vietnamese(),
+            $changedBy->name
+        );
+
+        $this->memberships()->updateExistingPivot($user->id, [
+            'member_notes' => $currentNotes . $logEntry,
+        ]);
     }
 
     /**

@@ -78,14 +78,24 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     // Group management  
-    Route::apiResource('groups', GroupController::class)->except(['store']);
+    Route::get('groups', [GroupController::class, 'index']); // Public endpoint for discovery
+    Route::get('groups/{group}', [GroupController::class, 'show']); // Public endpoint
+    Route::put('groups/{group}', [GroupController::class, 'update'])
+          ->middleware('group.permission:edit_group'); // Requires edit permission
+    Route::delete('groups/{group}', [GroupController::class, 'destroy'])
+          ->middleware('group.permission:delete_group'); // Requires delete permission
     Route::post('groups', [GroupController::class, 'store'])->middleware('throttle:5,60'); // 5 groups per hour
     Route::prefix('groups/{group}')->group(function () {
         Route::post('/join', [GroupController::class, 'join']);
         Route::post('/leave', [GroupController::class, 'leave']);
         Route::get('/members', [GroupController::class, 'members']);
-        Route::post('/members/{user}/role', [GroupController::class, 'updateMemberRole']);
-        Route::delete('/members/{user}', [GroupController::class, 'removeMember']);
+        Route::get('/permissions', [GroupController::class, 'getUserPermissions']);
+        
+        // Role management - requires specific permissions
+        Route::post('/members/{user}/role', [GroupController::class, 'updateMemberRole'])
+              ->middleware('group.permission:change_member_roles');
+        Route::delete('/members/{user}', [GroupController::class, 'removeMember'])
+              ->middleware('group.permission:remove_members');
     });
 
     // Attendance management

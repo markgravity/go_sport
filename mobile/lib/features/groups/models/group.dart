@@ -22,6 +22,7 @@ class Group {
   final DateTime updatedAt;
   final User? creator;
   final List<User>? activeMembers;
+  final List<GroupMember>? members;
 
   Group({
     required this.id,
@@ -47,6 +48,7 @@ class Group {
     required this.updatedAt,
     this.creator,
     this.activeMembers,
+    this.members,
   });
 
   factory Group.fromJson(Map<String, dynamic> json) {
@@ -73,9 +75,17 @@ class Group {
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
       creator: json['creator'] != null ? User.fromJson(json['creator']) : null,
-      activeMembers: json['active_members'] != null 
-        ? (json['active_members'] as List).map((member) => User.fromJson(member)).toList()
-        : null,
+      activeMembers: json['active_members'] != null
+          ? (json['active_members'] as List)
+              .map((member) => User.fromJson(member))
+              .toList()
+          : null,
+      members: json['members'] != null
+          ? (json['members'] as List)
+              .map((member) =>
+                  GroupMember.fromJson(member as Map<String, dynamic>))
+              .toList()
+          : null,
     );
   }
 
@@ -129,6 +139,7 @@ class Group {
     DateTime? updatedAt,
     User? creator,
     List<User>? activeMembers,
+    List<GroupMember>? members,
   }) {
     return Group(
       id: id ?? this.id,
@@ -154,6 +165,7 @@ class Group {
       updatedAt: updatedAt ?? this.updatedAt,
       creator: creator ?? this.creator,
       activeMembers: activeMembers ?? this.activeMembers,
+      members: members ?? this.members,
     );
   }
 
@@ -249,6 +261,26 @@ class User {
       name: json['name'] as String,
       phone: json['phone'] as String,
       avatar: json['avatar'] as String?,
+    );
+  }
+}
+
+class GroupMember {
+  final int userId;
+  final String name;
+  final String role;
+
+  GroupMember({
+    required this.userId,
+    required this.name,
+    required this.role,
+  });
+
+  factory GroupMember.fromJson(Map<String, dynamic> json) {
+    return GroupMember(
+      userId: (json['user_id'] ?? json['id']) as int,
+      name: json['name'] as String,
+      role: (json['role'] ?? json['group_role']) as String,
     );
   }
 }

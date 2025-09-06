@@ -127,13 +127,8 @@ class GroupController extends Controller
                 'creator_id' => Auth::id()
             ]);
 
-            // Add creator as admin member
-            $group->memberships()->attach(Auth::id(), [
-                'role' => 'admin',
-                'status' => 'hoat_dong',
-                'joined_at' => now(),
-                'join_reason' => 'Người tạo nhóm'
-            ]);
+            // Add creator as admin member automatically
+            $group->assignCreatorAsAdmin();
 
             DB::commit();
 
@@ -438,6 +433,176 @@ class GroupController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Không thể lấy danh sách thành viên',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Update member role
+     */
+    public function updateMemberRole(Request $request, string $groupId, string $userId): JsonResponse
+    {
+        try {
+            // The middleware has already verified permissions and added group to request
+            $group = $request->group;
+            
+            $validated = $request->validate([
+                'role' => 'required|in:admin,moderator,member,guest'
+            ]);
+
+            $targetUser = User::findOrFail($userId);
+            $currentUser = Auth::user();
+
+            // Check if target user is a member
+            if (!$group->isMember($targetUser)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Người dùng không phải là thành viên của nhóm'
+                ], 400);
+            }
+
+            // Can't change creator's role
+            if ($targetUser->id === $group->creator_id && $validated['role'] !== 'admin') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không thể thay đổi vai trò của người tạo nhóm'
+                ], 400);
+            }
+
+            $newRole = \App\Enums\GroupRole::from($validated['role']);
+            
+            if ($group->changeUserRole($targetUser, $newRole, $currentUser)) {
+                return response()->json([
+                    'success' => true,
+                    'message' => sprintf(
+                        'Đã thay đổi vai trò của %s thành %s',
+                        $targetUser->name,
+                        $newRole->vietnamese()
+                    ),
+                    'data' => [
+                        'user_id' => $targetUser->id,
+                        'new_role' => $validated['role'],
+                        'new_role_name' => $newRole->vietnamese()
+                    ]
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không thể thay đổi vai trò thành viên'
+                ], 400);
+            }
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy thông tin người dùng'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể thay đổi vai trò thành viên',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Remove member from group
+     */
+    public function removeMember(Request $request, string $groupId, string $userId): JsonResponse
+    {
+        try {
+            // The middleware has already verified permissions
+            $group = $request->group;
+            $targetUser = User::findOrFail($userId);
+            $currentUser = Auth::user();
+
+            if (!$group->isMember($targetUser)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Người dùng không phải là thành viên của nhóm'
+                ], 400);
+            }
+
+            // Can't remove creator
+            if ($targetUser->id === $group->creator_id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không thể loại bỏ người tạo nhóm'
+                ], 400);
+            }
+
+            // Can't remove yourself unless you're leaving
+            if ($targetUser->id === $currentUser->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vui lòng sử dụng chức năng rời nhóm để tự rời khỏi nhóm'
+                ], 400);
+            }
+
+            DB::beginTransaction();
+
+            $group->memberships()->updateExistingPivot($targetUser->id, [
+                'status' => 'bi_loai',
+                'left_at' => now(),
+                'member_notes' => ($group->memberships()->where('user_id', $targetUser->id)->first()->pivot->member_notes ?? '') . 
+                    sprintf("\n[%s] Bị loại bỏ khỏi nhóm bởi %s", now()->format('Y-m-d H:i:s'), $currentUser->name)
+            ]);
+
+            $group->decrement('current_members');
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => sprintf('Đã loại bỏ %s khỏi nhóm', $targetUser->name)
+            ]);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy thông tin người dùng'
+            ], 404);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể loại bỏ thành viên',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get user permissions in group
+     */
+    public function getUserPermissions(Request $request, string $groupId): JsonResponse
+    {
+        try {
+            $group = Group::findOrFail($groupId);
+            $user = Auth::user();
+
+            $role = $group->getUserRole($user);
+            $permissions = $group->getUserPermissions($user);
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'role' => $role?->value,
+                    'role_name' => $role?->vietnamese(),
+                    'permissions' => array_map(fn($p) => [
+                        'value' => $p->value,
+                        'label' => $p->label(),
+                        'description' => $p->description()
+                    ], $permissions)
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể lấy thông tin quyền',
                 'error' => $e->getMessage()
             ], 500);
         }
