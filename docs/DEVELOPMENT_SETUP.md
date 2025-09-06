@@ -23,7 +23,7 @@ Before starting development, ensure you have the following installed:
 ```
 go_sport/
 ├── api/                    # Laravel API backend
-├── mobile-app/            # Flutter mobile application
+├── mobile/            # Flutter mobile application
 ├── docker/                # Docker configuration files
 ├── scripts/               # Development utility scripts
 ├── docs/                  # Project documentation

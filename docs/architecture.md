@@ -109,6 +109,9 @@ graph TD
 - **Command Query Responsibility Segregation (CQRS):** Separate read/write models for attendance data - _Rationale:_ Optimizes real-time attendance queries while maintaining data consistency
 - **Circuit Breaker Pattern:** For Vietnamese payment gateway integrations - _Rationale:_ Provides resilience against payment provider outages common in developing markets
 - **Queue-based Processing:** Laravel queues with Redis backing for notifications - _Rationale:_ Ensures reliable message delivery despite Vietnamese mobile network inconsistencies
+ - **Dependency Injection (Flutter):** get_it + injectable for compile-time DI; Cubits obtain services via DI rather than global singletons - _Rationale:_ Explicit wiring, easy testing/mocking, minimal runtime overhead
+ - **MVVM Presentation (Flutter):** One ViewModel per screen implemented as Cubit with Freezed union state; Widgets dispatch intents and render from state only - _Rationale:_ Separation of concerns, predictable state, high testability
+ - **Typed Routing (Flutter):** AutoRoute with code generation and guards - _Rationale:_ Safer navigation, deep link support, easier refactors
 
 ## Tech Stack
 
@@ -121,8 +124,19 @@ graph TD
 
 | Category | Technology | Version | Purpose | Rationale |
 |----------|------------|---------|---------|-----------|
-| **Mobile Framework** | Flutter | 3.35.2 | Cross-platform mobile development | Strong Vietnamese developer community, single codebase for iOS/Android |
-| **Mobile State** | Riverpod | 2.4.9 | Flutter state management | Better performance than Provider, excellent testing support |
+| **Mobile Framework** | Flutter | 3.27+ | Cross-platform mobile development | Strong Vietnamese developer community, single codebase for iOS/Android |
+| **Presentation Pattern** | MVVM (Cubit-based ViewModels) | N/A | View-model boundary for UI | Testable, clear intent/state flow, separation of concerns |
+| **Mobile State** | Cubit (flutter_bloc) | 9.x | Lightweight predictable state | Simple mental model, wide community adoption, testable |
+| **Mobile Routing** | AutoRoute | 7.x+ | Typed, declarative navigation with codegen | Guards, deep links, safe refactors, reduced boilerplate |
+| **State/Data Classes** | Freezed (+ freezed_annotation) | 2.x | Immutable models and union states | Concise APIs, copyWith, equality, sealed unions for Cubit states |
+| **Dependency Injection** | get_it + injectable | 7.x / 2.x | DI container with codegen | Clear dependency graph, testable Cubits/services, minimal boilerplate |
+### Frontend Presentation Pattern (MVVM)
+
+- **Structure:** One Cubit per screen acting as the ViewModel. ViewModels expose intent methods (e.g., `submitPhone`, `verifyCode`, `createGroup`) and emit Freezed union states. Widgets are passive: they dispatch intents and render from state.
+- **Dependency Injection:** ViewModels and services are constructed via `get_it` + `injectable`. No global singletons or service lookups inside Widgets.
+- **Navigation:** Navigation is handled by the UI in response to state using AutoRoute typed routes and guards. ViewModels do not call Navigator directly.
+- **Testing:** Unit-test ViewModels for state transitions and error paths. Widget tests assert UI reacts correctly to state changes and guard redirects.
+
 | **Backend Language** | PHP | 8.3 | Server-side development | Team expertise from PRD, mature Vietnamese development ecosystem |
 | **Backend Framework** | Laravel | 12.0 | API and service development | Robust ecosystem, built-in queue system, excellent Vietnamese community |
 | **Database** | MySQL | 8.0 | Primary data storage | ACID compliance for financial data, strong Laravel integration |
@@ -1533,7 +1547,7 @@ Feature Branch → Development → Staging → Production
 Create detailed frontend architecture document for Go Sport App Flutter application using this backend architecture as foundation. Design mobile-first UI architecture supporting Vietnamese cultural preferences, role-based interface variations, and offline capabilities for attendance responses. Ensure seamless integration with Laravel API services and Vietnamese payment gateway UX patterns.
 
 Key frontend requirements to address:
-- Flutter state management with Riverpod for complex role-based UI
+- MVVM with Cubit ViewModels for role-based UI
 - Offline-first attendance response capability with sync on connectivity
 - Vietnamese payment gateway mobile UX integration (Momo, VietQR apps)
 - Cultural UI patterns for Vietnamese sports group social dynamics
