@@ -1,4 +1,3 @@
-import 'dart:convert';
 import '../../../core/network/api_client.dart';
 import '../models/group.dart';
 import '../models/sport.dart';
@@ -146,7 +145,7 @@ class GroupsService {
       // Remove null values
       data.removeWhere((key, value) => value == null);
 
-      final response = await ApiClient.instance.post(_baseUrl, data);
+      final response = await ApiClient.instance.post(_baseUrl, data: data);
       
       if (response.data['success'] == true) {
         return Group.fromJson(response.data['data']);
@@ -177,7 +176,7 @@ class GroupsService {
     Map<String, dynamic> updates,
   ) async {
     try {
-      final response = await ApiClient.instance.put('$_baseUrl/$groupId', updates);
+      final response = await ApiClient.instance.put('$_baseUrl/$groupId', data: updates);
       
       if (response.data['success'] == true) {
         return Group.fromJson(response.data['data']);
@@ -204,7 +203,7 @@ class GroupsService {
   static Future<Map<String, dynamic>> joinGroup(int groupId, {String? joinReason}) async {
     try {
       final data = joinReason != null ? {'join_reason': joinReason} : <String, dynamic>{};
-      final response = await ApiClient.instance.post('$_baseUrl/$groupId/join', data);
+      final response = await ApiClient.instance.post('$_baseUrl/$groupId/join', data: data);
       
       if (response.data['success'] == true) {
         return {

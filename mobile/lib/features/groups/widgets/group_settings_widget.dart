@@ -238,7 +238,7 @@ class _GroupSettingsWidgetState extends State<GroupSettingsWidget> {
                         ],
                       ),
                     );
-                  }).toList(),
+                  }),
                 ] else
                   Text(
                     'Chưa có nội quy nào',
@@ -256,7 +256,7 @@ class _GroupSettingsWidgetState extends State<GroupSettingsWidget> {
         if (widget.selectedSport != null) ...[
           const SizedBox(height: 16),
           Card(
-            color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+            color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../../core/theme/app_theme.dart';
-import '../../../widgets/go_sport_logo.dart';
 import '../models/sport.dart';
-import '../models/group.dart';
 import '../services/groups_service.dart';
 import '../widgets/sport_selection_widget.dart';
 import '../widgets/location_input_widget.dart';
@@ -38,7 +34,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   double _membershipFee = 0.0;
   String _privacy = 'cong_khai';
   List<String> _rules = [];
-  Map<String, dynamic> _schedule = {};
 
   bool _isLoading = false;
   List<Sport> _availableSports = [];
@@ -155,12 +150,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.createGroup ?? 'Tạo Nhóm'),
+        title: const Text('Tạo Nhóm'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -169,7 +163,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           preferredSize: const Size.fromHeight(4.0),
           child: LinearProgressIndicator(
             value: (_currentStep + 1) / _totalSteps,
-            backgroundColor: theme.colorScheme.surfaceVariant,
+            backgroundColor: theme.colorScheme.surfaceContainerHighest,
             valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
           ),
         ),
@@ -354,7 +348,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         color: Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).shadowColor.withOpacity(0.1),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, -2),
           ),

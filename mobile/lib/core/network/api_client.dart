@@ -10,8 +10,22 @@ class ApiClient {
   static const Duration _receiveTimeout = Duration(seconds: 30);
 
   late final Dio _dio;
-
+  
+  // Singleton instance
+  static final ApiClient _instance = ApiClient._internal();
+  static ApiClient get instance => _instance;
+  
+  // Private constructor for singleton
+  ApiClient._internal() {
+    _initializeDio();
+  }
+  
+  // Public constructor for provider
   ApiClient() {
+    _initializeDio();
+  }
+  
+  void _initializeDio() {
     _dio = Dio(BaseOptions(
       baseUrl: _baseUrl,
       connectTimeout: _connectTimeout,
