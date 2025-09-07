@@ -7,7 +7,7 @@ import 'package:injectable/injectable.dart';
 class ApiService {
   // TODO: Move to environment configuration
   static const String _baseUrl = kDebugMode
-      ? 'http://localhost/api' // Development
+      ? 'http://localhost:8000/api' // Development
       : 'https://api.gosport.vn/api'; // Production
 
   static const Duration _timeout = Duration(seconds: 30);
