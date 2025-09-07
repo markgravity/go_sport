@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\GroupPermission;
 use App\Enums\GroupRole;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Group extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -342,19 +343,28 @@ class Group extends Model
     private function logRoleChange(User $user, GroupRole $newRole, User $changedBy): void
     {
         // This would typically log to a role_changes table
-        // For now, we'll add it to member_notes
+        // For now, we'll add it to member_notes as JSON array
         $membership = $this->memberships()->where('user_id', $user->id)->first();
-        $currentNotes = $membership->pivot->member_notes ?? '';
+        $currentNotes = $membership->pivot->member_notes ?? [];
         
-        $logEntry = sprintf(
-            "[%s] Vai trò được thay đổi thành %s bởi %s\n",
-            now()->format('Y-m-d H:i:s'),
-            $newRole->vietnamese(),
-            $changedBy->name
-        );
+        // Ensure currentNotes is an array
+        if (!is_array($currentNotes)) {
+            $currentNotes = [];
+        }
+        
+        $logEntry = [
+            'timestamp' => now()->format('Y-m-d H:i:s'),
+            'action' => 'role_change',
+            'new_role' => $newRole->value,
+            'new_role_name' => $newRole->vietnamese(),
+            'changed_by' => $changedBy->name,
+            'changed_by_id' => $changedBy->id,
+        ];
+
+        $currentNotes[] = $logEntry;
 
         $this->memberships()->updateExistingPivot($user->id, [
-            'member_notes' => $currentNotes . $logEntry,
+            'member_notes' => $currentNotes,
         ]);
     }
 

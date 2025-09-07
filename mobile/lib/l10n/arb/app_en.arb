@@ -328,5 +328,334 @@
   "backToLogin": "Back to Login",
   "@backToLogin": {
     "description": "Back to login button text"
+  },
+
+  "createGroup": "Create Group",
+  "@createGroup": {
+    "description": "Create group screen title"
+  },
+  "chooseGroupSport": "Choose sport",
+  "@chooseGroupSport": {
+    "description": "Choose sport for group"
+  },
+  "popularSports": "Popular",
+  "@popularSports": {
+    "description": "Popular sports section"
+  },
+  "allSports": "All Sports",
+  "@allSports": {
+    "description": "All sports section"
+  },
+  "selected": "Selected",
+  "@selected": {
+    "description": "Selected indicator"
+  },
+  "basicInfo": "Basic Information",
+  "@basicInfo": {
+    "description": "Basic information section"
+  },
+  "groupName": "Group Name",
+  "@groupName": {
+    "description": "Group name field"
+  },
+  "groupNameRequired": "Group Name *",
+  "@groupNameRequired": {
+    "description": "Required group name field"
+  },
+  "groupNameHint": "E.g.: Hanoi Badminton Group",
+  "@groupNameHint": {
+    "description": "Group name hint"
+  },
+  "groupDescription": "Group Description",
+  "@groupDescription": {
+    "description": "Group description field"
+  },
+  "groupDescriptionHint": "Describe your group...",
+  "@groupDescriptionHint": {
+    "description": "Group description hint"
+  },
+  "skillLevel": "Skill Level",
+  "@skillLevel": {
+    "description": "Skill level field"
+  },
+  "skillLevelRequired": "Skill Level *",
+  "@skillLevelRequired": {
+    "description": "Required skill level field"
+  },
+  "cityRequired": "City *",
+  "@cityRequired": {
+    "description": "Required city field"
+  },
+  "cityHint": "E.g.: Hanoi",
+  "@cityHint": {
+    "description": "City hint"
+  },
+  "district": "District",
+  "@district": {
+    "description": "District field"
+  },
+  "districtHint": "E.g.: Ba Dinh",
+  "@districtHint": {
+    "description": "District hint"
+  },
+  "locationRequired": "Location *",
+  "@locationRequired": {
+    "description": "Required location field"
+  },
+  "locationHint": "E.g.: ABC Badminton Court, 123 XYZ Street",
+  "@locationHint": {
+    "description": "Location hint"
+  },
+  "groupSettings": "Group Settings",
+  "@groupSettings": {
+    "description": "Group settings section"
+  },
+  "maxMembers": "Maximum Members",
+  "@maxMembers": {
+    "description": "Max members field"
+  },
+  "membershipFee": "Membership Fee (VND/month)",
+  "@membershipFee": {
+    "description": "Membership fee field"
+  },
+  "privacy": "Privacy",
+  "@privacy": {
+    "description": "Privacy settings"
+  },
+  "publicGroup": "Public",
+  "@publicGroup": {
+    "description": "Public group option"
+  },
+  "privateGroup": "Private",
+  "@privateGroup": {
+    "description": "Private group option"
+  },
+  "publicGroupDesc": "Anyone can find and join the group",
+  "@publicGroupDesc": {
+    "description": "Public group description"
+  },
+  "privateGroupDesc": "Only joinable by invitation or request",
+  "@privateGroupDesc": {
+    "description": "Private group description"
+  },
+  "groupRules": "Group Rules",
+  "@groupRules": {
+    "description": "Group rules section"
+  },
+  "addRule": "Add Rule",
+  "@addRule": {
+    "description": "Add rule button"
+  },
+  "enterNewRule": "Enter new rule...",
+  "@enterNewRule": {
+    "description": "Enter new rule hint"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Back button"
+  },
+  "continueButton": "Continue",
+  "@continueButton": {
+    "description": "Continue button"
+  },
+  "finish": "Finish",
+  "@finish": {
+    "description": "Finish button"
+  },
+  "errorMinGroupName": "Group name must be at least 3 characters",
+  "@errorMinGroupName": {
+    "description": "Minimum group name length error"
+  },
+  "errorEnterGroupName": "Please enter group name",
+  "@errorEnterGroupName": {
+    "description": "Enter group name error"
+  },
+  "errorSelectSkillLevel": "Please select skill level",
+  "@errorSelectSkillLevel": {
+    "description": "Select skill level error"
+  },
+  "errorEnterCity": "Please enter city",
+  "@errorEnterCity": {
+    "description": "Enter city error"
+  },
+  "errorEnterLocation": "Please enter location",
+  "@errorEnterLocation": {
+    "description": "Enter location error"
+  },
+
+  "sportFootball": "Football",
+  "@sportFootball": {
+    "description": "Football/Soccer sport name"
+  },
+  "sportBadminton": "Badminton",
+  "@sportBadminton": {
+    "description": "Badminton sport name"
+  },
+  "sportTennis": "Tennis",
+  "@sportTennis": {
+    "description": "Tennis sport name"
+  },
+  "sportPickleball": "Pickleball",
+  "@sportPickleball": {
+    "description": "Pickleball sport name"
+  },
+  "sportBasketball": "Basketball",
+  "@sportBasketball": {
+    "description": "Basketball sport name"
+  },
+  "sportVolleyball": "Volleyball",
+  "@sportVolleyball": {
+    "description": "Volleyball sport name"
+  },
+  "sportTableTennis": "Table Tennis",
+  "@sportTableTennis": {
+    "description": "Table tennis sport name"
+  },
+
+  "roleAdmin": "Admin",
+  "@roleAdmin": {
+    "description": "Admin role name"
+  },
+  "roleModerator": "Moderator",
+  "@roleModerator": {
+    "description": "Moderator role name"
+  },
+  "roleMember": "Member",
+  "@roleMember": {
+    "description": "Member role name"
+  },
+  "roleGuest": "Guest",
+  "@roleGuest": {
+    "description": "Guest role name"
+  },
+  "rolePending": "Pending",
+  "@rolePending": {
+    "description": "Pending role name"
+  },
+
+  "groupCreationStep1": "Step 1: Choose Sport",
+  "@groupCreationStep1": {
+    "description": "Group creation step 1 title"
+  },
+  "groupCreationStep2": "Step 2: Group Information",
+  "@groupCreationStep2": {
+    "description": "Group creation step 2 title"
+  },
+  "groupCreationStep3": "Step 3: Settings and Rules",
+  "@groupCreationStep3": {
+    "description": "Group creation step 3 title"
+  },
+  "groupCreationComplete": "Group created successfully!",
+  "@groupCreationComplete": {
+    "description": "Group creation success message"
+  },
+  "groupCreationWelcome": "Welcome to your new group!",
+  "@groupCreationWelcome": {
+    "description": "Welcome message after group creation"
+  },
+
+  "helpGroupName": "Group name will be displayed to all members. Choose a recognizable name that fits the sport.",
+  "@helpGroupName": {
+    "description": "Help text for group name field"
+  },
+  "helpGroupDescription": "Brief description of the group, its goals and characteristics.",
+  "@helpGroupDescription": {
+    "description": "Help text for group description field"
+  },
+  "helpSkillLevel": "Choose appropriate skill level to attract players of similar level.",
+  "@helpSkillLevel": {
+    "description": "Help text for skill level field"
+  },
+  "helpLocation": "Main location where the group usually plays. Can be changed later.",
+  "@helpLocation": {
+    "description": "Help text for location field"
+  },
+  "helpMembershipFee": "Monthly membership fee (if any). Leave blank if group is free.",
+  "@helpMembershipFee": {
+    "description": "Help text for membership fee field"
+  },
+  "helpPrivacy": "Public group: Anyone can find and join\nPrivate group: Join by invitation only",
+  "@helpPrivacy": {
+    "description": "Help text for privacy settings"
+  },
+
+  "groupNameSuggestionSport": "{sport} Group {city}",
+  "@groupNameSuggestionSport": {
+    "description": "Group name suggestion with sport and city",
+    "placeholders": {
+      "sport": {
+        "type": "String",
+        "description": "Sport name"
+      },
+      "city": {
+        "type": "String",
+        "description": "City name"
+      }
+    }
+  },
+  "groupNameSuggestionClub": "{sport} Club {city}",
+  "@groupNameSuggestionClub": {
+    "description": "Club-style group name suggestion",
+    "placeholders": {
+      "sport": {
+        "type": "String",
+        "description": "Sport name"
+      },
+      "city": {
+        "type": "String",
+        "description": "City name"
+      }
+    }
+  },
+  "groupNameSuggestionTeam": "{sport} Team {city}",
+  "@groupNameSuggestionTeam": {
+    "description": "Team-style group name suggestion",
+    "placeholders": {
+      "sport": {
+        "type": "String",
+        "description": "Sport name"
+      },
+      "city": {
+        "type": "String",
+        "description": "City name"
+      }
+    }
+  },
+  "tapToUse": "Tap to use",
+  "@tapToUse": {
+    "description": "Tap to use suggestion instruction"
+  },
+  "nameSuggestions": "Name Suggestions",
+  "@nameSuggestions": {
+    "description": "Name suggestions title"
+  },
+
+  "errorGroupCreationFailed": "Group creation failed. Please try again.",
+  "@errorGroupCreationFailed": {
+    "description": "Group creation failed error"
+  },
+  "errorInvalidSportSelection": "Please select a valid sport",
+  "@errorInvalidSportSelection": {
+    "description": "Invalid sport selection error"
+  },
+  "errorNetworkConnection": "Network connection error. Please check your connection and try again.",
+  "@errorNetworkConnection": {
+    "description": "Network connection error"
+  },
+  "errorServerError": "Server error. Please try again later.",
+  "@errorServerError": {
+    "description": "Server error message"
+  },
+  "errorPermissionDenied": "You don't have permission to perform this action",
+  "@errorPermissionDenied": {
+    "description": "Permission denied error"
+  },
+  "errorGroupNotFound": "Group not found",
+  "@errorGroupNotFound": {
+    "description": "Group not found error"
+  },
+  "errorMemberNotFound": "Member not found",
+  "@errorMemberNotFound": {
+    "description": "Member not found error"
   }
 }

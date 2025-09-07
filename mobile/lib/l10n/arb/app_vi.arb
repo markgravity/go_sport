@@ -454,8 +454,8 @@
   "@back": {
     "description": "Back button"
   },
-  "continue": "Tiếp tục",
-  "@continue": {
+  "continueButton": "Tiếp tục",
+  "@continueButton": {
     "description": "Continue button"
   },
   "finish": "Hoàn thành",
@@ -481,5 +481,181 @@
   "errorEnterLocation": "Vui lòng nhập địa điểm",
   "@errorEnterLocation": {
     "description": "Enter location error"
+  },
+
+  "sportFootball": "Bóng đá",
+  "@sportFootball": {
+    "description": "Football/Soccer sport name"
+  },
+  "sportBadminton": "Cầu lông",
+  "@sportBadminton": {
+    "description": "Badminton sport name"
+  },
+  "sportTennis": "Tennis",
+  "@sportTennis": {
+    "description": "Tennis sport name"
+  },
+  "sportPickleball": "Pickleball",
+  "@sportPickleball": {
+    "description": "Pickleball sport name"
+  },
+  "sportBasketball": "Bóng rổ",
+  "@sportBasketball": {
+    "description": "Basketball sport name"
+  },
+  "sportVolleyball": "Bóng chuyền",
+  "@sportVolleyball": {
+    "description": "Volleyball sport name"
+  },
+  "sportTableTennis": "Bóng bàn",
+  "@sportTableTennis": {
+    "description": "Table tennis sport name"
+  },
+
+  "roleAdmin": "Trưởng nhóm",
+  "@roleAdmin": {
+    "description": "Admin role name"
+  },
+  "roleModerator": "Phó nhóm",
+  "@roleModerator": {
+    "description": "Moderator role name"
+  },
+  "roleMember": "Thành viên",
+  "@roleMember": {
+    "description": "Member role name"
+  },
+  "roleGuest": "Khách",
+  "@roleGuest": {
+    "description": "Guest role name"
+  },
+  "rolePending": "Chờ duyệt",
+  "@rolePending": {
+    "description": "Pending role name"
+  },
+
+  "groupCreationStep1": "Bước 1: Chọn môn thể thao",
+  "@groupCreationStep1": {
+    "description": "Group creation step 1 title"
+  },
+  "groupCreationStep2": "Bước 2: Thông tin nhóm",
+  "@groupCreationStep2": {
+    "description": "Group creation step 2 title"
+  },
+  "groupCreationStep3": "Bước 3: Cài đặt và quy tắc",
+  "@groupCreationStep3": {
+    "description": "Group creation step 3 title"
+  },
+  "groupCreationComplete": "Tạo nhóm thành công!",
+  "@groupCreationComplete": {
+    "description": "Group creation success message"
+  },
+  "groupCreationWelcome": "Chào mừng bạn đến với nhóm mới!",
+  "@groupCreationWelcome": {
+    "description": "Welcome message after group creation"
+  },
+
+  "helpGroupName": "Tên nhóm sẽ hiển thị cho tất cả thành viên. Hãy chọn tên dễ nhận biết và phù hợp với môn thể thao.",
+  "@helpGroupName": {
+    "description": "Help text for group name field"
+  },
+  "helpGroupDescription": "Mô tả ngắn gọn về nhóm, mục tiêu và đặc điểm của nhóm.",
+  "@helpGroupDescription": {
+    "description": "Help text for group description field"
+  },
+  "helpSkillLevel": "Chọn trình độ phù hợp để thu hút những người chơi cùng trình độ.",
+  "@helpSkillLevel": {
+    "description": "Help text for skill level field"
+  },
+  "helpLocation": "Địa điểm chính nơi nhóm thường hoạt động. Có thể thay đổi sau này.",
+  "@helpLocation": {
+    "description": "Help text for location field"
+  },
+  "helpMembershipFee": "Phí thành viên hàng tháng (nếu có). Để trống nếu nhóm miễn phí.",
+  "@helpMembershipFee": {
+    "description": "Help text for membership fee field"
+  },
+  "helpPrivacy": "Nhóm công khai: Ai cũng có thể tìm thấy và tham gia\nNhóm riêng tư: Chỉ tham gia qua lời mời",
+  "@helpPrivacy": {
+    "description": "Help text for privacy settings"
+  },
+
+  "groupNameSuggestionSport": "Nhóm {sport} {city}",
+  "@groupNameSuggestionSport": {
+    "description": "Group name suggestion with sport and city",
+    "placeholders": {
+      "sport": {
+        "type": "String",
+        "description": "Sport name"
+      },
+      "city": {
+        "type": "String",
+        "description": "City name"
+      }
+    }
+  },
+  "groupNameSuggestionClub": "CLB {sport} {city}",
+  "@groupNameSuggestionClub": {
+    "description": "Club-style group name suggestion",
+    "placeholders": {
+      "sport": {
+        "type": "String",
+        "description": "Sport name"
+      },
+      "city": {
+        "type": "String",
+        "description": "City name"
+      }
+    }
+  },
+  "groupNameSuggestionTeam": "Đội {sport} {city}",
+  "@groupNameSuggestionTeam": {
+    "description": "Team-style group name suggestion",
+    "placeholders": {
+      "sport": {
+        "type": "String",
+        "description": "Sport name"
+      },
+      "city": {
+        "type": "String",
+        "description": "City name"
+      }
+    }
+  },
+  "tapToUse": "Nhấn để sử dụng",
+  "@tapToUse": {
+    "description": "Tap to use suggestion instruction"
+  },
+  "nameSuggestions": "Gợi ý tên nhóm",
+  "@nameSuggestions": {
+    "description": "Name suggestions title"
+  },
+
+  "errorGroupCreationFailed": "Tạo nhóm thất bại. Vui lòng thử lại.",
+  "@errorGroupCreationFailed": {
+    "description": "Group creation failed error"
+  },
+  "errorInvalidSportSelection": "Vui lòng chọn một môn thể thao hợp lệ",
+  "@errorInvalidSportSelection": {
+    "description": "Invalid sport selection error"
+  },
+  "errorNetworkConnection": "Lỗi kết nối mạng. Vui lòng kiểm tra kết nối và thử lại.",
+  "@errorNetworkConnection": {
+    "description": "Network connection error"
+  },
+  "errorServerError": "Lỗi máy chủ. Vui lòng thử lại sau.",
+  "@errorServerError": {
+    "description": "Server error message"
+  },
+  "errorPermissionDenied": "Bạn không có quyền thực hiện hành động này",
+  "@errorPermissionDenied": {
+    "description": "Permission denied error"
+  },
+  "errorGroupNotFound": "Không tìm thấy nhóm",
+  "@errorGroupNotFound": {
+    "description": "Group not found error"
+  },
+  "errorMemberNotFound": "Không tìm thấy thành viên",
+  "@errorMemberNotFound": {
+    "description": "Member not found error"
   }
 }

@@ -11,9 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Step 1: Drop the existing index on phone first
+        // Check if phone column is indexed and drop it first
         Schema::table('users', function (Blueprint $table) {
-            $table->dropIndex(['phone']);
+            // Try to drop unique constraint first if it exists
+            try {
+                $table->dropUnique(['phone']);
+            } catch (\Exception $e) {
+                // Ignore if unique constraint doesn't exist
+            }
+            
+            // Try to drop index if it exists
+            try {
+                $table->dropIndex(['phone']);
+            } catch (\Exception $e) {
+                // Ignore if index doesn't exist
+            }
         });
         
         // Step 2: Modify phone column to TEXT and add new fields
