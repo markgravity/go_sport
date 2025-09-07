@@ -7,7 +7,7 @@ void main() {
   if (kDebugMode) {
     print('🚀 Starting Go Sport App - Development Mode');
     print('🌍 Locale: Vietnamese (vi)');
-    print('🔗 API: Local Laravel (http://localhost:8000)');
+    print('🔗 API: Local Laravel Sail (http://localhost)');
   }
   
   main_app.main();
