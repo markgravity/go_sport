@@ -28,6 +28,15 @@ class LoginState with _$LoginState {
     String? verificationId,
   }) = _PhoneVerificationRequired;
   
+  /// SMS code sent successfully
+  /// 
+  /// [phoneNumber] - Phone number that received SMS
+  /// [verificationId] - Firebase verification ID for SMS
+  const factory LoginState.smsCodeSent({
+    required String phoneNumber,
+    required String verificationId,
+  }) = _SmsCodeSent;
+  
   /// Success state when login completes
   /// 
   /// [message] - Success message in Vietnamese
@@ -58,6 +67,7 @@ extension LoginStateExtensions on LoginState {
     initial: () => false,
     loading: (_) => true,
     phoneVerificationRequired: (_, __) => false,
+    smsCodeSent: (_, __) => false,
     success: (_) => false,
     error: (_, __) => false,
     navigateToRegistration: () => false,
@@ -69,6 +79,7 @@ extension LoginStateExtensions on LoginState {
     initial: () => false,
     loading: (_) => false,
     phoneVerificationRequired: (_, __) => false,
+    smsCodeSent: (_, __) => false,
     success: (_) => false,
     error: (_, __) => true,
     navigateToRegistration: () => false,
@@ -80,6 +91,7 @@ extension LoginStateExtensions on LoginState {
     initial: () => null,
     loading: (_) => null,
     phoneVerificationRequired: (_, __) => null,
+    smsCodeSent: (_, __) => null,
     success: (_) => null,
     error: (message, _) => message,
     navigateToRegistration: () => null,

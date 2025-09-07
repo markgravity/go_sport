@@ -59,9 +59,26 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     SmsVerificationRoute.name: (routeData) {
+      final queryParams = routeData.queryParams;
+      final args = routeData.argsAs<SmsVerificationRouteArgs>(
+          orElse: () => SmsVerificationRouteArgs(
+                phoneNumber: queryParams.optString('phoneNumber'),
+                userName: queryParams.optString('userName'),
+                password: queryParams.optString('password'),
+                selectedSports: queryParams.get(
+                  'selectedSports',
+                  const [],
+                ),
+              ));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const SmsVerificationPage(),
+        child: SmsVerificationPage(
+          key: args.key,
+          phoneNumber: args.phoneNumber,
+          userName: args.userName,
+          password: args.password,
+          selectedSports: args.selectedSports,
+        ),
       );
     },
     WrapperRoute.name: (routeData) {
@@ -184,16 +201,61 @@ class PhoneRegistrationRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [SmsVerificationPage]
-class SmsVerificationRoute extends PageRouteInfo<void> {
-  const SmsVerificationRoute({List<PageRouteInfo>? children})
-      : super(
+class SmsVerificationRoute extends PageRouteInfo<SmsVerificationRouteArgs> {
+  SmsVerificationRoute({
+    Key? key,
+    String? phoneNumber,
+    String? userName,
+    String? password,
+    List<String> selectedSports = const [],
+    List<PageRouteInfo>? children,
+  }) : super(
           SmsVerificationRoute.name,
+          args: SmsVerificationRouteArgs(
+            key: key,
+            phoneNumber: phoneNumber,
+            userName: userName,
+            password: password,
+            selectedSports: selectedSports,
+          ),
+          rawQueryParams: {
+            'phoneNumber': phoneNumber,
+            'userName': userName,
+            'password': password,
+            'selectedSports': selectedSports,
+          },
           initialChildren: children,
         );
 
   static const String name = 'SmsVerificationRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<SmsVerificationRouteArgs> page =
+      PageInfo<SmsVerificationRouteArgs>(name);
+}
+
+class SmsVerificationRouteArgs {
+  const SmsVerificationRouteArgs({
+    this.key,
+    this.phoneNumber,
+    this.userName,
+    this.password,
+    this.selectedSports = const [],
+  });
+
+  final Key? key;
+
+  final String? phoneNumber;
+
+  final String? userName;
+
+  final String? password;
+
+  final List<String> selectedSports;
+
+  @override
+  String toString() {
+    return 'SmsVerificationRouteArgs{key: $key, phoneNumber: $phoneNumber, userName: $userName, password: $password, selectedSports: $selectedSports}';
+  }
 }
 
 /// generated route for

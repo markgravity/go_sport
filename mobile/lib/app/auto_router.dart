@@ -89,24 +89,24 @@ class PhoneRegistrationPage extends StatelessWidget {
 
 @RoutePage()
 class SmsVerificationPage extends StatelessWidget {
-  final String phoneNumber;
-  final String userName;
-  final String password;
+  final String? phoneNumber;
+  final String? userName;
+  final String? password;
   final List<String> selectedSports;
   
   const SmsVerificationPage({
     super.key,
-    @queryParam required this.phoneNumber,
-    @queryParam required this.userName, 
-    @queryParam required this.password,
+    @queryParam this.phoneNumber,
+    @queryParam this.userName, 
+    @queryParam this.password,
     @queryParam this.selectedSports = const [],
   });
 
   @override
   Widget build(BuildContext context) => SmsVerificationScreen(
-    phoneNumber: phoneNumber,
-    userName: userName,
-    password: password,
+    phoneNumber: phoneNumber ?? '',
+    userName: userName ?? '',
+    password: password ?? '',
     selectedSports: selectedSports,
   );
 }

@@ -22,6 +22,8 @@ mixin _$LoginState {
     required TResult Function(String? message) loading,
     required TResult Function(String phoneNumber, String? verificationId)
         phoneVerificationRequired,
+    required TResult Function(String phoneNumber, String verificationId)
+        smsCodeSent,
     required TResult Function(String? message) success,
     required TResult Function(String message, String? errorCode) error,
     required TResult Function() navigateToRegistration,
@@ -34,6 +36,7 @@ mixin _$LoginState {
     TResult? Function(String? message)? loading,
     TResult? Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult? Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult? Function(String? message)? success,
     TResult? Function(String message, String? errorCode)? error,
     TResult? Function()? navigateToRegistration,
@@ -46,6 +49,7 @@ mixin _$LoginState {
     TResult Function(String? message)? loading,
     TResult Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult Function(String? message)? success,
     TResult Function(String message, String? errorCode)? error,
     TResult Function()? navigateToRegistration,
@@ -59,6 +63,7 @@ mixin _$LoginState {
     required TResult Function(_Loading value) loading,
     required TResult Function(_PhoneVerificationRequired value)
         phoneVerificationRequired,
+    required TResult Function(_SmsCodeSent value) smsCodeSent,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
     required TResult Function(_NavigateToRegistration value)
@@ -73,6 +78,7 @@ mixin _$LoginState {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult? Function(_SmsCodeSent value)? smsCodeSent,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
     TResult? Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -86,6 +92,7 @@ mixin _$LoginState {
     TResult Function(_Loading value)? loading,
     TResult Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult Function(_SmsCodeSent value)? smsCodeSent,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
     TResult Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -161,6 +168,8 @@ class _$InitialImpl implements _Initial {
     required TResult Function(String? message) loading,
     required TResult Function(String phoneNumber, String? verificationId)
         phoneVerificationRequired,
+    required TResult Function(String phoneNumber, String verificationId)
+        smsCodeSent,
     required TResult Function(String? message) success,
     required TResult Function(String message, String? errorCode) error,
     required TResult Function() navigateToRegistration,
@@ -176,6 +185,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function(String? message)? loading,
     TResult? Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult? Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult? Function(String? message)? success,
     TResult? Function(String message, String? errorCode)? error,
     TResult? Function()? navigateToRegistration,
@@ -191,6 +201,7 @@ class _$InitialImpl implements _Initial {
     TResult Function(String? message)? loading,
     TResult Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult Function(String? message)? success,
     TResult Function(String message, String? errorCode)? error,
     TResult Function()? navigateToRegistration,
@@ -210,6 +221,7 @@ class _$InitialImpl implements _Initial {
     required TResult Function(_Loading value) loading,
     required TResult Function(_PhoneVerificationRequired value)
         phoneVerificationRequired,
+    required TResult Function(_SmsCodeSent value) smsCodeSent,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
     required TResult Function(_NavigateToRegistration value)
@@ -227,6 +239,7 @@ class _$InitialImpl implements _Initial {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult? Function(_SmsCodeSent value)? smsCodeSent,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
     TResult? Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -243,6 +256,7 @@ class _$InitialImpl implements _Initial {
     TResult Function(_Loading value)? loading,
     TResult Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult Function(_SmsCodeSent value)? smsCodeSent,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
     TResult Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -332,6 +346,8 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(String? message) loading,
     required TResult Function(String phoneNumber, String? verificationId)
         phoneVerificationRequired,
+    required TResult Function(String phoneNumber, String verificationId)
+        smsCodeSent,
     required TResult Function(String? message) success,
     required TResult Function(String message, String? errorCode) error,
     required TResult Function() navigateToRegistration,
@@ -347,6 +363,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(String? message)? loading,
     TResult? Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult? Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult? Function(String? message)? success,
     TResult? Function(String message, String? errorCode)? error,
     TResult? Function()? navigateToRegistration,
@@ -362,6 +379,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function(String? message)? loading,
     TResult Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult Function(String? message)? success,
     TResult Function(String message, String? errorCode)? error,
     TResult Function()? navigateToRegistration,
@@ -381,6 +399,7 @@ class _$LoadingImpl implements _Loading {
     required TResult Function(_Loading value) loading,
     required TResult Function(_PhoneVerificationRequired value)
         phoneVerificationRequired,
+    required TResult Function(_SmsCodeSent value) smsCodeSent,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
     required TResult Function(_NavigateToRegistration value)
@@ -398,6 +417,7 @@ class _$LoadingImpl implements _Loading {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult? Function(_SmsCodeSent value)? smsCodeSent,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
     TResult? Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -414,6 +434,7 @@ class _$LoadingImpl implements _Loading {
     TResult Function(_Loading value)? loading,
     TResult Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult Function(_SmsCodeSent value)? smsCodeSent,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
     TResult Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -525,6 +546,8 @@ class _$PhoneVerificationRequiredImpl implements _PhoneVerificationRequired {
     required TResult Function(String? message) loading,
     required TResult Function(String phoneNumber, String? verificationId)
         phoneVerificationRequired,
+    required TResult Function(String phoneNumber, String verificationId)
+        smsCodeSent,
     required TResult Function(String? message) success,
     required TResult Function(String message, String? errorCode) error,
     required TResult Function() navigateToRegistration,
@@ -540,6 +563,7 @@ class _$PhoneVerificationRequiredImpl implements _PhoneVerificationRequired {
     TResult? Function(String? message)? loading,
     TResult? Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult? Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult? Function(String? message)? success,
     TResult? Function(String message, String? errorCode)? error,
     TResult? Function()? navigateToRegistration,
@@ -555,6 +579,7 @@ class _$PhoneVerificationRequiredImpl implements _PhoneVerificationRequired {
     TResult Function(String? message)? loading,
     TResult Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult Function(String? message)? success,
     TResult Function(String message, String? errorCode)? error,
     TResult Function()? navigateToRegistration,
@@ -574,6 +599,7 @@ class _$PhoneVerificationRequiredImpl implements _PhoneVerificationRequired {
     required TResult Function(_Loading value) loading,
     required TResult Function(_PhoneVerificationRequired value)
         phoneVerificationRequired,
+    required TResult Function(_SmsCodeSent value) smsCodeSent,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
     required TResult Function(_NavigateToRegistration value)
@@ -591,6 +617,7 @@ class _$PhoneVerificationRequiredImpl implements _PhoneVerificationRequired {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult? Function(_SmsCodeSent value)? smsCodeSent,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
     TResult? Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -607,6 +634,7 @@ class _$PhoneVerificationRequiredImpl implements _PhoneVerificationRequired {
     TResult Function(_Loading value)? loading,
     TResult Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult Function(_SmsCodeSent value)? smsCodeSent,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
     TResult Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -633,6 +661,206 @@ abstract class _PhoneVerificationRequired implements LoginState {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PhoneVerificationRequiredImplCopyWith<_$PhoneVerificationRequiredImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$SmsCodeSentImplCopyWith<$Res> {
+  factory _$$SmsCodeSentImplCopyWith(
+          _$SmsCodeSentImpl value, $Res Function(_$SmsCodeSentImpl) then) =
+      __$$SmsCodeSentImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String phoneNumber, String verificationId});
+}
+
+/// @nodoc
+class __$$SmsCodeSentImplCopyWithImpl<$Res>
+    extends _$LoginStateCopyWithImpl<$Res, _$SmsCodeSentImpl>
+    implements _$$SmsCodeSentImplCopyWith<$Res> {
+  __$$SmsCodeSentImplCopyWithImpl(
+      _$SmsCodeSentImpl _value, $Res Function(_$SmsCodeSentImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? phoneNumber = null,
+    Object? verificationId = null,
+  }) {
+    return _then(_$SmsCodeSentImpl(
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      verificationId: null == verificationId
+          ? _value.verificationId
+          : verificationId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SmsCodeSentImpl implements _SmsCodeSent {
+  const _$SmsCodeSentImpl(
+      {required this.phoneNumber, required this.verificationId});
+
+  @override
+  final String phoneNumber;
+  @override
+  final String verificationId;
+
+  @override
+  String toString() {
+    return 'LoginState.smsCodeSent(phoneNumber: $phoneNumber, verificationId: $verificationId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SmsCodeSentImpl &&
+            (identical(other.phoneNumber, phoneNumber) ||
+                other.phoneNumber == phoneNumber) &&
+            (identical(other.verificationId, verificationId) ||
+                other.verificationId == verificationId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, phoneNumber, verificationId);
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SmsCodeSentImplCopyWith<_$SmsCodeSentImpl> get copyWith =>
+      __$$SmsCodeSentImplCopyWithImpl<_$SmsCodeSentImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function(String? message) loading,
+    required TResult Function(String phoneNumber, String? verificationId)
+        phoneVerificationRequired,
+    required TResult Function(String phoneNumber, String verificationId)
+        smsCodeSent,
+    required TResult Function(String? message) success,
+    required TResult Function(String message, String? errorCode) error,
+    required TResult Function() navigateToRegistration,
+    required TResult Function() navigateToForgotPassword,
+  }) {
+    return smsCodeSent(phoneNumber, verificationId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function(String? message)? loading,
+    TResult? Function(String phoneNumber, String? verificationId)?
+        phoneVerificationRequired,
+    TResult? Function(String phoneNumber, String verificationId)? smsCodeSent,
+    TResult? Function(String? message)? success,
+    TResult? Function(String message, String? errorCode)? error,
+    TResult? Function()? navigateToRegistration,
+    TResult? Function()? navigateToForgotPassword,
+  }) {
+    return smsCodeSent?.call(phoneNumber, verificationId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function(String? message)? loading,
+    TResult Function(String phoneNumber, String? verificationId)?
+        phoneVerificationRequired,
+    TResult Function(String phoneNumber, String verificationId)? smsCodeSent,
+    TResult Function(String? message)? success,
+    TResult Function(String message, String? errorCode)? error,
+    TResult Function()? navigateToRegistration,
+    TResult Function()? navigateToForgotPassword,
+    required TResult orElse(),
+  }) {
+    if (smsCodeSent != null) {
+      return smsCodeSent(phoneNumber, verificationId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Loading value) loading,
+    required TResult Function(_PhoneVerificationRequired value)
+        phoneVerificationRequired,
+    required TResult Function(_SmsCodeSent value) smsCodeSent,
+    required TResult Function(_Success value) success,
+    required TResult Function(_Error value) error,
+    required TResult Function(_NavigateToRegistration value)
+        navigateToRegistration,
+    required TResult Function(_NavigateToForgotPassword value)
+        navigateToForgotPassword,
+  }) {
+    return smsCodeSent(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_PhoneVerificationRequired value)?
+        phoneVerificationRequired,
+    TResult? Function(_SmsCodeSent value)? smsCodeSent,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Error value)? error,
+    TResult? Function(_NavigateToRegistration value)? navigateToRegistration,
+    TResult? Function(_NavigateToForgotPassword value)?
+        navigateToForgotPassword,
+  }) {
+    return smsCodeSent?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Loading value)? loading,
+    TResult Function(_PhoneVerificationRequired value)?
+        phoneVerificationRequired,
+    TResult Function(_SmsCodeSent value)? smsCodeSent,
+    TResult Function(_Success value)? success,
+    TResult Function(_Error value)? error,
+    TResult Function(_NavigateToRegistration value)? navigateToRegistration,
+    TResult Function(_NavigateToForgotPassword value)? navigateToForgotPassword,
+    required TResult orElse(),
+  }) {
+    if (smsCodeSent != null) {
+      return smsCodeSent(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _SmsCodeSent implements LoginState {
+  const factory _SmsCodeSent(
+      {required final String phoneNumber,
+      required final String verificationId}) = _$SmsCodeSentImpl;
+
+  String get phoneNumber;
+  String get verificationId;
+
+  /// Create a copy of LoginState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SmsCodeSentImplCopyWith<_$SmsCodeSentImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -707,6 +935,8 @@ class _$SuccessImpl implements _Success {
     required TResult Function(String? message) loading,
     required TResult Function(String phoneNumber, String? verificationId)
         phoneVerificationRequired,
+    required TResult Function(String phoneNumber, String verificationId)
+        smsCodeSent,
     required TResult Function(String? message) success,
     required TResult Function(String message, String? errorCode) error,
     required TResult Function() navigateToRegistration,
@@ -722,6 +952,7 @@ class _$SuccessImpl implements _Success {
     TResult? Function(String? message)? loading,
     TResult? Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult? Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult? Function(String? message)? success,
     TResult? Function(String message, String? errorCode)? error,
     TResult? Function()? navigateToRegistration,
@@ -737,6 +968,7 @@ class _$SuccessImpl implements _Success {
     TResult Function(String? message)? loading,
     TResult Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult Function(String? message)? success,
     TResult Function(String message, String? errorCode)? error,
     TResult Function()? navigateToRegistration,
@@ -756,6 +988,7 @@ class _$SuccessImpl implements _Success {
     required TResult Function(_Loading value) loading,
     required TResult Function(_PhoneVerificationRequired value)
         phoneVerificationRequired,
+    required TResult Function(_SmsCodeSent value) smsCodeSent,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
     required TResult Function(_NavigateToRegistration value)
@@ -773,6 +1006,7 @@ class _$SuccessImpl implements _Success {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult? Function(_SmsCodeSent value)? smsCodeSent,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
     TResult? Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -789,6 +1023,7 @@ class _$SuccessImpl implements _Success {
     TResult Function(_Loading value)? loading,
     TResult Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult Function(_SmsCodeSent value)? smsCodeSent,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
     TResult Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -895,6 +1130,8 @@ class _$ErrorImpl implements _Error {
     required TResult Function(String? message) loading,
     required TResult Function(String phoneNumber, String? verificationId)
         phoneVerificationRequired,
+    required TResult Function(String phoneNumber, String verificationId)
+        smsCodeSent,
     required TResult Function(String? message) success,
     required TResult Function(String message, String? errorCode) error,
     required TResult Function() navigateToRegistration,
@@ -910,6 +1147,7 @@ class _$ErrorImpl implements _Error {
     TResult? Function(String? message)? loading,
     TResult? Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult? Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult? Function(String? message)? success,
     TResult? Function(String message, String? errorCode)? error,
     TResult? Function()? navigateToRegistration,
@@ -925,6 +1163,7 @@ class _$ErrorImpl implements _Error {
     TResult Function(String? message)? loading,
     TResult Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult Function(String? message)? success,
     TResult Function(String message, String? errorCode)? error,
     TResult Function()? navigateToRegistration,
@@ -944,6 +1183,7 @@ class _$ErrorImpl implements _Error {
     required TResult Function(_Loading value) loading,
     required TResult Function(_PhoneVerificationRequired value)
         phoneVerificationRequired,
+    required TResult Function(_SmsCodeSent value) smsCodeSent,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
     required TResult Function(_NavigateToRegistration value)
@@ -961,6 +1201,7 @@ class _$ErrorImpl implements _Error {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult? Function(_SmsCodeSent value)? smsCodeSent,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
     TResult? Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -977,6 +1218,7 @@ class _$ErrorImpl implements _Error {
     TResult Function(_Loading value)? loading,
     TResult Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult Function(_SmsCodeSent value)? smsCodeSent,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
     TResult Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -1052,6 +1294,8 @@ class _$NavigateToRegistrationImpl implements _NavigateToRegistration {
     required TResult Function(String? message) loading,
     required TResult Function(String phoneNumber, String? verificationId)
         phoneVerificationRequired,
+    required TResult Function(String phoneNumber, String verificationId)
+        smsCodeSent,
     required TResult Function(String? message) success,
     required TResult Function(String message, String? errorCode) error,
     required TResult Function() navigateToRegistration,
@@ -1067,6 +1311,7 @@ class _$NavigateToRegistrationImpl implements _NavigateToRegistration {
     TResult? Function(String? message)? loading,
     TResult? Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult? Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult? Function(String? message)? success,
     TResult? Function(String message, String? errorCode)? error,
     TResult? Function()? navigateToRegistration,
@@ -1082,6 +1327,7 @@ class _$NavigateToRegistrationImpl implements _NavigateToRegistration {
     TResult Function(String? message)? loading,
     TResult Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult Function(String? message)? success,
     TResult Function(String message, String? errorCode)? error,
     TResult Function()? navigateToRegistration,
@@ -1101,6 +1347,7 @@ class _$NavigateToRegistrationImpl implements _NavigateToRegistration {
     required TResult Function(_Loading value) loading,
     required TResult Function(_PhoneVerificationRequired value)
         phoneVerificationRequired,
+    required TResult Function(_SmsCodeSent value) smsCodeSent,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
     required TResult Function(_NavigateToRegistration value)
@@ -1118,6 +1365,7 @@ class _$NavigateToRegistrationImpl implements _NavigateToRegistration {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult? Function(_SmsCodeSent value)? smsCodeSent,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
     TResult? Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -1134,6 +1382,7 @@ class _$NavigateToRegistrationImpl implements _NavigateToRegistration {
     TResult Function(_Loading value)? loading,
     TResult Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult Function(_SmsCodeSent value)? smsCodeSent,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
     TResult Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -1199,6 +1448,8 @@ class _$NavigateToForgotPasswordImpl implements _NavigateToForgotPassword {
     required TResult Function(String? message) loading,
     required TResult Function(String phoneNumber, String? verificationId)
         phoneVerificationRequired,
+    required TResult Function(String phoneNumber, String verificationId)
+        smsCodeSent,
     required TResult Function(String? message) success,
     required TResult Function(String message, String? errorCode) error,
     required TResult Function() navigateToRegistration,
@@ -1214,6 +1465,7 @@ class _$NavigateToForgotPasswordImpl implements _NavigateToForgotPassword {
     TResult? Function(String? message)? loading,
     TResult? Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult? Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult? Function(String? message)? success,
     TResult? Function(String message, String? errorCode)? error,
     TResult? Function()? navigateToRegistration,
@@ -1229,6 +1481,7 @@ class _$NavigateToForgotPasswordImpl implements _NavigateToForgotPassword {
     TResult Function(String? message)? loading,
     TResult Function(String phoneNumber, String? verificationId)?
         phoneVerificationRequired,
+    TResult Function(String phoneNumber, String verificationId)? smsCodeSent,
     TResult Function(String? message)? success,
     TResult Function(String message, String? errorCode)? error,
     TResult Function()? navigateToRegistration,
@@ -1248,6 +1501,7 @@ class _$NavigateToForgotPasswordImpl implements _NavigateToForgotPassword {
     required TResult Function(_Loading value) loading,
     required TResult Function(_PhoneVerificationRequired value)
         phoneVerificationRequired,
+    required TResult Function(_SmsCodeSent value) smsCodeSent,
     required TResult Function(_Success value) success,
     required TResult Function(_Error value) error,
     required TResult Function(_NavigateToRegistration value)
@@ -1265,6 +1519,7 @@ class _$NavigateToForgotPasswordImpl implements _NavigateToForgotPassword {
     TResult? Function(_Loading value)? loading,
     TResult? Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult? Function(_SmsCodeSent value)? smsCodeSent,
     TResult? Function(_Success value)? success,
     TResult? Function(_Error value)? error,
     TResult? Function(_NavigateToRegistration value)? navigateToRegistration,
@@ -1281,6 +1536,7 @@ class _$NavigateToForgotPasswordImpl implements _NavigateToForgotPassword {
     TResult Function(_Loading value)? loading,
     TResult Function(_PhoneVerificationRequired value)?
         phoneVerificationRequired,
+    TResult Function(_SmsCodeSent value)? smsCodeSent,
     TResult Function(_Success value)? success,
     TResult Function(_Error value)? error,
     TResult Function(_NavigateToRegistration value)? navigateToRegistration,

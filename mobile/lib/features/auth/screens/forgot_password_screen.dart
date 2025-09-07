@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../core/network/api_client.dart';
+import '../../../core/dependency_injection/injection_container.dart';
 import '../../../core/utils/phone_validator.dart';
 import '../../../widgets/go_sport_logo.dart';
 import '../widgets/loading_overlay.dart';
@@ -303,7 +304,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final apiClient = ApiClient.instance;
+      final apiClient = getIt<ApiClient>();
       final response = await apiClient.post('/auth/password-reset-request', 
         data: {
           'phone': _phoneController.text,
@@ -368,7 +369,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final apiClient = ApiClient.instance;
+      final apiClient = getIt<ApiClient>();
       final response = await apiClient.post('/auth/password-reset-confirm',
         data: {
           'phone': _phoneController.text,
