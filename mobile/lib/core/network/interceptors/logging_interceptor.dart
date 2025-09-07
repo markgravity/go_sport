@@ -10,40 +10,40 @@ class LoggingInterceptor extends Interceptor {
       final requestId = ++_requestCounter;
       final timestamp = DateTime.now().toIso8601String();
       
-      print('\n╔══════════════════════════════════════════════════════════════════════════════');
-      print('║ 🚀 REQUEST #$requestId [$timestamp]');
-      print('║ ${options.method} ${options.baseUrl}${options.path}');
-      print('╟──────────────────────────────────────────────────────────────────────────────');
+      debugPrint('\n╔══════════════════════════════════════════════════════════════════════════════');
+      debugPrint('║ 🚀 REQUEST #$requestId [$timestamp]');
+      debugPrint('║ ${options.method} ${options.baseUrl}${options.path}');
+      debugPrint('╟──────────────────────────────────────────────────────────────────────────────');
       
       // Request Headers
       if (options.headers.isNotEmpty) {
-        print('║ 📋 Headers:');
+        debugPrint('║ 📋 Headers:');
         options.headers.forEach((key, value) {
-          print('║   $key: $value');
+          debugPrint('║   $key: $value');
         });
-        print('║');
+        debugPrint('║');
       }
       
       // Query Parameters
       if (options.queryParameters.isNotEmpty) {
-        print('║ 🔗 Query Parameters:');
+        debugPrint('║ 🔗 Query Parameters:');
         options.queryParameters.forEach((key, value) {
-          print('║   $key: $value');
+          debugPrint('║   $key: $value');
         });
-        print('║');
+        debugPrint('║');
       }
       
       // Request Body
       if (options.data != null) {
-        print('║ 📤 Request Body:');
+        debugPrint('║ 📤 Request Body:');
         final bodyString = _formatData(options.data);
         bodyString.split('\n').forEach((line) {
-          print('║   $line');
+          debugPrint('║   $line');
         });
-        print('║');
+        debugPrint('║');
       }
       
-      print('╚══════════════════════════════════════════════════════════════════════════════\n');
+      debugPrint('╚══════════════════════════════════════════════════════════════════════════════\n');
       
       // Store request start time for duration calculation
       options.extra['requestStartTime'] = DateTime.now().millisecondsSinceEpoch;
@@ -63,31 +63,31 @@ class LoggingInterceptor extends Interceptor {
       final timestamp = DateTime.now().toIso8601String();
       
       print('\n╔══════════════════════════════════════════════════════════════════════════════');
-      print('║ ✅ RESPONSE #$requestId [$timestamp] (${duration}ms)');
-      print('║ ${response.statusCode} ${response.statusMessage}');
-      print('║ ${response.requestOptions.method} ${response.requestOptions.baseUrl}${response.requestOptions.path}');
+      debugPrint('║ ✅ RESPONSE #$requestId [$timestamp] (${duration}ms)');
+      debugPrint('║ ${response.statusCode} ${response.statusMessage}');
+      debugPrint('║ ${response.requestOptions.method} ${response.requestOptions.baseUrl}${response.requestOptions.path}');
       print('╟──────────────────────────────────────────────────────────────────────────────');
       
       // Response Headers
       if (response.headers.map.isNotEmpty) {
-        print('║ 📋 Response Headers:');
+        debugPrint('║ 📋 Response Headers:');
         response.headers.map.forEach((key, values) {
-          print('║   $key: ${values.join(', ')}');
+          debugPrint('║   $key: ${values.join(', ')}');
         });
-        print('║');
+        debugPrint('║');
       }
       
       // Response Body
       if (response.data != null) {
-        print('║ 📥 Response Body:');
+        debugPrint('║ 📥 Response Body:');
         final bodyString = _formatData(response.data);
         bodyString.split('\n').forEach((line) {
-          print('║   $line');
+          debugPrint('║   $line');
         });
-        print('║');
+        debugPrint('║');
       }
       
-      print('╚══════════════════════════════════════════════════════════════════════════════\n');
+      debugPrint('╚══════════════════════════════════════════════════════════════════════════════\n');
     }
     super.onResponse(response, handler);
   }
@@ -103,38 +103,38 @@ class LoggingInterceptor extends Interceptor {
       final timestamp = DateTime.now().toIso8601String();
       
       print('\n╔══════════════════════════════════════════════════════════════════════════════');
-      print('║ ❌ ERROR #$requestId [$timestamp] (${duration}ms)');
-      print('║ ${err.response?.statusCode ?? 'NO_STATUS'} ${err.response?.statusMessage ?? err.type.toString()}');
-      print('║ ${err.requestOptions.method} ${err.requestOptions.baseUrl}${err.requestOptions.path}');
+      debugPrint('║ ❌ ERROR #$requestId [$timestamp] (${duration}ms)');
+      debugPrint('║ ${err.response?.statusCode ?? 'NO_STATUS'} ${err.response?.statusMessage ?? err.type.toString()}');
+      debugPrint('║ ${err.requestOptions.method} ${err.requestOptions.baseUrl}${err.requestOptions.path}');
       print('╟──────────────────────────────────────────────────────────────────────────────');
       
       // Error Information
-      print('║ 🚨 Error Type: ${err.type}');
+      debugPrint('║ 🚨 Error Type: ${err.type}');
       if (err.message != null) {
-        print('║ 💬 Error Message: ${err.message}');
+        debugPrint('║ 💬 Error Message: ${err.message}');
       }
       
       // Error Response Headers
       if (err.response?.headers.map.isNotEmpty == true) {
-        print('║');
-        print('║ 📋 Error Response Headers:');
+        debugPrint('║');
+        debugPrint('║ 📋 Error Response Headers:');
         err.response!.headers.map.forEach((key, values) {
-          print('║   $key: ${values.join(', ')}');
+          debugPrint('║   $key: ${values.join(', ')}');
         });
       }
       
       // Error Response Body
       if (err.response?.data != null) {
-        print('║');
-        print('║ 📥 Error Response Body:');
+        debugPrint('║');
+        debugPrint('║ 📥 Error Response Body:');
         final bodyString = _formatData(err.response!.data);
         bodyString.split('\n').forEach((line) {
-          print('║   $line');
+          debugPrint('║   $line');
         });
       }
       
-      print('║');
-      print('╚══════════════════════════════════════════════════════════════════════════════\n');
+      debugPrint('║');
+      debugPrint('╚══════════════════════════════════════════════════════════════════════════════\n');
     }
     super.onError(err, handler);
   }

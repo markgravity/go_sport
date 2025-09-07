@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/dependency_injection/injection_container.dart';
-
 /// Base class for route guards
 /// 
 /// Provides common functionality for protecting routes based on authentication state

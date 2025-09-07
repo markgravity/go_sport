@@ -20,11 +20,8 @@ SportLevel _$SportLevelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SportLevel {
-  @JsonKey(name: 'level_key')
   String get levelKey => throw _privateConstructorUsedError;
-  @JsonKey(name: 'level_name')
   String get levelName => throw _privateConstructorUsedError;
-  @JsonKey(name: 'sport_type')
   String get sportType => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
 
@@ -45,9 +42,9 @@ abstract class $SportLevelCopyWith<$Res> {
       _$SportLevelCopyWithImpl<$Res, SportLevel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'level_key') String levelKey,
-      @JsonKey(name: 'level_name') String levelName,
-      @JsonKey(name: 'sport_type') String sportType,
+      {String levelKey,
+      String levelName,
+      String sportType,
       String? description});
 }
 
@@ -101,9 +98,9 @@ abstract class _$$SportLevelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'level_key') String levelKey,
-      @JsonKey(name: 'level_name') String levelName,
-      @JsonKey(name: 'sport_type') String sportType,
+      {String levelKey,
+      String levelName,
+      String sportType,
       String? description});
 }
 
@@ -150,22 +147,19 @@ class __$$SportLevelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$SportLevelImpl implements _SportLevel {
   const _$SportLevelImpl(
-      {@JsonKey(name: 'level_key') required this.levelKey,
-      @JsonKey(name: 'level_name') required this.levelName,
-      @JsonKey(name: 'sport_type') required this.sportType,
+      {required this.levelKey,
+      required this.levelName,
+      required this.sportType,
       this.description});
 
   factory _$SportLevelImpl.fromJson(Map<String, dynamic> json) =>
       _$$SportLevelImplFromJson(json);
 
   @override
-  @JsonKey(name: 'level_key')
   final String levelKey;
   @override
-  @JsonKey(name: 'level_name')
   final String levelName;
   @override
-  @JsonKey(name: 'sport_type')
   final String sportType;
   @override
   final String? description;
@@ -213,22 +207,19 @@ class _$SportLevelImpl implements _SportLevel {
 
 abstract class _SportLevel implements SportLevel {
   const factory _SportLevel(
-      {@JsonKey(name: 'level_key') required final String levelKey,
-      @JsonKey(name: 'level_name') required final String levelName,
-      @JsonKey(name: 'sport_type') required final String sportType,
+      {required final String levelKey,
+      required final String levelName,
+      required final String sportType,
       final String? description}) = _$SportLevelImpl;
 
   factory _SportLevel.fromJson(Map<String, dynamic> json) =
       _$SportLevelImpl.fromJson;
 
   @override
-  @JsonKey(name: 'level_key')
   String get levelKey;
   @override
-  @JsonKey(name: 'level_name')
   String get levelName;
   @override
-  @JsonKey(name: 'sport_type')
   String get sportType;
   @override
   String? get description;
@@ -430,7 +421,6 @@ SportLevelsData _$SportLevelsDataFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SportLevelsData {
-  @JsonKey(name: 'sport_type')
   String get sportType => throw _privateConstructorUsedError;
   List<SportLevel> get levels => throw _privateConstructorUsedError;
 
@@ -450,8 +440,7 @@ abstract class $SportLevelsDataCopyWith<$Res> {
           SportLevelsData value, $Res Function(SportLevelsData) then) =
       _$SportLevelsDataCopyWithImpl<$Res, SportLevelsData>;
   @useResult
-  $Res call(
-      {@JsonKey(name: 'sport_type') String sportType, List<SportLevel> levels});
+  $Res call({String sportType, List<SportLevel> levels});
 }
 
 /// @nodoc
@@ -493,8 +482,7 @@ abstract class _$$SportLevelsDataImplCopyWith<$Res>
       __$$SportLevelsDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(name: 'sport_type') String sportType, List<SportLevel> levels});
+  $Res call({String sportType, List<SportLevel> levels});
 }
 
 /// @nodoc
@@ -530,15 +518,13 @@ class __$$SportLevelsDataImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$SportLevelsDataImpl implements _SportLevelsData {
   const _$SportLevelsDataImpl(
-      {@JsonKey(name: 'sport_type') required this.sportType,
-      required final List<SportLevel> levels})
+      {required this.sportType, required final List<SportLevel> levels})
       : _levels = levels;
 
   factory _$SportLevelsDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$SportLevelsDataImplFromJson(json);
 
   @override
-  @JsonKey(name: 'sport_type')
   final String sportType;
   final List<SportLevel> _levels;
   @override
@@ -587,14 +573,13 @@ class _$SportLevelsDataImpl implements _SportLevelsData {
 
 abstract class _SportLevelsData implements SportLevelsData {
   const factory _SportLevelsData(
-      {@JsonKey(name: 'sport_type') required final String sportType,
+      {required final String sportType,
       required final List<SportLevel> levels}) = _$SportLevelsDataImpl;
 
   factory _SportLevelsData.fromJson(Map<String, dynamic> json) =
       _$SportLevelsDataImpl.fromJson;
 
   @override
-  @JsonKey(name: 'sport_type')
   String get sportType;
   @override
   List<SportLevel> get levels;
