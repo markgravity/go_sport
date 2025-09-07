@@ -9,6 +9,7 @@ import '../widgets/sport_selection_widget.dart';
 import '../widgets/location_input_widget.dart';
 import '../widgets/group_settings_widget.dart';
 import '../widgets/avatar_selection_widget.dart';
+import '../widgets/level_requirements_widget.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   const CreateGroupScreen({super.key});
@@ -273,27 +274,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Skill level
+            // Level requirements
             if (_getSelectedSport(state) != null) ...[
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  labelText: 'Trình độ *',
-                  border: OutlineInputBorder(),
-                ),
-                value: state.currentFormData.skillLevel?.isEmpty == true ? null : state.currentFormData.skillLevel,
-                items: _getSelectedSport(state)!.skillLevelsList.map((skill) {
-                  return DropdownMenuItem(
-                    value: skill.key,
-                    child: Text(skill.name),
-                  );
-                }).toList(),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Vui lòng chọn trình độ';
-                  }
-                  return null;
-                },
-                onChanged: (value) => _createGroupCubit.updateField('skillLevel', value ?? ''),
+              LevelRequirementsWidget(
+                sportType: state.currentFormData.sportType,
+                selectedLevels: state.currentFormData.levelRequirements,
+                onLevelsChanged: (levels) => _createGroupCubit.updateField('levelRequirements', levels),
               ),
               const SizedBox(height: 16),
             ],
@@ -332,12 +318,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
             GroupSettingsWidget(
               selectedSport: _getSelectedSport(state),
-              maxMembers: state.currentFormData.maxMembers,
-              membershipFee: state.currentFormData.membershipFee,
+              monthlyFee: state.currentFormData.monthlyFee,
               privacy: state.currentFormData.privacy ?? 'cong_khai',
               rules: _convertRulesToList(state.currentFormData.rules),
-              onMaxMembersChanged: (value) => _createGroupCubit.updateField('maxMembers', value),
-              onMembershipFeeChanged: (value) => _createGroupCubit.updateField('membershipFee', value),
+              onMonthlyFeeChanged: (value) => _createGroupCubit.updateField('monthlyFee', value),
               onPrivacyChanged: (value) => _createGroupCubit.updateField('privacy', value),
               onRulesChanged: (value) => _createGroupCubit.updateField('rules', _convertRulesFromList(value)),
             ),
@@ -382,7 +366,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                       break;
                     case 1:
                       canProceed = state.currentFormData.name.isNotEmpty && 
-                                 state.currentFormData.skillLevel?.isNotEmpty == true && 
                                  state.currentFormData.location.isNotEmpty && 
                                  state.currentFormData.city.isNotEmpty;
                       break;

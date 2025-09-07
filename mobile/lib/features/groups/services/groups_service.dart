@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 import '../../../core/network/api_client.dart';
 import '../models/group.dart';
 import '../models/sport.dart';
+import '../models/sport_level.dart';
 
 @injectable
 class GroupsService {
@@ -93,6 +94,21 @@ class GroupsService {
     }
   }
 
+  Future<List<SportLevel>> getSportLevels(String sportType) async {
+    try {
+      final response = await _apiClient.get('$_sportsUrl/$sportType/levels');
+      
+      if (response.data['success'] == true) {
+        final levelsResponse = SportLevelsResponse.fromJson(response.data);
+        return levelsResponse.data.levels;
+      } else {
+        throw Exception('Failed to load sport levels: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching sport levels: $e');
+    }
+  }
+
   // Group management methods
   Future<List<Group>> getGroups({
     String? sportType,
@@ -133,33 +149,54 @@ class GroupsService {
     required String name,
     String? description,
     required String sportType,
-    required String skillLevel,
+    List<String>? levelRequirements,
     required String location,
     required String city,
     String? district,
     double? latitude,
     double? longitude,
     Map<String, dynamic>? schedule,
-    int? maxMembers,
-    double? membershipFee,
+    double? monthlyFee,
     required String privacy,
     String? avatar,
     Map<String, dynamic>? rules,
   }) async {
     try {
+      // Convert level requirements to API format
+      List<Map<String, String>>? levelRequirementsData;
+      if (levelRequirements != null && levelRequirements.isNotEmpty) {
+        // Get sport level names for the requirements
+        final sportLevels = await getSportLevels(sportType);
+        levelRequirementsData = levelRequirements
+            .map((levelKey) {
+              final level = sportLevels.firstWhere(
+                (l) => l.levelKey == levelKey,
+                orElse: () => SportLevel(
+                  levelKey: levelKey, 
+                  levelName: levelKey, 
+                  sportType: sportType
+                ),
+              );
+              return {
+                'level_key': level.levelKey,
+                'level_name': level.levelName,
+              };
+            })
+            .toList();
+      }
+
       final data = {
         'name': name,
         'description': description,
         'sport_type': sportType,
-        'skill_level': skillLevel,
+        'level_requirements': levelRequirementsData,
         'location': location,
         'city': city,
         'district': district,
         'latitude': latitude,
         'longitude': longitude,
         'schedule': schedule,
-        'max_members': maxMembers,
-        'membership_fee': membershipFee,
+        'monthly_fee': monthlyFee,
         'privacy': privacy,
         'avatar': avatar,
         'rules': rules,

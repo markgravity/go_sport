@@ -18,10 +18,10 @@ class Sport {
   factory Sport.fromJson(String key, Map<String, dynamic> json) {
     return Sport(
       key: key,
-      name: json['vietnamese_name'] as String,
-      englishName: json['english_name'] as String,
-      icon: json['icon'] as String,
-      defaults: SportDefaults.fromJson(json['defaults']),
+      name: json['vietnamese_name'] as String? ?? 'Chưa rõ',
+      englishName: json['english_name'] as String? ?? 'Unknown',
+      icon: json['icon'] as String? ?? 'sports',
+      defaults: SportDefaults.fromJson(json['defaults'] ?? {}),
       skillLevels: {
         'moi_bat_dau': 'Mới bắt đầu',
         'trung_binh': 'Trung bình', 
@@ -57,14 +57,17 @@ class SportDefaults {
     required this.equipmentNeeded,
   });
 
-  factory SportDefaults.fromJson(Map<String, dynamic> json) {
+  factory SportDefaults.fromJson(Map<String, dynamic>? json) {
+    final data = json ?? {};
     return SportDefaults(
-      maxMembers: json['max_players'] as int? ?? 20,
-      minPlayers: json['min_players'] as int? ?? 2,
-      maxPlayers: json['max_players'] as int? ?? 20,
-      notificationHours: json['notification_hours'] as int? ?? 24,
-      typicalDuration: json['typical_duration_minutes'] as int? ?? 60,
-      typicalLocations: List<String>.from(json['typical_locations'] ?? []),
+      maxMembers: data['max_players'] as int? ?? 20,
+      minPlayers: data['min_players'] as int? ?? 2,
+      maxPlayers: data['max_players'] as int? ?? 20,
+      notificationHours: data['notification_hours'] as int? ?? 24,
+      typicalDuration: data['typical_duration_minutes'] as int? ?? 60,
+      typicalLocations: data['typical_locations'] != null 
+          ? List<String>.from(data['typical_locations']) 
+          : [],
       equipmentNeeded: [], // Not provided by our current API
     );
   }

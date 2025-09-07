@@ -1729,8 +1729,8 @@ mixin _$GroupFormData {
   /// Loại thể thao (bắt buộc)
   String? get sportType => throw _privateConstructorUsedError;
 
-  /// Mức độ kỹ năng (bắt buộc)
-  String? get skillLevel => throw _privateConstructorUsedError;
+  /// Yêu cầu cấp độ (tùy chọn, đa chọn)
+  List<String> get levelRequirements => throw _privateConstructorUsedError;
 
   /// Địa điểm (bắt buộc)
   String get location => throw _privateConstructorUsedError;
@@ -1750,11 +1750,8 @@ mixin _$GroupFormData {
   /// Lịch hoạt động
   Map<String, dynamic> get schedule => throw _privateConstructorUsedError;
 
-  /// Số thành viên tối đa
-  int? get maxMembers => throw _privateConstructorUsedError;
-
-  /// Phí thành viên (VND)
-  double get membershipFee => throw _privateConstructorUsedError;
+  /// Phí hàng tháng (VND)
+  double get monthlyFee => throw _privateConstructorUsedError;
 
   /// Quyền riêng tư (cong_khai/rieng_tu)
   String? get privacy => throw _privateConstructorUsedError;
@@ -1785,15 +1782,14 @@ abstract class $GroupFormDataCopyWith<$Res> {
       {String name,
       String description,
       String? sportType,
-      String? skillLevel,
+      List<String> levelRequirements,
       String location,
       String city,
       String district,
       double? latitude,
       double? longitude,
       Map<String, dynamic> schedule,
-      int? maxMembers,
-      double membershipFee,
+      double monthlyFee,
       String? privacy,
       String? avatar,
       Map<String, dynamic> rules,
@@ -1818,15 +1814,14 @@ class _$GroupFormDataCopyWithImpl<$Res, $Val extends GroupFormData>
     Object? name = null,
     Object? description = null,
     Object? sportType = freezed,
-    Object? skillLevel = freezed,
+    Object? levelRequirements = null,
     Object? location = null,
     Object? city = null,
     Object? district = null,
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? schedule = null,
-    Object? maxMembers = freezed,
-    Object? membershipFee = null,
+    Object? monthlyFee = null,
     Object? privacy = freezed,
     Object? avatar = freezed,
     Object? rules = null,
@@ -1845,10 +1840,10 @@ class _$GroupFormDataCopyWithImpl<$Res, $Val extends GroupFormData>
           ? _value.sportType
           : sportType // ignore: cast_nullable_to_non_nullable
               as String?,
-      skillLevel: freezed == skillLevel
-          ? _value.skillLevel
-          : skillLevel // ignore: cast_nullable_to_non_nullable
-              as String?,
+      levelRequirements: null == levelRequirements
+          ? _value.levelRequirements
+          : levelRequirements // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       location: null == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
@@ -1873,13 +1868,9 @@ class _$GroupFormDataCopyWithImpl<$Res, $Val extends GroupFormData>
           ? _value.schedule
           : schedule // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
-      maxMembers: freezed == maxMembers
-          ? _value.maxMembers
-          : maxMembers // ignore: cast_nullable_to_non_nullable
-              as int?,
-      membershipFee: null == membershipFee
-          ? _value.membershipFee
-          : membershipFee // ignore: cast_nullable_to_non_nullable
+      monthlyFee: null == monthlyFee
+          ? _value.monthlyFee
+          : monthlyFee // ignore: cast_nullable_to_non_nullable
               as double,
       privacy: freezed == privacy
           ? _value.privacy
@@ -1913,15 +1904,14 @@ abstract class _$$GroupFormDataImplCopyWith<$Res>
       {String name,
       String description,
       String? sportType,
-      String? skillLevel,
+      List<String> levelRequirements,
       String location,
       String city,
       String district,
       double? latitude,
       double? longitude,
       Map<String, dynamic> schedule,
-      int? maxMembers,
-      double membershipFee,
+      double monthlyFee,
       String? privacy,
       String? avatar,
       Map<String, dynamic> rules,
@@ -1944,15 +1934,14 @@ class __$$GroupFormDataImplCopyWithImpl<$Res>
     Object? name = null,
     Object? description = null,
     Object? sportType = freezed,
-    Object? skillLevel = freezed,
+    Object? levelRequirements = null,
     Object? location = null,
     Object? city = null,
     Object? district = null,
     Object? latitude = freezed,
     Object? longitude = freezed,
     Object? schedule = null,
-    Object? maxMembers = freezed,
-    Object? membershipFee = null,
+    Object? monthlyFee = null,
     Object? privacy = freezed,
     Object? avatar = freezed,
     Object? rules = null,
@@ -1971,10 +1960,10 @@ class __$$GroupFormDataImplCopyWithImpl<$Res>
           ? _value.sportType
           : sportType // ignore: cast_nullable_to_non_nullable
               as String?,
-      skillLevel: freezed == skillLevel
-          ? _value.skillLevel
-          : skillLevel // ignore: cast_nullable_to_non_nullable
-              as String?,
+      levelRequirements: null == levelRequirements
+          ? _value._levelRequirements
+          : levelRequirements // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       location: null == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
@@ -1999,13 +1988,9 @@ class __$$GroupFormDataImplCopyWithImpl<$Res>
           ? _value._schedule
           : schedule // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
-      maxMembers: freezed == maxMembers
-          ? _value.maxMembers
-          : maxMembers // ignore: cast_nullable_to_non_nullable
-              as int?,
-      membershipFee: null == membershipFee
-          ? _value.membershipFee
-          : membershipFee // ignore: cast_nullable_to_non_nullable
+      monthlyFee: null == monthlyFee
+          ? _value.monthlyFee
+          : monthlyFee // ignore: cast_nullable_to_non_nullable
               as double,
       privacy: freezed == privacy
           ? _value.privacy
@@ -2034,20 +2019,20 @@ class _$GroupFormDataImpl implements _GroupFormData {
       {this.name = '',
       this.description = '',
       this.sportType,
-      this.skillLevel,
+      final List<String> levelRequirements = const [],
       this.location = '',
       this.city = '',
       this.district = '',
       this.latitude,
       this.longitude,
       final Map<String, dynamic> schedule = const {},
-      this.maxMembers,
-      this.membershipFee = 0.0,
+      this.monthlyFee = 0.0,
       this.privacy,
       this.avatar,
       final Map<String, dynamic> rules = const {},
       final Map<String, dynamic> customFields = const {}})
-      : _schedule = schedule,
+      : _levelRequirements = levelRequirements,
+        _schedule = schedule,
         _rules = rules,
         _customFields = customFields;
 
@@ -2065,9 +2050,18 @@ class _$GroupFormDataImpl implements _GroupFormData {
   @override
   final String? sportType;
 
-  /// Mức độ kỹ năng (bắt buộc)
+  /// Yêu cầu cấp độ (tùy chọn, đa chọn)
+  final List<String> _levelRequirements;
+
+  /// Yêu cầu cấp độ (tùy chọn, đa chọn)
   @override
-  final String? skillLevel;
+  @JsonKey()
+  List<String> get levelRequirements {
+    if (_levelRequirements is EqualUnmodifiableListView)
+      return _levelRequirements;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_levelRequirements);
+  }
 
   /// Địa điểm (bắt buộc)
   @override
@@ -2104,14 +2098,10 @@ class _$GroupFormDataImpl implements _GroupFormData {
     return EqualUnmodifiableMapView(_schedule);
   }
 
-  /// Số thành viên tối đa
-  @override
-  final int? maxMembers;
-
-  /// Phí thành viên (VND)
+  /// Phí hàng tháng (VND)
   @override
   @JsonKey()
-  final double membershipFee;
+  final double monthlyFee;
 
   /// Quyền riêng tư (cong_khai/rieng_tu)
   @override
@@ -2147,7 +2137,7 @@ class _$GroupFormDataImpl implements _GroupFormData {
 
   @override
   String toString() {
-    return 'GroupFormData(name: $name, description: $description, sportType: $sportType, skillLevel: $skillLevel, location: $location, city: $city, district: $district, latitude: $latitude, longitude: $longitude, schedule: $schedule, maxMembers: $maxMembers, membershipFee: $membershipFee, privacy: $privacy, avatar: $avatar, rules: $rules, customFields: $customFields)';
+    return 'GroupFormData(name: $name, description: $description, sportType: $sportType, levelRequirements: $levelRequirements, location: $location, city: $city, district: $district, latitude: $latitude, longitude: $longitude, schedule: $schedule, monthlyFee: $monthlyFee, privacy: $privacy, avatar: $avatar, rules: $rules, customFields: $customFields)';
   }
 
   @override
@@ -2160,8 +2150,8 @@ class _$GroupFormDataImpl implements _GroupFormData {
                 other.description == description) &&
             (identical(other.sportType, sportType) ||
                 other.sportType == sportType) &&
-            (identical(other.skillLevel, skillLevel) ||
-                other.skillLevel == skillLevel) &&
+            const DeepCollectionEquality()
+                .equals(other._levelRequirements, _levelRequirements) &&
             (identical(other.location, location) ||
                 other.location == location) &&
             (identical(other.city, city) || other.city == city) &&
@@ -2172,10 +2162,8 @@ class _$GroupFormDataImpl implements _GroupFormData {
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
             const DeepCollectionEquality().equals(other._schedule, _schedule) &&
-            (identical(other.maxMembers, maxMembers) ||
-                other.maxMembers == maxMembers) &&
-            (identical(other.membershipFee, membershipFee) ||
-                other.membershipFee == membershipFee) &&
+            (identical(other.monthlyFee, monthlyFee) ||
+                other.monthlyFee == monthlyFee) &&
             (identical(other.privacy, privacy) || other.privacy == privacy) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
             const DeepCollectionEquality().equals(other._rules, _rules) &&
@@ -2189,15 +2177,14 @@ class _$GroupFormDataImpl implements _GroupFormData {
       name,
       description,
       sportType,
-      skillLevel,
+      const DeepCollectionEquality().hash(_levelRequirements),
       location,
       city,
       district,
       latitude,
       longitude,
       const DeepCollectionEquality().hash(_schedule),
-      maxMembers,
-      membershipFee,
+      monthlyFee,
       privacy,
       avatar,
       const DeepCollectionEquality().hash(_rules),
@@ -2217,15 +2204,14 @@ abstract class _GroupFormData implements GroupFormData {
       {final String name,
       final String description,
       final String? sportType,
-      final String? skillLevel,
+      final List<String> levelRequirements,
       final String location,
       final String city,
       final String district,
       final double? latitude,
       final double? longitude,
       final Map<String, dynamic> schedule,
-      final int? maxMembers,
-      final double membershipFee,
+      final double monthlyFee,
       final String? privacy,
       final String? avatar,
       final Map<String, dynamic> rules,
@@ -2243,9 +2229,9 @@ abstract class _GroupFormData implements GroupFormData {
   @override
   String? get sportType;
 
-  /// Mức độ kỹ năng (bắt buộc)
+  /// Yêu cầu cấp độ (tùy chọn, đa chọn)
   @override
-  String? get skillLevel;
+  List<String> get levelRequirements;
 
   /// Địa điểm (bắt buộc)
   @override
@@ -2271,13 +2257,9 @@ abstract class _GroupFormData implements GroupFormData {
   @override
   Map<String, dynamic> get schedule;
 
-  /// Số thành viên tối đa
+  /// Phí hàng tháng (VND)
   @override
-  int? get maxMembers;
-
-  /// Phí thành viên (VND)
-  @override
-  double get membershipFee;
+  double get monthlyFee;
 
   /// Quyền riêng tư (cong_khai/rieng_tu)
   @override

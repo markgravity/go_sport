@@ -96,7 +96,7 @@ void main() {
         sportType: 'cau_long',
         location: 'Quận 1, TP.HCM',
         city: 'Hồ Chí Minh',
-        skillLevel: 'trung_binh',
+        levelRequirements: ['trung_cap'],
         privacy: 'cong_khai',
         description: 'Câu lạc bộ cầu lông cho người yêu thích thể thao',
       );

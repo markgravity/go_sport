@@ -7,10 +7,11 @@ import 'dart:async' as _i5;
 
 import 'package:go_sport_app/features/groups/models/group.dart' as _i3;
 import 'package:go_sport_app/features/groups/models/sport.dart' as _i2;
+import 'package:go_sport_app/features/groups/models/sport_level.dart' as _i6;
 import 'package:go_sport_app/features/groups/services/groups_service.dart'
     as _i4;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i6;
+import 'package:mockito/src/dummies.dart' as _i7;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -134,6 +135,16 @@ class MockGroupsService extends _i1.Mock implements _i4.GroupsService {
       ) as _i5.Future<List<String>>);
 
   @override
+  _i5.Future<List<_i6.SportLevel>> getSportLevels(String? sportType) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getSportLevels,
+          [sportType],
+        ),
+        returnValue: _i5.Future<List<_i6.SportLevel>>.value(<_i6.SportLevel>[]),
+      ) as _i5.Future<List<_i6.SportLevel>>);
+
+  @override
   _i5.Future<List<_i3.Group>> getGroups({
     String? sportType,
     String? city,
@@ -163,15 +174,14 @@ class MockGroupsService extends _i1.Mock implements _i4.GroupsService {
     required String? name,
     String? description,
     required String? sportType,
-    required String? skillLevel,
+    List<String>? levelRequirements,
     required String? location,
     required String? city,
     String? district,
     double? latitude,
     double? longitude,
     Map<String, dynamic>? schedule,
-    int? maxMembers,
-    double? membershipFee,
+    double? monthlyFee,
     required String? privacy,
     String? avatar,
     Map<String, dynamic>? rules,
@@ -184,15 +194,14 @@ class MockGroupsService extends _i1.Mock implements _i4.GroupsService {
             #name: name,
             #description: description,
             #sportType: sportType,
-            #skillLevel: skillLevel,
+            #levelRequirements: levelRequirements,
             #location: location,
             #city: city,
             #district: district,
             #latitude: latitude,
             #longitude: longitude,
             #schedule: schedule,
-            #maxMembers: maxMembers,
-            #membershipFee: membershipFee,
+            #monthlyFee: monthlyFee,
             #privacy: privacy,
             #avatar: avatar,
             #rules: rules,
@@ -207,15 +216,14 @@ class MockGroupsService extends _i1.Mock implements _i4.GroupsService {
               #name: name,
               #description: description,
               #sportType: sportType,
-              #skillLevel: skillLevel,
+              #levelRequirements: levelRequirements,
               #location: location,
               #city: city,
               #district: district,
               #latitude: latitude,
               #longitude: longitude,
               #schedule: schedule,
-              #maxMembers: maxMembers,
-              #membershipFee: membershipFee,
+              #monthlyFee: monthlyFee,
               #privacy: privacy,
               #avatar: avatar,
               #rules: rules,
@@ -348,7 +356,7 @@ class MockGroupsService extends _i1.Mock implements _i4.GroupsService {
           #generateInvitationLink,
           [groupId],
         ),
-        returnValue: _i5.Future<String>.value(_i6.dummyValue<String>(
+        returnValue: _i5.Future<String>.value(_i7.dummyValue<String>(
           this,
           Invocation.method(
             #generateInvitationLink,

@@ -53,27 +53,31 @@ class Group {
 
   factory Group.fromJson(Map<String, dynamic> json) {
     return Group(
-      id: json['id'] as int,
-      name: json['name'] as String,
+      id: json['id'] as int? ?? 0,
+      name: json['name'] as String? ?? 'Chưa có tên',
       description: json['description'] as String?,
-      sportType: json['sport_type'] as String,
-      skillLevel: json['skill_level'] as String,
-      location: json['location'] as String,
-      city: json['city'] as String,
+      sportType: json['sport_type'] as String? ?? 'unknown',
+      skillLevel: json['skill_level'] as String? ?? 'moi_bat_dau',
+      location: json['location'] as String? ?? 'Chưa xác định',
+      city: json['city'] as String? ?? 'Chưa xác định',
       district: json['district'] as String?,
       latitude: json['latitude']?.toDouble(),
       longitude: json['longitude']?.toDouble(),
       schedule: json['schedule'] as Map<String, dynamic>?,
-      maxMembers: json['max_members'] as int,
-      currentMembers: json['current_members'] as int,
-      membershipFee: (json['membership_fee'] as num?)?.toDouble() ?? 0.0,
-      privacy: json['privacy'] as String,
-      status: json['status'] as String,
+      maxMembers: json['max_members'] as int? ?? 20,
+      currentMembers: json['current_members'] as int? ?? 0,
+      membershipFee: (json['membership_fee'] ?? json['monthly_fee'])?.toDouble() ?? 0.0,
+      privacy: json['privacy'] as String? ?? 'cong_khai',
+      status: json['status'] as String? ?? 'hoat_dong',
       avatar: json['avatar'] as String?,
       rules: json['rules'] as Map<String, dynamic>?,
-      creatorId: json['creator_id'] as int,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      creatorId: json['creator_id'] as int? ?? 0,
+      createdAt: json['created_at'] != null 
+          ? DateTime.parse(json['created_at'] as String)
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'] as String)
+          : DateTime.now(),
       creator: json['creator'] != null ? User.fromJson(json['creator']) : null,
       activeMembers: json['active_members'] != null
           ? (json['active_members'] as List)
@@ -257,9 +261,9 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      phone: json['phone'] as String,
+      id: json['id'] as int? ?? 0,
+      name: json['name'] as String? ?? 'Người dùng',
+      phone: json['phone'] as String? ?? '',
       avatar: json['avatar'] as String?,
     );
   }
@@ -282,9 +286,9 @@ class GroupMember {
 
   factory GroupMember.fromJson(Map<String, dynamic> json) {
     return GroupMember(
-      userId: (json['user_id'] ?? json['id']) as int,
-      name: json['name'] as String,
-      role: (json['role'] ?? json['group_role']) as String,
+      userId: (json['user_id'] ?? json['id'] ?? 0) as int,
+      name: json['name'] as String? ?? 'Thành viên',
+      role: (json['role'] ?? json['group_role'] ?? 'member') as String,
       avatar: json['avatar'] as String?,
       isCurrentUser: json['is_current_user'] ?? false,
     );

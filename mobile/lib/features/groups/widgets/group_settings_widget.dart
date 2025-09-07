@@ -4,24 +4,20 @@ import '../models/sport.dart';
 
 class GroupSettingsWidget extends StatefulWidget {
   final Sport? selectedSport;
-  final int? maxMembers;
-  final double membershipFee;
+  final double monthlyFee;
   final String privacy;
   final List<String> rules;
-  final Function(int?) onMaxMembersChanged;
-  final Function(double) onMembershipFeeChanged;
+  final Function(double) onMonthlyFeeChanged;
   final Function(String) onPrivacyChanged;
   final Function(List<String>) onRulesChanged;
 
   const GroupSettingsWidget({
     super.key,
     required this.selectedSport,
-    required this.maxMembers,
-    required this.membershipFee,
+    required this.monthlyFee,
     required this.privacy,
     required this.rules,
-    required this.onMaxMembersChanged,
-    required this.onMembershipFeeChanged,
+    required this.onMonthlyFeeChanged,
     required this.onPrivacyChanged,
     required this.onRulesChanged,
   });
@@ -31,15 +27,13 @@ class GroupSettingsWidget extends StatefulWidget {
 }
 
 class _GroupSettingsWidgetState extends State<GroupSettingsWidget> {
-  final _maxMembersController = TextEditingController();
-  final _membershipFeeController = TextEditingController();
+  final _monthlyFeeController = TextEditingController();
   final _ruleController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _maxMembersController.text = widget.maxMembers?.toString() ?? '';
-    _membershipFeeController.text = widget.membershipFee == 0 ? '' : widget.membershipFee.toStringAsFixed(0);
+    _monthlyFeeController.text = widget.monthlyFee == 0 ? '' : widget.monthlyFee.toStringAsFixed(0);
   }
 
   void _addRule() {
@@ -64,51 +58,15 @@ class _GroupSettingsWidgetState extends State<GroupSettingsWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Max members
+        // Monthly fee
         TextFormField(
-          controller: _maxMembersController,
-          decoration: InputDecoration(
-            labelText: 'Số thành viên tối đa',
-            hintText: widget.selectedSport?.defaults.maxMembers.toString(),
-            border: const OutlineInputBorder(),
-            prefixIcon: const Icon(Icons.people),
-            helperText: widget.selectedSport != null
-                ? 'Đề xuất: ${widget.selectedSport!.defaults.maxMembers} người'
-                : null,
-          ),
-          keyboardType: TextInputType.number,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(3),
-          ],
-          validator: (value) {
-            if (value != null && value.isNotEmpty) {
-              final members = int.tryParse(value);
-              if (members == null || members < 2) {
-                return 'Số thành viên phải ít nhất 2 người';
-              }
-              if (members > 100) {
-                return 'Số thành viên không được vượt quá 100 người';
-              }
-            }
-            return null;
-          },
-          onChanged: (value) {
-            final members = int.tryParse(value);
-            widget.onMaxMembersChanged(members);
-          },
-        ),
-        const SizedBox(height: 16),
-
-        // Membership fee
-        TextFormField(
-          controller: _membershipFeeController,
+          controller: _monthlyFeeController,
           decoration: const InputDecoration(
-            labelText: 'Phí thành viên (VND/tháng)',
+            labelText: 'Phí hàng tháng (VND)',
             hintText: '0',
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.attach_money),
-            helperText: 'Để trống nếu miễn phí',
+            helperText: 'Phí hàng tháng của nhóm (sẽ chia đều cho thành viên)',
           ),
           keyboardType: TextInputType.number,
           inputFormatters: [
@@ -117,7 +75,7 @@ class _GroupSettingsWidgetState extends State<GroupSettingsWidget> {
           ],
           onChanged: (value) {
             final fee = double.tryParse(value) ?? 0.0;
-            widget.onMembershipFeeChanged(fee);
+            widget.onMonthlyFeeChanged(fee);
           },
         ),
         const SizedBox(height: 16),
@@ -324,8 +282,7 @@ class _GroupSettingsWidgetState extends State<GroupSettingsWidget> {
 
   @override
   void dispose() {
-    _maxMembersController.dispose();
-    _membershipFeeController.dispose();
+    _monthlyFeeController.dispose();
     _ruleController.dispose();
     super.dispose();
   }

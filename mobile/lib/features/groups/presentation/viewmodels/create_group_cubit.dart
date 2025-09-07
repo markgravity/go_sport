@@ -74,8 +74,8 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
           return; // _loadSportSuggestions sẽ emit state mới
         }
         break;
-      case 'skillLevel':
-        updatedFormData = currentFormData.copyWith(skillLevel: value as String?);
+      case 'levelRequirements':
+        updatedFormData = currentFormData.copyWith(levelRequirements: value as List<String>);
         break;
       case 'location':
         updatedFormData = currentFormData.copyWith(location: value as String);
@@ -86,11 +86,8 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
       case 'district':
         updatedFormData = currentFormData.copyWith(district: value as String);
         break;
-      case 'maxMembers':
-        updatedFormData = currentFormData.copyWith(maxMembers: value as int?);
-        break;
-      case 'membershipFee':
-        updatedFormData = currentFormData.copyWith(membershipFee: value as double);
+      case 'monthlyFee':
+        updatedFormData = currentFormData.copyWith(monthlyFee: value as double);
         break;
       case 'privacy':
         updatedFormData = currentFormData.copyWith(privacy: value as String?);
@@ -148,11 +145,8 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
       final nameSuggestions = futures[1] as List<String>;
       final sportDefaults = futures[2] as SportDefaults;
 
-      // Apply sport defaults if form fields are empty
+      // Sport defaults are no longer applied automatically
       var finalFormData = updatedFormData;
-      if (finalFormData.maxMembers == null) {
-        finalFormData = finalFormData.copyWith(maxMembers: sportDefaults.maxMembers);
-      }
 
       final validationErrors = _validateForm(finalFormData);
 
@@ -216,10 +210,6 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
       errors['city'] = 'Thành phố không được để trống';
     }
 
-    if (formData.skillLevel == null) {
-      errors['skillLevel'] = 'Vui lòng chọn mức độ kỹ năng';
-    }
-
     if (formData.privacy == null) {
       errors['privacy'] = 'Vui lòng chọn quyền riêng tư';
     }
@@ -229,20 +219,12 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
       errors['description'] = 'Mô tả không được dài quá 500 ký tự';
     }
 
-    if (formData.maxMembers != null && formData.maxMembers! < 2) {
-      errors['maxMembers'] = 'Số thành viên tối đa phải ít nhất 2 người';
+    if (formData.monthlyFee < 0) {
+      errors['monthlyFee'] = 'Phí hàng tháng không được âm';
     }
 
-    if (formData.maxMembers != null && formData.maxMembers! > 200) {
-      errors['maxMembers'] = 'Số thành viên tối đa không được quá 200 người';
-    }
-
-    if (formData.membershipFee < 0) {
-      errors['membershipFee'] = 'Phí thành viên không được âm';
-    }
-
-    if (formData.membershipFee > 10000000) { // 10 million VND
-      errors['membershipFee'] = 'Phí thành viên không được quá 10,000,000 VND';
+    if (formData.monthlyFee > 10000000) { // 10 million VND
+      errors['monthlyFee'] = 'Phí hàng tháng không được quá 10,000,000 VND';
     }
 
     return errors;
@@ -290,15 +272,14 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
         name: formData.name.trim(),
         description: formData.description.trim().isNotEmpty ? formData.description.trim() : null,
         sportType: formData.sportType!,
-        skillLevel: formData.skillLevel!,
+        levelRequirements: formData.levelRequirements,
         location: formData.location.trim(),
         city: formData.city.trim(),
         district: formData.district.trim().isNotEmpty ? formData.district.trim() : null,
         latitude: formData.latitude,
         longitude: formData.longitude,
         schedule: formData.schedule.isNotEmpty ? formData.schedule : null,
-        maxMembers: formData.maxMembers,
-        membershipFee: formData.membershipFee,
+        monthlyFee: formData.monthlyFee,
         privacy: formData.privacy!,
         avatar: formData.avatar,
         rules: formData.rules.isNotEmpty ? formData.rules : null,
@@ -357,8 +338,8 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
       errors['location'] = 'Địa điểm không hợp lệ.';
     }
 
-    if (errorString.contains('max_members')) {
-      errors['maxMembers'] = 'Số thành viên tối đa không hợp lệ.';
+    if (errorString.contains('monthly_fee')) {
+      errors['monthlyFee'] = 'Phí hàng tháng không hợp lệ.';
     }
 
     return errors;
@@ -399,7 +380,7 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
     final defaults = currentState.sportDefaults!;
     var updatedFormData = currentState.currentFormData;
 
-    updatedFormData = updatedFormData.copyWith(maxMembers: defaults.maxMembers);
+    // No longer apply default max members since field was removed
 
     final validationErrors = _validateForm(updatedFormData);
     

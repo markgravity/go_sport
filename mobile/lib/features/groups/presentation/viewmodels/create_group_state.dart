@@ -81,8 +81,8 @@ class GroupFormData with _$GroupFormData {
     @Default('') String description,
     /// Loại thể thao (bắt buộc)
     String? sportType,
-    /// Mức độ kỹ năng (bắt buộc)
-    String? skillLevel,
+    /// Yêu cầu cấp độ (tùy chọn, đa chọn)
+    @Default([]) List<String> levelRequirements,
     /// Địa điểm (bắt buộc)
     @Default('') String location,
     /// Thành phố (bắt buộc)
@@ -95,10 +95,8 @@ class GroupFormData with _$GroupFormData {
     double? longitude,
     /// Lịch hoạt động
     @Default({}) Map<String, dynamic> schedule,
-    /// Số thành viên tối đa
-    int? maxMembers,
-    /// Phí thành viên (VND)
-    @Default(0.0) double membershipFee,
+    /// Phí hàng tháng (VND)
+    @Default(0.0) double monthlyFee,
     /// Quyền riêng tư (cong_khai/rieng_tu)
     String? privacy,
     /// Avatar URL
