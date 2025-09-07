@@ -64,7 +64,13 @@ class AuthInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     // Handle 401 Unauthorized responses
     if (err.response?.statusCode == 401) {
-      // Clear auth data first
+      // Don't handle 401 for login/auth endpoints - these are credential errors, not token expiration
+      if (_isAuthEndpoint(err.requestOptions.path)) {
+        // Let the original 401 response pass through for auth endpoints
+        return super.onError(err, handler);
+      }
+      
+      // For protected endpoints, this is a token expiration - clear auth data
       await _clearAuthData();
       
       // Get navigation service and redirect to login
@@ -86,7 +92,7 @@ class AuthInterceptor extends Interceptor {
         debugPrint('Navigation service error during 401 handling: $e');
       }
       
-      // Return Vietnamese error message
+      // Return Vietnamese error message for token expiration
       return handler.next(
         DioException(
           requestOptions: err.requestOptions,
@@ -110,6 +116,24 @@ class AuthInterceptor extends Interceptor {
     return false;
   }
 
+  /// Check if endpoint is an auth endpoint (login/register/etc.)
+  bool _isAuthEndpoint(String path) {
+    const authEndpoints = [
+      '/auth/login',
+      '/auth/register',
+      '/auth/send-verification-code',
+      '/auth/password-reset-request',
+      '/auth/password-reset-confirm',
+      '/auth/firebase/authenticate',
+    ];
+    
+    for (final authPath in authEndpoints) {
+      if (path.startsWith(authPath)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   /// Clear all authentication data
   Future<void> _clearAuthData() async {
