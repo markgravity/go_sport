@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class ApiService {
   // TODO: Move to environment configuration
   static const String _baseUrl = kDebugMode

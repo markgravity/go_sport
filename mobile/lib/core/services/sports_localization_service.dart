@@ -1,6 +1,8 @@
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:injectable/injectable.dart';
 
 /// Service to provide localized sports lists
+@injectable
 class SportsLocalizationService {
   
   /// Get localized Vietnamese sports list

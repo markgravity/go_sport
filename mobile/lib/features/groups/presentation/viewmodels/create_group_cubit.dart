@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../models/sport.dart';
 import '../../services/groups_service.dart';
@@ -12,8 +13,11 @@ import 'create_group_state.dart';
 /// - Vietnamese location và name suggestions
 /// - Cultural patterns trong group creation
 /// - Vietnamese validation messages
+@injectable
 class CreateGroupCubit extends Cubit<CreateGroupState> {
-  CreateGroupCubit() : super(const CreateGroupState.initial());
+  final GroupsService _groupsService;
+  
+  CreateGroupCubit(this._groupsService) : super(const CreateGroupState.initial());
 
   /// Initialize form với sports data và suggestions
   Future<void> initializeForm() async {
@@ -21,7 +25,7 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
       emit(const CreateGroupState.loadingForm());
       
       // Load available sports
-      final sports = await GroupsService.getAvailableSports();
+      final sports = await _groupsService.getAvailableSports();
       
       emit(CreateGroupState.formReady(
         availableSports: sports,
@@ -135,9 +139,9 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
 
       // Load suggestions parallel
       final futures = await Future.wait([
-        GroupsService.getLocationSuggestions(sportType, city: updatedFormData.city.isNotEmpty ? updatedFormData.city : null),
-        GroupsService.getNameSuggestions(sportType, city: updatedFormData.city.isNotEmpty ? updatedFormData.city : null),
-        GroupsService.getSportDefaults(sportType),
+        _groupsService.getLocationSuggestions(sportType, city: updatedFormData.city.isNotEmpty ? updatedFormData.city : null),
+        _groupsService.getNameSuggestions(sportType, city: updatedFormData.city.isNotEmpty ? updatedFormData.city : null),
+        _groupsService.getSportDefaults(sportType),
       ]);
 
       final locationSuggestions = futures[0] as List<String>;
@@ -282,7 +286,7 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
       ));
 
       // Create group via API
-      final createdGroup = await GroupsService.createGroup(
+      final createdGroup = await _groupsService.createGroup(
         name: formData.name.trim(),
         description: formData.description.trim().isNotEmpty ? formData.description.trim() : null,
         sportType: formData.sportType!,

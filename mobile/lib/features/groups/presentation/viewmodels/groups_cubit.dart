@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../models/group.dart';
 import '../../services/groups_service.dart';
@@ -12,8 +13,11 @@ import 'groups_state.dart';
 /// - Pagination hỗ trợ load more
 /// - Vietnamese sports types và cultural patterns
 /// - Group member management
+@injectable
 class GroupsCubit extends Cubit<GroupsState> {
-  GroupsCubit() : super(const GroupsState.initial());
+  final GroupsService _groupsService;
+  
+  GroupsCubit(this._groupsService) : super(const GroupsState.initial());
 
   static const int _pageSize = 15;
 
@@ -39,7 +43,7 @@ class GroupsCubit extends Cubit<GroupsState> {
         ));
       }
 
-      final groups = await GroupsService.getGroups(
+      final groups = await _groupsService.getGroups(
         sportType: sportType,
         city: city,
         privacy: privacy,
@@ -99,7 +103,7 @@ class GroupsCubit extends Cubit<GroupsState> {
         privacyFilter: currentState.currentPrivacyFilter,
       ));
 
-      final newGroups = await GroupsService.getGroups(
+      final newGroups = await _groupsService.getGroups(
         sportType: currentState.currentSportTypeFilter,
         city: currentState.currentCityFilter,
         privacy: currentState.currentPrivacyFilter,
@@ -248,7 +252,7 @@ class GroupsCubit extends Cubit<GroupsState> {
   /// Join group
   Future<Map<String, dynamic>?> joinGroup(int groupId, {String? joinReason}) async {
     try {
-      final result = await GroupsService.joinGroup(groupId, joinReason: joinReason);
+      final result = await _groupsService.joinGroup(groupId, joinReason: joinReason);
       
       // Refresh groups để update member count
       await refreshGroups();
@@ -277,7 +281,7 @@ class GroupsCubit extends Cubit<GroupsState> {
   /// Leave group
   Future<bool> leaveGroup(int groupId) async {
     try {
-      await GroupsService.leaveGroup(groupId);
+      await _groupsService.leaveGroup(groupId);
       
       // Refresh groups để update member count
       await refreshGroups();

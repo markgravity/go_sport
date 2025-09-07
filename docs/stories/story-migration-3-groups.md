@@ -20,25 +20,29 @@ So that group coordination continues seamlessly during the architectural migrati
 
 ## Acceptance Criteria
 
-### AC1: Groups Provider to GroupsCubit Migration
-- [ ] Create `GroupsCubit` in `features/groups/presentation/viewmodels/groups_cubit.dart`
+### AC1: Groups Provider to GroupsCubit Migration  
+- [ ] Create screen-specific ViewModels co-located with screens:
+  - `features/groups/screens/groups_list/groups_list_view_model.dart` (GroupsListViewModel)
+  - `features/groups/screens/groups_list/groups_list_state.dart` (Freezed state)
 - [ ] Create `GroupsState` using Freezed with states: `initial, loading, loaded, error`
 - [ ] Migrate group list loading, filtering, and search functionality
 - [ ] Preserve Vietnamese group name and sport type handling
 - [ ] Maintain group member count displays and role summaries
-- [ ] Register GroupsCubit in GetIt container
+- [ ] Register GroupsListViewModel in GetIt container
 
 ### AC2: CreateGroup Provider to CreateGroupCubit Migration  
-- [ ] Create `CreateGroupCubit` in `features/groups/presentation/viewmodels/create_group_cubit.dart`
-- [ ] Create `CreateGroupState` using Freezed for form management
+- [ ] Create screen-specific ViewModels co-located with screens:
+  - `features/groups/screens/create_group/create_group_view_model.dart` (CreateGroupViewModel)
+  - `features/groups/screens/create_group/create_group_state.dart` (Freezed state)
 - [ ] Migrate group creation form validation (Vietnamese names, sport types)
 - [ ] Preserve Vietnamese sports selection (Cầu lông, Pickleball, Bóng đá)
 - [ ] Maintain group privacy settings and invitation link generation
 - [ ] Keep Vietnamese location and timing preferences intact
 
 ### AC3: GroupDetails Provider to GroupDetailsCubit Migration
-- [ ] Create `GroupDetailsCubit` in `features/groups/presentation/viewmodels/group_details_cubit.dart`  
-- [ ] Create `GroupDetailsState` using Freezed for complex group state management
+- [ ] Create screen-specific ViewModels co-located with screens:
+  - `features/groups/screens/group_details/group_details_view_model.dart` (GroupDetailsViewModel)
+  - `features/groups/screens/group_details/group_details_state.dart` (Freezed state)
 - [ ] Migrate member list management with Vietnamese role displays
 - [ ] Preserve role assignment functionality (Trưởng nhóm, Phó nhóm, Thành viên, Khách)
 - [ ] Maintain group settings modification capabilities

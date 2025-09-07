@@ -2,15 +2,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import '../../../core/network/api_client.dart';
 import '../models/default_avatar.dart';
 
+@injectable
 class ImageUploadService {
+  final ApiClient _apiClient;
   static const String _baseUrl = '/images';
   static final ImagePicker _picker = ImagePicker();
+  
+  ImageUploadService(this._apiClient);
 
   /// Pick image from gallery or camera
-  static Future<XFile?> pickImage({ImageSource source = ImageSource.gallery}) async {
+  Future<XFile?> pickImage({ImageSource source = ImageSource.gallery}) async {
     try {
       final XFile? image = await _picker.pickImage(
         source: source,
@@ -25,7 +30,7 @@ class ImageUploadService {
   }
 
   /// Upload group avatar image
-  static Future<Map<String, dynamic>> uploadGroupAvatar(XFile image, {int? groupId}) async {
+  Future<Map<String, dynamic>> uploadGroupAvatar(XFile image, {int? groupId}) async {
     try {
       // Create form data
       final formData = FormData();
@@ -41,7 +46,7 @@ class ImageUploadService {
         formData.fields.add(MapEntry('group_id', groupId.toString()));
       }
 
-      final response = await ApiClient.instance.post(
+      final response = await _apiClient.post(
         '$_baseUrl/upload/group-avatar',
         data: formData,
         options: Options(
@@ -64,9 +69,9 @@ class ImageUploadService {
   }
 
   /// Delete uploaded image
-  static Future<void> deleteImage(String filename) async {
+  Future<void> deleteImage(String filename) async {
     try {
-      final response = await ApiClient.instance.delete(
+      final response = await _apiClient.delete(
         '$_baseUrl/delete',
         data: {'filename': filename},
       );
@@ -80,9 +85,9 @@ class ImageUploadService {
   }
 
   /// Get default avatar options
-  static Future<List<DefaultAvatar>> getDefaultAvatars() async {
+  Future<List<DefaultAvatar>> getDefaultAvatars() async {
     try {
-      final response = await ApiClient.instance.get('$_baseUrl/default-avatars');
+      final response = await _apiClient.get('$_baseUrl/default-avatars');
 
       if (response.data['success'] == true) {
         final List<dynamic> avatarsData = response.data['data'];
@@ -96,7 +101,7 @@ class ImageUploadService {
   }
 
   /// Show image picker dialog
-  static Future<XFile?> showImagePickerDialog(BuildContext context) async {
+  static Future<XFile?> showImagePickerDialog(BuildContext context, ImageUploadService service) async {
     return showModalBottomSheet<XFile>(
       context: context,
       builder: (BuildContext context) {
@@ -109,7 +114,7 @@ class ImageUploadService {
                 onTap: () async {
                   final navigator = Navigator.of(context);
                   navigator.pop();
-                  final image = await pickImage(source: ImageSource.gallery);
+                  final image = await service.pickImage(source: ImageSource.gallery);
                   navigator.pop(image);
                 },
               ),
@@ -119,7 +124,7 @@ class ImageUploadService {
                 onTap: () async {
                   final navigator = Navigator.of(context);
                   navigator.pop();
-                  final image = await pickImage(source: ImageSource.camera);
+                  final image = await service.pickImage(source: ImageSource.camera);
                   navigator.pop(image);
                 },
               ),
@@ -136,7 +141,7 @@ class ImageUploadService {
   }
 
   /// Validate image before upload
-  static bool isValidImage(XFile image) {
+  bool isValidImage(XFile image) {
     // Check file size (max 5MB)
     final file = File(image.path);
     final sizeInBytes = file.lengthSync();

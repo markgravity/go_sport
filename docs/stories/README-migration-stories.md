@@ -11,8 +11,6 @@ The migration follows a **sequential dependency pattern** to minimize risk to pr
 | **MIGRATION-1** | [Foundation Setup and Dependency Migration](story-migration-1-foundation.md) | 1-2 sprints | 🔄 Ready | None |
 | **MIGRATION-2** | [Authentication System Migration](story-migration-2-authentication.md) | 2-3 sprints | ⏳ Blocked | MIGRATION-1 |
 | **MIGRATION-3** | [Group Management System Migration](story-migration-3-groups.md) | 2-3 sprints | ⏳ Blocked | MIGRATION-2 |
-| **MIGRATION-4** | [Attendance and Real-time Features Migration](story-migration-4-attendance.md) | 2-3 sprints | ⏳ Blocked | MIGRATION-3 |
-| **MIGRATION-5** | [Payment System Migration and Architecture Cleanup](story-migration-5-payments-cleanup.md) | 1-2 sprints | ⏳ Blocked | MIGRATION-4 |
 
 **Total Estimated Effort**: 9-13 sprints (approximately 10 weeks as planned)
 
@@ -63,6 +61,32 @@ Each story includes feature flags enabling **safe rollback** during migration:
 - **Timezone Handling**: UTC+7 Vietnam timezone for all attendance coordination
 - **Cultural UI**: Vietnamese sports icons, role badges, currency displays
 - **Localization**: Vietnamese text rendering, diacritics, cultural messaging patterns
+
+### Screen-ViewModel Co-location Architecture
+
+**IMPORTANT ORGANIZATIONAL RULE**: Each screen must have its dedicated ViewModel (Cubit) placed in the same folder for better maintainability:
+
+```
+features/auth/screens/
+├── login/
+│   ├── login_screen.dart
+│   ├── login_view_model.dart      # LoginViewModel extends Cubit<LoginState>
+│   └── login_state.dart           # Freezed state classes
+├── forgot_password/
+│   ├── forgot_password_screen.dart
+│   ├── forgot_password_view_model.dart
+│   └── forgot_password_state.dart
+└── phone_registration/
+    ├── phone_registration_screen.dart
+    ├── phone_registration_view_model.dart
+    └── phone_registration_state.dart
+```
+
+This pattern ensures:
+- **Clear ownership**: Each screen owns its business logic
+- **Easy maintenance**: Related files are co-located  
+- **Better testing**: ViewModels can be tested independently
+- **Reduced coupling**: Screen-specific logic stays with the screen
 
 ### Testing with Vietnamese Data
 Each story includes comprehensive testing with:

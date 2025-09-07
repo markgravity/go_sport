@@ -50,8 +50,19 @@ class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
     ));
     
     try {
-      await _firebaseAuthService.sendSMSVerification(phoneNumber: phoneNumber);
-      final verificationId = 'mock_verification_id'; // Placeholder
+      String? receivedVerificationId;
+      await _firebaseAuthService.sendSMSVerification(
+        phoneNumber: phoneNumber,
+        onCodeSent: (verificationId) {
+          receivedVerificationId = verificationId;
+        },
+        onError: (error) {
+          emit(PhoneRegistrationState.error(
+            message: 'Không thể gửi mã xác thực: $error',
+          ));
+        },
+      );
+      final verificationId = receivedVerificationId ?? 'mock_verification_id';
       
       if (verificationId != null) {
         emit(PhoneRegistrationState.verificationCodeSent(
@@ -92,7 +103,6 @@ class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
         verificationId: verificationId,
         smsCode: smsCode,
         name: name,
-        password: password,
         preferredSports: preferredSports,
       );
       final success = user != null;

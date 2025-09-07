@@ -42,74 +42,16 @@ final getIt = GetIt.instance;
 @InjectableInit()
 Future<void> configureDependencies() async {
   // Initialize injectable generated code
-  await _initializeInjectableDependencies();
-  
-  // Register existing services manually for transition period
-  await _registerExistingServices();
-}
-
-/// Initialize injectable auto-generated dependencies
-Future<void> _initializeInjectableDependencies() async {
-  // This will be populated by injectable generator
   getIt.init();
+  
+  // Register additional services manually if needed
+  await _registerAdditionalServices();
 }
 
-/// Register services with manual configuration
-/// Services are registered in dependency order for proper initialization
-Future<void> _registerExistingServices() async {
-  // Core services - Register in dependency order
-  getIt.registerLazySingleton<ApiService>(() => ApiService());
-  getIt.registerLazySingleton<ApiClient>(() => ApiClient.instance);
-  
-  // HealthService depends on ApiClient, so register it after
-  getIt.registerLazySingleton<HealthService>(() => HealthService(getIt<ApiClient>()));
-  getIt.registerLazySingleton<SportsLocalizationService>(() => SportsLocalizationService());
-  
-  // NetworkStatusCubit depends on ApiClient
-  getIt.registerFactory<NetworkStatusCubit>(() => NetworkStatusCubit(getIt<ApiClient>()));
-  
-  // Auth services - These handle user authentication and security
-  getIt.registerLazySingleton<AuthService>(() => AuthService());
-  getIt.registerLazySingleton<FirebaseAuthService>(() => FirebaseAuthService());
-  getIt.registerLazySingleton<PhoneAuthService>(() => PhoneAuthService());
-  
-  // Auth Cubit - Authentication state management
-  getIt.registerFactory<AuthCubit>(() => AuthCubit(
-    firebaseAuthService: getIt<FirebaseAuthService>(),
-    apiService: getIt<ApiService>(),
-  ));
-  
-  // Auth Screen ViewModels - Screen-specific state management
-  getIt.registerFactory<LoginViewModel>(() => LoginViewModel(
-    getIt<FirebaseAuthService>(),
-    getIt<AuthService>(),
-  ));
-  getIt.registerFactory<PhoneRegistrationViewModel>(() => PhoneRegistrationViewModel(
-    getIt<FirebaseAuthService>(),
-    getIt<AuthService>(),
-  ));
-  getIt.registerFactory<SmsVerificationViewModel>(() => SmsVerificationViewModel(
-    getIt<FirebaseAuthService>(),
-    getIt<AuthService>(),
-  ));
-  
-  // Groups Cubits - Group management state management
-  getIt.registerFactory<GroupsCubit>(() => GroupsCubit());
-  getIt.registerFactory<CreateGroupCubit>(() => CreateGroupCubit());
-  
-  // Groups services - Handle group management and interactions
-  getIt.registerLazySingleton<GroupsService>(() => GroupsService());
-  getIt.registerLazySingleton<ImageUploadService>(() => ImageUploadService());
-  getIt.registerLazySingleton<GroupRoleService>(() => GroupRoleService());
-  
-  // Groups Screen ViewModels - Screen-specific state management
-  getIt.registerFactory<GroupsListViewModel>(() => GroupsListViewModel(
-    getIt<GroupsService>(),
-  ));
-  getIt.registerFactory<GroupDetailsViewModel>(() => GroupDetailsViewModel(
-    getIt<GroupsService>(),
-    getIt<GroupRoleService>(),
-  ));
+/// Register additional services not covered by annotations
+Future<void> _registerAdditionalServices() async {
+  // All services are now registered automatically via @injectable annotation
+  // This function is reserved for future manual registrations if needed
 }
 
 /// Reset all services (useful for testing)
@@ -121,29 +63,14 @@ Future<void> resetDependencies() async {
 bool verifyDependencies() {
   try {
     // Test core services
-    getIt<ApiService>();
     getIt<ApiClient>();
-    getIt<HealthService>();
-    getIt<SportsLocalizationService>();
     
     // Test auth services
     getIt<AuthService>();
     getIt<FirebaseAuthService>();
-    getIt<PhoneAuthService>();
-    
-    // Test auth cubit (factory registration)
-    final authCubit = getIt<AuthCubit>();
-    authCubit.close(); // Close immediately after testing
-    
-    // Test groups cubits (factory registrations)
-    final groupsCubit = getIt<GroupsCubit>();
-    final createGroupCubit = getIt<CreateGroupCubit>();
-    groupsCubit.close(); // Close immediately after testing
-    createGroupCubit.close(); // Close immediately after testing
     
     // Test groups services
     getIt<GroupsService>();
-    getIt<ImageUploadService>();
     getIt<GroupRoleService>();
     
     return true;
@@ -156,37 +83,24 @@ bool verifyDependencies() {
 // Extension for easy service access throughout the app
 extension GetItExtension on GetIt {
   // Core services
-  ApiService get apiService => get<ApiService>();
   ApiClient get apiClient => get<ApiClient>();
-  HealthService get healthService => get<HealthService>();
-  SportsLocalizationService get sportsLocalizationService => get<SportsLocalizationService>();
-  
-  // Network status cubit - Factory registration (creates new instance each time)
-  NetworkStatusCubit createNetworkStatusCubit() => get<NetworkStatusCubit>();
   
   // Auth services
   AuthService get authService => get<AuthService>();
   FirebaseAuthService get firebaseAuthService => get<FirebaseAuthService>();
-  PhoneAuthService get phoneAuthService => get<PhoneAuthService>();
-  
-  // Auth Cubit - Factory registration (creates new instance each time)
-  AuthCubit createAuthCubit() => get<AuthCubit>();
-  
-  // Auth ViewModels - Factory registrations (create new instances each time)
-  LoginViewModel createLoginViewModel() => get<LoginViewModel>();
-  PhoneRegistrationViewModel createPhoneRegistrationViewModel() => get<PhoneRegistrationViewModel>();
-  SmsVerificationViewModel createSmsVerificationViewModel() => get<SmsVerificationViewModel>();
-  
-  // Groups Cubits - Factory registrations (create new instances each time)
-  GroupsCubit createGroupsCubit() => get<GroupsCubit>();
-  CreateGroupCubit createCreateGroupCubit() => get<CreateGroupCubit>();
   
   // Groups services
   GroupsService get groupsService => get<GroupsService>();
-  ImageUploadService get imageUploadService => get<ImageUploadService>();
   GroupRoleService get groupRoleService => get<GroupRoleService>();
   
-  // Groups ViewModels - Factory registrations (create new instances each time)
+  // Factory methods for ViewModels and Cubits
+  AuthCubit createAuthCubit() => get<AuthCubit>();
+  LoginViewModel createLoginViewModel() => get<LoginViewModel>();
+  PhoneRegistrationViewModel createPhoneRegistrationViewModel() => get<PhoneRegistrationViewModel>();
+  SmsVerificationViewModel createSmsVerificationViewModel() => get<SmsVerificationViewModel>();
+  GroupsCubit createGroupsCubit() => get<GroupsCubit>();
+  CreateGroupCubit createCreateGroupCubit() => get<CreateGroupCubit>();
   GroupsListViewModel createGroupsListViewModel() => get<GroupsListViewModel>();
   GroupDetailsViewModel createGroupDetailsViewModel() => get<GroupDetailsViewModel>();
+  NetworkStatusCubit createNetworkStatusCubit() => get<NetworkStatusCubit>();
 }

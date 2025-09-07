@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'api_client.dart';
 import 'exceptions/api_exception.dart';
 
@@ -31,6 +32,7 @@ class HealthCheckResult {
   }
 }
 
+@injectable
 class HealthService {
   final ApiClient _apiClient;
 

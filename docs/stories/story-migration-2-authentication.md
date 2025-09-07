@@ -21,12 +21,15 @@ So that my authentication experience remains seamless during the migration.
 ## Acceptance Criteria
 
 ### AC1: AuthProvider to AuthCubit Migration
-- [ ] Create `AuthCubit` in `features/auth/presentation/viewmodels/auth_cubit.dart`
-- [ ] Create `AuthState` using Freezed in `features/auth/presentation/viewmodels/auth_state.dart`
+- [ ] Create screen-specific ViewModels co-located with screens:
+  - `features/auth/screens/login/login_view_model.dart` (AuthCubit)
+  - `features/auth/screens/login/login_state.dart` (Freezed state)
+  - `features/auth/screens/phone_registration/phone_registration_view_model.dart`
+  - `features/auth/screens/sms_verification/sms_verification_view_model.dart`
 - [ ] Implement identical state transitions: `unauthenticated → authenticating → authenticated`
 - [ ] Preserve phone verification required state for Vietnamese SMS flow
 - [ ] Maintain error handling with Vietnamese error messages
-- [ ] Register AuthCubit in GetIt dependency injection container
+- [ ] Register all screen ViewModels in GetIt dependency injection container
 
 ### AC2: Screen Updates to BlocBuilder Pattern
 - [ ] Update `LoginScreen` to use `BlocProvider` and `BlocBuilder<AuthCubit, AuthState>`
@@ -57,8 +60,6 @@ So that my authentication experience remains seamless during the migration.
 - [ ] Ensure Vietnamese payment flow authentication works
 
 ### AC6: Feature Flag Implementation
-- [ ] Create `USE_CUBIT_AUTH` feature flag in app configuration
-- [ ] Allow runtime switching between Riverpod and Cubit auth systems
 - [ ] Implement gradual rollout capability (percentage-based)
 - [ ] Add debug settings to toggle authentication system
 - [ ] Ensure both systems can coexist safely
@@ -100,22 +101,27 @@ class AuthState with _$AuthState {
 }
 ```
 
-### Screen Migration Pattern
+### Screen-ViewModel Co-location Pattern
 ```dart
-// Before (Riverpod)
-class LoginScreen extends ConsumerWidget {
-  Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authProvider);
-    return authState.when(...)
+// File: features/auth/screens/login/login_view_model.dart
+@injectable
+class LoginViewModel extends Cubit<LoginState> {
+  final AuthRepository _authRepository;
+  
+  LoginViewModel(this._authRepository) : super(const LoginState.initial());
+  
+  Future<void> loginWithPhone(String phoneNumber) async {
+    emit(const LoginState.loading());
+    // ... implementation
   }
 }
 
-// After (Cubit)
+// File: features/auth/screens/login/login_screen.dart
 class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => GetIt.instance<AuthCubit>(),
-      child: BlocBuilder<AuthCubit, AuthState>(
+      create: (context) => GetIt.instance<LoginViewModel>(),
+      child: BlocBuilder<LoginViewModel, LoginState>(
         builder: (context, state) {
           return state.when(...)
         }

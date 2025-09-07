@@ -3,10 +3,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import '../../../core/network/api_client.dart';
 import '../models/user_model.dart';
 
+@injectable
 class AuthService {
+  final ApiClient _apiClient;
+  
+  AuthService(this._apiClient);
+  
   static const _storage = FlutterSecureStorage(
     aOptions: AndroidOptions(
       encryptedSharedPreferences: true,
@@ -22,7 +28,7 @@ class AuthService {
   static const String _biometricPhoneKey = 'biometric_phone';
   
   final LocalAuthentication _localAuth = LocalAuthentication();
-  final ApiClient _apiClient = ApiClient.instance;
+  final ApiClient _apiClient;
 
   /// Login with phone and password
   Future<void> login({

@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import 'interceptors/logging_interceptor.dart';
 import 'interceptors/error_interceptor.dart';
 import 'interceptors/retry_interceptor.dart';
 
+@singleton
 class ApiClient {
   static const String _baseUrl = 'http://localhost/api';
   static const Duration _connectTimeout = Duration(seconds: 30);
@@ -10,16 +12,7 @@ class ApiClient {
 
   late final Dio _dio;
   
-  // Singleton instance
-  static final ApiClient _instance = ApiClient._internal();
-  static ApiClient get instance => _instance;
-  
-  // Private constructor for singleton
-  ApiClient._internal() {
-    _initializeDio();
-  }
-  
-  // Public constructor for provider
+  // Constructor for dependency injection
   ApiClient() {
     _initializeDio();
   }

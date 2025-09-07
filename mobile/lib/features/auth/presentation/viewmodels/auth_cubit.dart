@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../models/user_model.dart';
 import '../../models/auth_tokens.dart';
@@ -14,6 +15,7 @@ import 'auth_state.dart';
 /// - Firebase SMS authentication
 /// - Token refresh và session management
 /// - Cultural error messages
+@injectable
 class AuthCubit extends Cubit<AuthState> {
   final FirebaseAuthService _firebaseAuthService;
 

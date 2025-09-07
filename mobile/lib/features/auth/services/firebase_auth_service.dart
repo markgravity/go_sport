@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import '../models/user_model.dart';
 import 'api_service.dart';
 
+@injectable
 class FirebaseAuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final ApiService _apiService = ApiService();

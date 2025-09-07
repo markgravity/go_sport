@@ -1,15 +1,20 @@
+import 'package:injectable/injectable.dart';
 import '../../../core/network/api_client.dart';
 import '../models/group.dart';
 import '../models/sport.dart';
 
+@injectable
 class GroupsService {
+  final ApiClient _apiClient;
   static const String _baseUrl = '/groups';
   static const String _sportsUrl = '/sports';
+  
+  GroupsService(this._apiClient);
 
   // Sports configuration methods
-  static Future<List<Sport>> getAvailableSports() async {
+  Future<List<Sport>> getAvailableSports() async {
     try {
-      final response = await ApiClient.instance.get(_sportsUrl);
+      final response = await _apiClient.get(_sportsUrl);
       
       if (response.data['success'] == true) {
         final Map<String, dynamic> sportsData = response.data['data']['sports'];
@@ -24,9 +29,9 @@ class GroupsService {
     }
   }
 
-  static Future<Sport> getSportDetails(String sportType) async {
+  Future<Sport> getSportDetails(String sportType) async {
     try {
-      final response = await ApiClient.instance.get('$_sportsUrl/$sportType');
+      final response = await _apiClient.get('$_sportsUrl/$sportType');
       
       if (response.data['success'] == true) {
         return Sport.fromJson(sportType, response.data['data']);
@@ -38,9 +43,9 @@ class GroupsService {
     }
   }
 
-  static Future<SportDefaults> getSportDefaults(String sportType) async {
+  Future<SportDefaults> getSportDefaults(String sportType) async {
     try {
-      final response = await ApiClient.instance.get('$_sportsUrl/$sportType/defaults');
+      final response = await _apiClient.get('$_sportsUrl/$sportType/defaults');
       
       if (response.data['success'] == true) {
         return SportDefaults.fromJson(response.data['data']);
@@ -52,10 +57,10 @@ class GroupsService {
     }
   }
 
-  static Future<List<String>> getLocationSuggestions(String sportType, {String? city}) async {
+  Future<List<String>> getLocationSuggestions(String sportType, {String? city}) async {
     try {
       final queryParams = city != null ? {'city': city} : <String, String>{};
-      final response = await ApiClient.instance.get(
+      final response = await _apiClient.get(
         '$_sportsUrl/$sportType/locations',
         queryParameters: queryParams,
       );
@@ -70,10 +75,10 @@ class GroupsService {
     }
   }
 
-  static Future<List<String>> getNameSuggestions(String sportType, {String? city}) async {
+  Future<List<String>> getNameSuggestions(String sportType, {String? city}) async {
     try {
       final queryParams = city != null ? {'city': city} : <String, String>{};
-      final response = await ApiClient.instance.get(
+      final response = await _apiClient.get(
         '$_sportsUrl/$sportType/name-suggestions',
         queryParameters: queryParams,
       );
@@ -89,7 +94,7 @@ class GroupsService {
   }
 
   // Group management methods
-  static Future<List<Group>> getGroups({
+  Future<List<Group>> getGroups({
     String? sportType,
     String? city,
     String? privacy,
@@ -108,7 +113,7 @@ class GroupsService {
       if (privacy != null) queryParams['privacy'] = privacy;
       if (search != null) queryParams['search'] = search;
 
-      final response = await ApiClient.instance.get(
+      final response = await _apiClient.get(
         _baseUrl,
         queryParameters: queryParams,
       );
@@ -124,7 +129,7 @@ class GroupsService {
     }
   }
 
-  static Future<Group> createGroup({
+  Future<Group> createGroup({
     required String name,
     String? description,
     required String sportType,
@@ -163,7 +168,7 @@ class GroupsService {
       // Remove null values
       data.removeWhere((key, value) => value == null);
 
-      final response = await ApiClient.instance.post(_baseUrl, data: data);
+      final response = await _apiClient.post(_baseUrl, data: data);
       
       if (response.data['success'] == true) {
         return Group.fromJson(response.data['data']);
@@ -175,9 +180,9 @@ class GroupsService {
     }
   }
 
-  static Future<Group> getGroup(int groupId) async {
+  Future<Group> getGroup(int groupId) async {
     try {
-      final response = await ApiClient.instance.get('$_baseUrl/$groupId');
+      final response = await _apiClient.get('$_baseUrl/$groupId');
       
       if (response.data['success'] == true) {
         return Group.fromJson(response.data['data']);
@@ -189,12 +194,12 @@ class GroupsService {
     }
   }
 
-  static Future<Group> updateGroup(
+  Future<Group> updateGroup(
     int groupId,
     Map<String, dynamic> updates,
   ) async {
     try {
-      final response = await ApiClient.instance.put('$_baseUrl/$groupId', data: updates);
+      final response = await _apiClient.put('$_baseUrl/$groupId', data: updates);
       
       if (response.data['success'] == true) {
         return Group.fromJson(response.data['data']);
@@ -206,9 +211,9 @@ class GroupsService {
     }
   }
 
-  static Future<void> deleteGroup(int groupId) async {
+  Future<void> deleteGroup(int groupId) async {
     try {
-      final response = await ApiClient.instance.delete('$_baseUrl/$groupId');
+      final response = await _apiClient.delete('$_baseUrl/$groupId');
       
       if (response.data['success'] != true) {
         throw Exception('Failed to delete group: ${response.data['message']}');
@@ -218,10 +223,10 @@ class GroupsService {
     }
   }
 
-  static Future<Map<String, dynamic>> joinGroup(int groupId, {String? joinReason}) async {
+  Future<Map<String, dynamic>> joinGroup(int groupId, {String? joinReason}) async {
     try {
       final data = joinReason != null ? {'join_reason': joinReason} : <String, dynamic>{};
-      final response = await ApiClient.instance.post('$_baseUrl/$groupId/join', data: data);
+      final response = await _apiClient.post('$_baseUrl/$groupId/join', data: data);
       
       if (response.data['success'] == true) {
         return {
@@ -237,9 +242,9 @@ class GroupsService {
     }
   }
 
-  static Future<void> leaveGroup(int groupId) async {
+  Future<void> leaveGroup(int groupId) async {
     try {
-      final response = await ApiClient.instance.post('$_baseUrl/$groupId/leave');
+      final response = await _apiClient.post('$_baseUrl/$groupId/leave');
       
       if (response.data['success'] != true) {
         throw Exception('Failed to leave group: ${response.data['message']}');
@@ -249,9 +254,9 @@ class GroupsService {
     }
   }
 
-  static Future<List<User>> getGroupMembers(int groupId) async {
+  Future<List<User>> getGroupMembers(int groupId) async {
     try {
-      final response = await ApiClient.instance.get('$_baseUrl/$groupId/members');
+      final response = await _apiClient.get('$_baseUrl/$groupId/members');
       
       if (response.data['success'] == true) {
         final List<dynamic> membersData = response.data['data'];
@@ -267,17 +272,17 @@ class GroupsService {
   // Additional methods needed by ViewModels
 
   /// Get detailed group information (alias for getGroup)
-  static Future<Group> getGroupDetails(String groupId) async {
+  Future<Group> getGroupDetails(String groupId) async {
     return await getGroup(int.parse(groupId));
   }
 
   /// Remove member from group
-  static Future<bool> removeMemberFromGroup({
+  Future<bool> removeMemberFromGroup({
     required String groupId,
     required String memberId,
   }) async {
     try {
-      final response = await ApiClient.instance.delete(
+      final response = await _apiClient.delete(
         '$_baseUrl/${int.parse(groupId)}/members/${int.parse(memberId)}'
       );
       return response.data['success'] == true;
@@ -287,9 +292,9 @@ class GroupsService {
   }
 
   /// Generate invitation link for group
-  static Future<String> generateInvitationLink(String groupId) async {
+  Future<String> generateInvitationLink(String groupId) async {
     try {
-      final response = await ApiClient.instance.post(
+      final response = await _apiClient.post(
         '$_baseUrl/${int.parse(groupId)}/invite'
       );
       if (response.data['success'] == true) {
@@ -303,7 +308,7 @@ class GroupsService {
   }
 
   /// Update group settings
-  static Future<bool> updateGroupSettings({
+  Future<bool> updateGroupSettings({
     required String groupId,
     String? name,
     String? description,
@@ -317,7 +322,7 @@ class GroupsService {
       if (isPrivate != null) data['privacy'] = isPrivate ? 'rieng_tu' : 'cong_khai';
       if (location != null) data['location'] = location;
 
-      final response = await ApiClient.instance.put(
+      final response = await _apiClient.put(
         '$_baseUrl/${int.parse(groupId)}',
         data: data,
       );

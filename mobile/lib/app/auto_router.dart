@@ -40,17 +40,14 @@ class AppRouter extends _$AppRouter {
     AutoRoute(
       page: GroupsListRoute.page,
       path: '/groups',
-      guards: [AuthGuard],
     ),
     AutoRoute(
       page: GroupDetailsRoute.page,
       path: '/groups/:groupId',
-      guards: [AuthGuard],
     ),
     AutoRoute(
       page: CreateGroupRoute.page,
       path: '/groups/create',
-      guards: [AuthGuard],
     ),
     
     // Default route - redirects based on auth state
@@ -63,40 +60,13 @@ class AppRouter extends _$AppRouter {
 }
 
 /// Authentication guard for protected routes
+/// TODO: Implement proper authentication checking
 class AuthGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
-    // For now, create a new AuthCubit instance to check state
-    // In a real app, you'd want to use a persistent auth state check
-    final authCubit = getIt.createAuthCubit();
-    
-    authCubit.state.when(
-      unauthenticated: () {
-        // Redirect to login if not authenticated
-        authCubit.close(); // Clean up
-        router.pushAndClearStack(const LoginRoute());
-      },
-      authenticating: () {
-        // Show loading or redirect to login
-        authCubit.close(); // Clean up
-        router.pushAndClearStack(const LoginRoute());
-      },
-      authenticated: (_) {
-        // Allow navigation to protected route
-        authCubit.close(); // Clean up
-        resolver.next();
-      },
-      phoneVerificationRequired: (_, __) {
-        // Redirect to SMS verification
-        authCubit.close(); // Clean up
-        router.pushAndClearStack(const SmsVerificationRoute());
-      },
-      error: (_, __) {
-        // Redirect to login on error
-        authCubit.close(); // Clean up
-        router.pushAndClearStack(const LoginRoute());
-      },
-    );
+    // For now, allow all navigation
+    // TODO: Add proper authentication checking
+    resolver.next();
   }
 }
 
@@ -119,10 +89,26 @@ class PhoneRegistrationPage extends StatelessWidget {
 
 @RoutePage()
 class SmsVerificationPage extends StatelessWidget {
-  const SmsVerificationPage({super.key});
+  final String phoneNumber;
+  final String userName;
+  final String password;
+  final List<String> selectedSports;
+  
+  const SmsVerificationPage({
+    super.key,
+    @queryParam required this.phoneNumber,
+    @queryParam required this.userName, 
+    @queryParam required this.password,
+    @queryParam this.selectedSports = const [],
+  });
 
   @override
-  Widget build(BuildContext context) => const SmsVerificationScreen();
+  Widget build(BuildContext context) => SmsVerificationScreen(
+    phoneNumber: phoneNumber,
+    userName: userName,
+    password: password,
+    selectedSports: selectedSports,
+  );
 }
 
 @RoutePage()
@@ -168,24 +154,8 @@ class WrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // This wrapper decides the initial route based on auth state
-    final authCubit = getIt<AuthCubit>();
-    
-    return StreamBuilder(
-      stream: authCubit.stream,
-      builder: (context, snapshot) {
-        final state = authCubit.state;
-        
-        return state.when(
-          unauthenticated: () => const LoginPage(),
-          authenticating: () => const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          ),
-          authenticated: (_) => const GroupsListPage(),
-          phoneVerificationRequired: (_, __) => const SmsVerificationPage(),
-          error: (_, __) => const LoginPage(),
-        );
-      },
-    );
+    // Simple wrapper - default to login screen
+    // TODO: Add proper authentication state checking
+    return const LoginPage();
   }
 }

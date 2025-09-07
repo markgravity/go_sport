@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import '../models/user_model.dart';
 import '../models/auth_tokens.dart';
 import '../../../core/utils/phone_validator.dart';
 import 'api_service.dart';
 
+@injectable
 class PhoneAuthService {
-  final ApiService _apiService = ApiService();
+  final ApiService _apiService;
+  
+  PhoneAuthService(this._apiService);
 
   // Format phone number to Vietnamese standard (+84) - delegate to VietnamesePhoneValidator
   static String formatVietnamesePhone(String phone) {

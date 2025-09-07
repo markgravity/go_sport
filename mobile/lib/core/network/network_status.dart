@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'api_client.dart';
 
 enum NetworkConnectionStatus {
@@ -11,6 +12,7 @@ enum NetworkConnectionStatus {
 /// Cubit for managing network connection status
 /// 
 /// Provides real-time network connectivity status using API health checks
+@injectable
 class NetworkStatusCubit extends Cubit<NetworkConnectionStatus> {
   final ApiClient _apiClient;
   

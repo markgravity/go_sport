@@ -139,9 +139,26 @@ Based on your existing ui-architecture.md analysis, this migration is already **
 
 ### Code Organization and Standards
 
-**File Structure Approach**: Follow established MVVM pattern with features folder containing data/domain/presentation layers. New Cubit files follow established naming: `{feature}_cubit.dart`, `{feature}_state.dart`
+**File Structure Approach**: Follow established MVVM pattern with features folder containing data/domain/presentation layers. **IMPORTANT**: Each screen should have its dedicated ViewModel (Cubit) placed in the same folder as the screen for better organization and maintainability.
 
-**Naming Conventions**: Maintain existing Vietnamese cultural naming patterns. Cubit classes: `{Feature}Cubit`, State classes: `{Feature}State`, Screen classes: `{Feature}Screen`
+**Screen-ViewModel Co-location Pattern**:
+```
+features/auth/screens/
+├── login/
+│   ├── login_screen.dart
+│   ├── login_view_model.dart (AuthCubit)
+│   └── login_state.dart (Freezed state)
+├── forgot_password/
+│   ├── forgot_password_screen.dart
+│   ├── forgot_password_view_model.dart (ForgotPasswordCubit)
+│   └── forgot_password_state.dart (Freezed state)
+└── phone_registration/
+    ├── phone_registration_screen.dart
+    ├── phone_registration_view_model.dart (PhoneRegistrationCubit)
+    └── phone_registration_state.dart (Freezed state)
+```
+
+**Naming Conventions**: Maintain existing Vietnamese cultural naming patterns. Cubit classes: `{Feature}Cubit`, State classes: `{Feature}State`, Screen classes: `{Feature}Screen`. ViewModels should be named `{screen_name}_view_model.dart` and contain the appropriate Cubit implementation.
 
 **Coding Standards**: Preserve existing Vietnamese code patterns, comments, and cultural UI component standards. All new Cubit code follows established Flutter lint rules.
 
