@@ -382,20 +382,11 @@ class AuthService {
     required String name,
     required String password,
     required String smsCode,
+    required String verificationId,
     List<String>? preferredSports,
-    String? verificationId,
   }) async {
     try {
-      // Step 1: Get verification ID (either provided or generate new one)
-      String actualVerificationId;
-      if (verificationId != null && verificationId.isNotEmpty) {
-        actualVerificationId = verificationId;
-      } else {
-        // Generate new verification ID by sending SMS
-        actualVerificationId = await sendSMSVerification(phoneNumber: phoneNumber);
-      }
-      
-      // Step 2: Call backend registration API
+      // Call backend registration API
       final response = await _apiClient.post(
         '/auth/register',
         data: {
@@ -403,7 +394,7 @@ class AuthService {
           'phone': phoneNumber,
           'password': password,
           'password_confirmation': password,
-          'verification_id': actualVerificationId,
+          'verification_id': verificationId,
           'sms_code': smsCode,
           'preferred_sports': preferredSports ?? [],
         },

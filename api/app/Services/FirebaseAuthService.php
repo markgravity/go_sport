@@ -88,8 +88,8 @@ class FirebaseAuthService
                 'phone_verified' => !empty($userRecord->phoneNumber),
                 'provider_data' => $userRecord->providerData,
                 'custom_claims' => $userRecord->customClaims,
-                'created_at' => $userRecord->createdAt,
-                'last_sign_in_at' => $userRecord->lastSignInAt,
+                'created_at' => $userRecord->metadata->createdAt ?? null,
+                'last_sign_in_at' => $userRecord->metadata->lastSignInAt ?? null,
             ];
         } catch (FirebaseException $e) {
             Log::error('Failed to get Firebase user', [
