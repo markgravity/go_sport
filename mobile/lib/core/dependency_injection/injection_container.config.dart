@@ -80,8 +80,10 @@ extension GetItInjectableX on _i174.GetIt {
         _i1031.SmsVerificationViewModel(gh<_i1029.FirebaseAuthService>()));
     gh.factory<_i210.PhoneRegistrationViewModel>(() =>
         _i210.PhoneRegistrationViewModel(gh<_i1029.FirebaseAuthService>()));
-    gh.factory<_i428.LoginViewModel>(
-        () => _i428.LoginViewModel(gh<_i1029.FirebaseAuthService>()));
+    gh.factory<_i428.LoginViewModel>(() => _i428.LoginViewModel(
+          gh<_i1029.FirebaseAuthService>(),
+          gh<_i882.AuthService>(),
+        ));
     gh.factory<_i612.PhoneAuthService>(
         () => _i612.PhoneAuthService(gh<_i39.ApiService>()));
     gh.factory<_i898.GroupsCubit>(

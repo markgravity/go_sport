@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../services/firebase_auth_service.dart';
+import '../../services/auth_service.dart';
 import 'login_state.dart';
 
 /// ViewModel for Login Screen using Cubit pattern
@@ -11,9 +12,11 @@ import 'login_state.dart';
 @injectable
 class LoginViewModel extends Cubit<LoginState> {
   final FirebaseAuthService _firebaseAuthService;
+  final AuthService _authService;
   
   LoginViewModel(
     this._firebaseAuthService,
+    this._authService,
   ) : super(const LoginState.initial());
 
   /// Initialize login screen with default state
@@ -29,26 +32,21 @@ class LoginViewModel extends Cubit<LoginState> {
   }) async {
     emit(const LoginState.loading(message: 'Đang đăng nhập...'));
     
-    try {
-      // For now, forward to SMS verification flow
-      // This would need proper password authentication in the future
-      final verificationId = await sendVerificationCode(phoneNumber);
-      
-      if (verificationId != null) {
-        emit(LoginState.phoneVerificationRequired(
-          phoneNumber: phoneNumber,
-          verificationId: verificationId,
+    await _authService.login(
+      phoneNumber: phoneNumber,
+      password: password,
+      rememberMe: rememberMe,
+      onSuccess: (user, message) {
+        emit(LoginState.success(
+          message: message,
         ));
-      } else {
-        emit(const LoginState.error(
-          message: 'Không thể gửi mã xác thực. Vui lòng thử lại.',
+      },
+      onError: (error) {
+        emit(LoginState.error(
+          message: error,
         ));
-      }
-    } catch (error) {
-      emit(LoginState.error(
-        message: 'Có lỗi xảy ra khi đăng nhập: $error',
-      ));
-    }
+      },
+    );
   }
 
   /// Send SMS verification code to Vietnamese phone number
