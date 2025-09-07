@@ -12,9 +12,10 @@ class ApiClient {
   static const Duration _receiveTimeout = Duration(seconds: 30);
 
   late final Dio _dio;
+  final AuthInterceptor _authInterceptor;
   
   // Constructor for dependency injection
-  ApiClient() {
+  ApiClient(this._authInterceptor) {
     _initializeDio();
   }
   
@@ -35,7 +36,7 @@ class ApiClient {
 
   void _setupInterceptors() {
     _dio.interceptors.addAll([
-      AuthInterceptor(), // Must be first to add auth headers
+      _authInterceptor, // Injected auth interceptor - must be first to add auth headers
       LoggingInterceptor(),
       ErrorInterceptor(),
       RetryInterceptor(),

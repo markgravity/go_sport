@@ -11,7 +11,10 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:go_sport_app/core/network/api_client.dart' as _i951;
 import 'package:go_sport_app/core/network/health_service.dart' as _i517;
+import 'package:go_sport_app/core/network/interceptors/auth_interceptor.dart'
+    as _i775;
 import 'package:go_sport_app/core/network/network_status.dart' as _i223;
+import 'package:go_sport_app/core/services/navigation_service.dart' as _i283;
 import 'package:go_sport_app/core/services/sports_localization_service.dart'
     as _i70;
 import 'package:go_sport_app/features/auth/presentation/viewmodels/auth_cubit.dart'
@@ -59,11 +62,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i70.SportsLocalizationService());
     gh.factory<_i1029.FirebaseAuthService>(() => _i1029.FirebaseAuthService());
     gh.factory<_i39.ApiService>(() => _i39.ApiService());
-    gh.singleton<_i951.ApiClient>(() => _i951.ApiClient());
+    gh.factory<_i775.AuthInterceptor>(() => _i775.AuthInterceptor());
+    gh.lazySingleton<_i283.NavigationService>(() => _i283.NavigationService());
     gh.factory<_i730.AuthCubit>(() => _i730.AuthCubit(
           firebaseAuthService: gh<_i1029.FirebaseAuthService>(),
           apiService: gh<_i39.ApiService>(),
         ));
+    gh.singleton<_i951.ApiClient>(
+        () => _i951.ApiClient(gh<_i775.AuthInterceptor>()));
     gh.factory<_i517.HealthService>(
         () => _i517.HealthService(gh<_i951.ApiClient>()));
     gh.factory<_i223.NetworkStatusCubit>(
@@ -86,8 +92,10 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.factory<_i612.PhoneAuthService>(
         () => _i612.PhoneAuthService(gh<_i39.ApiService>()));
-    gh.factory<_i132.GroupsListViewModel>(
-        () => _i132.GroupsListViewModel(gh<_i578.GroupsService>()));
+    gh.factory<_i132.GroupsListViewModel>(() => _i132.GroupsListViewModel(
+          gh<_i578.GroupsService>(),
+          gh<_i882.AuthService>(),
+        ));
     gh.factory<_i898.GroupsCubit>(
         () => _i898.GroupsCubit(gh<_i578.GroupsService>()));
     gh.factory<_i196.CreateGroupCubit>(

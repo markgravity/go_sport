@@ -1,13 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:injectable/injectable.dart';
+
+import '../../services/navigation_service.dart';
+import '../../../core/dependency_injection/injection_container.dart';
 
 /// Authentication interceptor that automatically adds Bearer tokens to requests
 /// 
 /// This interceptor:
 /// - Adds stored auth tokens to protected API requests
 /// - Skips token for public endpoints (auth, health, etc.)
-/// - Handles token refresh on 401 responses
+/// - Handles 401 responses by logging out and redirecting to login
 /// - Provides Vietnamese error messages
+@injectable
 class AuthInterceptor extends Interceptor {
   static const _storage = FlutterSecureStorage(
     aOptions: AndroidOptions(
@@ -58,8 +63,27 @@ class AuthInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     // Handle 401 Unauthorized responses
     if (err.response?.statusCode == 401) {
-      // Token refresh failed or no token - clear auth data
+      // Clear auth data first
       await _clearAuthData();
+      
+      // Get navigation service and redirect to login
+      try {
+        final navigationService = getIt<NavigationService>();
+        
+        // Don't redirect if already on login screen to avoid infinite loops
+        if (!navigationService.isOnLoginScreen) {
+          // Show message and redirect to login
+          navigationService.showSnackBar(
+            'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.',
+          );
+          
+          // Navigate to login and clear stack
+          await navigationService.navigateToLoginAndClearStack();
+        }
+      } catch (e) {
+        // Fallback if navigation service fails
+        print('Navigation service error during 401 handling: $e');
+      }
       
       // Return Vietnamese error message
       return handler.next(

@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../services/groups_service.dart';
 import '../../models/group.dart';
+import '../../../auth/services/auth_service.dart';
 import 'groups_list_state.dart';
 
 /// ViewModel for Groups List Screen using Cubit pattern
@@ -12,11 +13,12 @@ import 'groups_list_state.dart';
 @injectable
 class GroupsListViewModel extends Cubit<GroupsListState> {
   final GroupsService _groupsService;
+  final AuthService _authService;
   List<Group> _allGroups = [];
   String _currentSearchQuery = '';
   String? _currentSportTypeFilter;
   
-  GroupsListViewModel(this._groupsService) : super(const GroupsListState.initial());
+  GroupsListViewModel(this._groupsService, this._authService) : super(const GroupsListState.initial());
 
   /// Initialize groups list screen
   Future<void> initialize() async {
@@ -26,6 +28,19 @@ class GroupsListViewModel extends Cubit<GroupsListState> {
   /// Load all user's groups from the service
   Future<void> loadGroups() async {
     if (isClosed) return; // Prevent emit after dispose
+    
+    // Check if user is authenticated before making API calls
+    final isLoggedIn = await _authService.isLoggedIn();
+    if (!isLoggedIn) {
+      // User is not authenticated, show empty state instead of making API call
+      emit(const GroupsListState.loaded(
+        groups: [],
+        searchQuery: '',
+        sportTypeFilter: null,
+        hasMore: false,
+      ));
+      return;
+    }
     
     emit(const GroupsListState.loading());
     
@@ -46,6 +61,19 @@ class GroupsListViewModel extends Cubit<GroupsListState> {
   /// Refresh groups list
   Future<void> refreshGroups() async {
     if (isClosed) return; // Prevent emit after dispose
+    
+    // Check if user is authenticated before making API calls
+    final isLoggedIn = await _authService.isLoggedIn();
+    if (!isLoggedIn) {
+      // User is not authenticated, show empty state
+      emit(const GroupsListState.loaded(
+        groups: [],
+        searchQuery: '',
+        sportTypeFilter: null,
+        hasMore: false,
+      ));
+      return;
+    }
     
     try {
       _allGroups = await _groupsService.getGroups();
