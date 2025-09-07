@@ -133,10 +133,11 @@ class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
     state.when(
       initial: () {},
       loading: (_) {},
-      verificationCodeSent: (_, __, ___, ____) {},
+      verificationCodeSent: (_, __, ___, ____, _____) {},
       sportsUpdated: (_) {},
       success: (_) {},
       error: (_, __) => emit(const PhoneRegistrationState.initial()),
+      navigateToLogin: () {},
     );
   }
 

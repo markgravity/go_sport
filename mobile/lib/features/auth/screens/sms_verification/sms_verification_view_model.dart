@@ -75,7 +75,6 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
           verificationId: verificationId,
           smsCode: smsCode,
           name: userName,
-          password: userPassword,
           preferredSports: preferredSports,
         );
         final success = user != null;
@@ -134,13 +133,24 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
     ));
     
     try {
-      await _firebaseAuthService.sendSMSVerification(phoneNumber: phoneNumber);
-      final newVerificationId = 'new_mock_verification_id'; // Placeholder
+      String? newVerificationId;
+      await _firebaseAuthService.sendSMSVerification(
+        phoneNumber: phoneNumber,
+        onCodeSent: (verificationId) {
+          newVerificationId = verificationId;
+        },
+        onError: (error) {
+          emit(SmsVerificationState.error(
+            message: 'Có lỗi xảy ra khi gửi lại mã: $error',
+          ));
+        },
+      );
+      final finalVerificationId = newVerificationId ?? 'mock_verification_id';
       
-      if (newVerificationId != null) {
+      if (finalVerificationId != null) {
         emit(SmsVerificationState.codeResent(
           phoneNumber: phoneNumber,
-          verificationId: newVerificationId,
+          verificationId: finalVerificationId,
           resendCountdown: 60, // Reset countdown
         ));
         _startResendCountdown();

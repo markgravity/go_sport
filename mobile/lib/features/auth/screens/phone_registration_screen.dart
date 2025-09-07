@@ -5,6 +5,8 @@ import '../widgets/loading_overlay.dart';
 import '../widgets/vietnamese_sports_selector.dart';
 import '../../../core/utils/phone_validator.dart';
 import '../../../core/dependency_injection/injection_container.dart';
+import '../../../core/services/sports_localization_service.dart';
+import '../services/phone_auth_service.dart';
 import 'phone_registration/phone_registration_view_model.dart';
 import 'phone_registration/phone_registration_state.dart';
 import 'sms_verification_screen.dart';
@@ -38,6 +40,13 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
   List<String> _selectedSports = [];
   bool _showPassword = false;
   bool _showConfirmPassword = false;
+  
+  // Temporary variables for backward compatibility
+  String get _phoneNumber => _phoneController.text;
+  bool _isLoading = false;
+  
+  // Use dependency injection to get the service
+  late final _phoneAuthService = getIt<PhoneAuthService>();
 
   @override
   void dispose() {
@@ -49,9 +58,8 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
   }
 
   void _onPhoneNumberChanged(String phone) {
-    setState(() {
-      _phoneNumber = phone;
-    });
+    // No state change needed - phone is stored in controller
+    // The getter _phoneNumber will get the value from the controller
   }
 
 
