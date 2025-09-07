@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../services/api_service.dart';
+import '../../services/auth_service.dart';
 import 'phone_registration_state.dart';
 
 /// ViewModel for Phone Registration Screen using Cubit pattern
@@ -10,10 +10,10 @@ import 'phone_registration_state.dart';
 /// Supports Vietnamese sports preferences and cultural patterns
 @injectable
 class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
-  final ApiService _apiService;
+  final AuthService _authService;
   
   PhoneRegistrationViewModel(
-    this._apiService,
+    this._authService,
   ) : super(const PhoneRegistrationState.initial());
 
   /// Initialize registration screen with default state
@@ -47,7 +47,7 @@ class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
     ));
     
     try {
-      final verificationId = await _apiService.sendSMSVerification(
+      final verificationId = await _authService.sendSMSVerification(
         phoneNumber: phoneNumber,
       );
       
@@ -79,7 +79,7 @@ class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
     ));
     
     try {
-      await _apiService.register(
+      await _authService.register(
         phoneNumber: phoneNumber,
         name: name,
         password: password,

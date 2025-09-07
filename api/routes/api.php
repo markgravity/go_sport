@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\FirebaseAuthController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\ImageUploadController;
@@ -44,18 +43,9 @@ Route::prefix('images')->group(function () {
 
 // Public routes (no authentication required)
 Route::prefix('auth')->group(function () {
-    // SMS-based authentication with rate limiting
-    Route::post('/send-verification-code', [AuthController::class, 'sendVerificationCode']);
+    // Simple authentication with Firebase SMS verification
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login'])->middleware('rate_limit_login');
-    
-    // Password reset with rate limiting
-    Route::post('/password-reset-request', [AuthController::class, 'requestPasswordReset'])->middleware('rate_limit_login');
-    Route::post('/password-reset-confirm', [AuthController::class, 'confirmPasswordReset']);
-    
-    // Firebase-based authentication (recommended)
-    Route::post('/firebase/authenticate', [FirebaseAuthController::class, 'authenticate']);
-    Route::get('/firebase/status', [FirebaseAuthController::class, 'status']);
 });
 
 // Protected routes (authentication required)
@@ -65,11 +55,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/auth/refresh', [AuthController::class, 'refresh']);
     Route::get('/auth/me', [AuthController::class, 'me']);
-    
-    // Firebase authentication management
-    Route::post('/auth/firebase/logout', [FirebaseAuthController::class, 'logout']);
-    Route::get('/auth/firebase/me', [FirebaseAuthController::class, 'me']);
-    Route::delete('/auth/firebase/delete-account', [FirebaseAuthController::class, 'deleteAccount']);
 
     // User management
     Route::prefix('user')->group(function () {

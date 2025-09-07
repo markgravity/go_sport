@@ -8,7 +8,6 @@ import '../network/network_status.dart';
 
 // Auth services
 import '../../features/auth/services/auth_service.dart';
-import '../../features/auth/services/api_service.dart';
 
 // Auth ViewModels
 import '../../features/auth/screens/login/login_view_model.dart';
@@ -61,7 +60,6 @@ bool verifyDependencies() {
     
     // Test auth services
     getIt<AuthService>();
-    getIt<ApiService>();
     
     // Test groups services
     getIt<GroupsService>();
@@ -81,7 +79,6 @@ extension GetItExtension on GetIt {
   
   // Auth services
   AuthService get authService => get<AuthService>();
-  ApiService get apiService => get<ApiService>();
   
   // Groups services
   GroupsService get groupsService => get<GroupsService>();

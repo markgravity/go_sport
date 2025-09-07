@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'dart:async';
 
-import '../../services/api_service.dart';
+import '../../services/auth_service.dart';
 import 'sms_verification_state.dart';
 
 /// ViewModel for SMS Verification Screen using Cubit pattern
@@ -11,11 +11,11 @@ import 'sms_verification_state.dart';
 /// Supports Vietnamese cultural patterns for phone verification
 @injectable
 class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
-  final ApiService _apiService;
+  final AuthService _authService;
   Timer? _countdownTimer;
   
   SmsVerificationViewModel(
-    this._apiService,
+    this._authService,
   ) : super(const SmsVerificationState.initial());
 
   @override
@@ -67,7 +67,7 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
     try {
       if (userName != null && userPassword != null) {
         // This is registration flow
-        await _apiService.register(
+        await _authService.register(
           phoneNumber: phoneNumber,
           name: userName,
           password: userPassword,
@@ -110,7 +110,7 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
     ));
     
     try {
-      final newVerificationId = await _apiService.sendSMSVerification(
+      final newVerificationId = await _authService.sendSMSVerification(
         phoneNumber: phoneNumber,
       );
       

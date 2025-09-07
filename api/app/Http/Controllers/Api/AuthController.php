@@ -4,112 +4,39 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\PhoneVerification;
-use App\Services\SmsService;
+use App\Services\FirebaseAuthService;
 use App\Rules\VietnamesePhoneRule;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-    /**
-     * Send SMS verification code for phone registration
-     */
-    public function sendVerificationCode(Request $request): JsonResponse
+    protected FirebaseAuthService $firebaseAuth;
+
+    public function __construct(FirebaseAuthService $firebaseAuth)
     {
-        $validator = Validator::make($request->all(), [
-            'phone' => [
-                'required',
-                'string',
-                new VietnamesePhoneRule(),
-            ]
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Số điện thoại không hợp lệ',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $phone = User::formatVietnamesePhone($request->phone);
-
-        // Check rate limiting (max 3 attempts per 15 minutes)
-        $recentAttempts = PhoneVerification::getRecentAttemptsForPhone($phone, 15);
-        if ($recentAttempts >= 3) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau 15 phút.',
-            ], 429);
-        }
-
-        // Check if phone is already registered
-        $existingUser = User::findByPhone($phone);
-        if ($existingUser && $existingUser->isPhoneVerified()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Số điện thoại này đã được đăng ký',
-            ], 409);
-        }
-
-        try {
-            // Create verification record
-            $verification = PhoneVerification::createForPhone($phone, $request->ip());
-
-            // Send SMS via configured SMS service
-            $smsService = new SmsService();
-            $smsSent = $smsService->sendVerificationCode($phone, $verification->code);
-
-            if (!$smsSent && !app()->environment('local')) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Không thể gửi mã xác thực. Vui lòng thử lại sau.',
-                ], 500);
-            }
-
-            // Return response with development code only in local environment
-            return response()->json([
-                'success' => true,
-                'message' => 'Mã xác thực đã được gửi đến số điện thoại của bạn',
-                'expires_in' => 300, // 5 minutes
-                'sms_provider' => $smsService->getProvider(),
-                'development_code' => app()->environment('local') ? $verification->code : null,
-            ]);
-
-        } catch (\Exception $e) {
-            \Log::error('SMS verification code sending failed', [
-                'phone' => $phone,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Không thể gửi mã xác thực. Vui lòng thử lại.',
-                'debug' => app()->environment('local') ? $e->getMessage() : null,
-            ], 500);
-        }
+        $this->firebaseAuth = $firebaseAuth;
     }
 
     /**
-     * Register user with phone verification
+     * Register user with Firebase SMS verification
      */
     public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
             'phone' => [
                 'required',
                 'string',
                 new VietnamesePhoneRule(),
             ],
-            'verification_code' => 'required|string|size:6',
-            'name' => 'required|string|max:255',
             'password' => 'required|string|min:8|confirmed',
-            'preferred_sports' => 'array',
+            'verification_id' => 'required|string',
+            'sms_code' => 'required|string|size:6',
+            'preferred_sports' => 'sometimes|array',
             'preferred_sports.*' => 'string',
         ]);
 
@@ -123,30 +50,39 @@ class AuthController extends Controller
 
         $phone = User::formatVietnamesePhone($request->phone);
 
-        // Verify the SMS code
-        $verification = PhoneVerification::where('phone', $phone)
-            ->where('code', $request->verification_code)
-            ->first();
-
-        if (!$verification) {
+        // Validate phone number format
+        if (!preg_match('/^(\+84|84|0)[3-9][0-9]{8}$/', $phone)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Mã xác thực không hợp lệ',
+                'message' => 'Số điện thoại không đúng định dạng Việt Nam',
             ], 422);
         }
 
-        if (!$verification->isValid()) {
-            $verification->incrementAttempts();
-            
-            if ($verification->expires_at->isPast()) {
-                $message = 'Mã xác thực đã hết hạn';
-            } else {
-                $message = 'Mã xác thực không đúng';
-            }
-
+        // Validate verification ID format (basic check)
+        if (empty($request->verification_id) || strlen($request->verification_id) < 10) {
             return response()->json([
                 'success' => false,
-                'message' => $message,
+                'message' => 'Mã xác thực Firebase không hợp lệ',
+            ], 422);
+        }
+
+        // Validate SMS code format
+        if (!preg_match('/^\d{6}$/', $request->sms_code)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Mã SMS phải có đúng 6 số',
+            ], 422);
+        }
+
+        // Verify with Firebase server
+        if (!$this->firebaseAuth->verifyPhoneNumberForRegistration(
+            $phone, 
+            $request->verification_id, 
+            $request->sms_code
+        )) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Xác thực Firebase thất bại. Vui lòng kiểm tra mã xác thực.',
             ], 422);
         }
 
@@ -166,18 +102,14 @@ class AuthController extends Controller
                 'phone' => $phone,
                 'email' => null, // Phone-based registration doesn't require email
                 'password' => Hash::make($request->password),
-                'preferred_sports' => $request->preferred_sports ?? [],
                 'preferences' => [
+                    'sports' => $request->preferred_sports ?? [],
                     'language' => 'vi',
+                    'locale' => 'vi_VN',
                 ],
                 'status' => 'active',
+                'phone_verified_at' => now(), // Firebase already verified
             ]);
-
-            // Mark phone as verified
-            $user->markPhoneAsVerified();
-            
-            // Mark verification as used
-            $verification->markAsVerified();
 
             // Create API token
             $token = $user->createToken('mobile-app')->plainTextToken;
@@ -190,15 +122,17 @@ class AuthController extends Controller
                     'name' => $user->name,
                     'phone' => $user->phone,
                     'phone_verified' => true,
-                    'preferred_sports' => $user->preferred_sports,
                     'preferences' => $user->preferences,
+                    'created_at' => $user->created_at,
                 ],
                 'token' => $token,
             ], 201);
 
         } catch (\Exception $e) {
             // Log the actual error for debugging
-            \Log::error('User registration failed', [
+            Log::error('User registration failed', [
+                'phone' => $phone,
+                'verification_id' => $request->verification_id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);

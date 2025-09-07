@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../services/api_service.dart';
 import '../../services/auth_service.dart';
 import 'login_state.dart';
 
@@ -11,11 +10,9 @@ import 'login_state.dart';
 /// Provides Vietnamese phone number validation and cultural patterns
 @injectable
 class LoginViewModel extends Cubit<LoginState> {
-  final ApiService _apiService;
   final AuthService _authService;
   
   LoginViewModel(
-    this._apiService,
     this._authService,
   ) : super(const LoginState.initial());
 
@@ -52,7 +49,7 @@ class LoginViewModel extends Cubit<LoginState> {
   /// Send SMS verification code to Vietnamese phone number
   Future<String?> sendVerificationCode(String phoneNumber) async {
     try {
-      final verificationId = await _apiService.sendSMSVerification(
+      final verificationId = await _authService.sendSMSVerification(
         phoneNumber: phoneNumber,
       );
       
