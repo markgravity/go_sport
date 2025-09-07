@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 
@@ -82,7 +83,7 @@ class AuthInterceptor extends Interceptor {
         }
       } catch (e) {
         // Fallback if navigation service fails
-        print('Navigation service error during 401 handling: $e');
+        debugPrint('Navigation service error during 401 handling: $e');
       }
       
       // Return Vietnamese error message

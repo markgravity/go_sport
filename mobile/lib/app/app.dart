@@ -3,8 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // AutoRoute configuration
 import 'auto_router.dart';
-import '../core/services/navigation_service.dart';
-import '../core/dependency_injection/injection_container.dart';
 
 /// Go Sport App with AutoRoute navigation
 /// 
@@ -36,10 +34,8 @@ class GoSportApp extends StatelessWidget {
         ),
       ),
       
-      // AutoRoute configuration with global navigator key
-      routerConfig: appRouter.config(
-        navigatorKey: NavigationService.navigatorKey,
-      ),
+      // AutoRoute configuration
+      routerConfig: appRouter.config(),
     );
   }
 }
