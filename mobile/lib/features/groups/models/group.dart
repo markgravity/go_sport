@@ -269,11 +269,15 @@ class GroupMember {
   final int userId;
   final String name;
   final String role;
+  final String? avatar;
+  final bool isCurrentUser;
 
   GroupMember({
     required this.userId,
     required this.name,
     required this.role,
+    this.avatar,
+    this.isCurrentUser = false,
   });
 
   factory GroupMember.fromJson(Map<String, dynamic> json) {
@@ -281,6 +285,18 @@ class GroupMember {
       userId: (json['user_id'] ?? json['id']) as int,
       name: json['name'] as String,
       role: (json['role'] ?? json['group_role']) as String,
+      avatar: json['avatar'] as String?,
+      isCurrentUser: json['is_current_user'] ?? false,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'user_id': userId,
+      'name': name,
+      'role': role,
+      'avatar': avatar,
+      'is_current_user': isCurrentUser,
+    };
   }
 }

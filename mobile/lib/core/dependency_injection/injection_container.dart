@@ -14,12 +14,17 @@ import '../../features/auth/services/auth_service.dart';
 import '../../features/auth/services/firebase_auth_service.dart';
 import '../../features/auth/services/phone_auth_service.dart';
 
-// Auth Cubit
+// Auth Cubit and ViewModels
 import '../../features/auth/presentation/viewmodels/auth_cubit.dart';
+import '../../features/auth/screens/login/login_view_model.dart';
+import '../../features/auth/screens/phone_registration/phone_registration_view_model.dart';
+import '../../features/auth/screens/sms_verification/sms_verification_view_model.dart';
 
-// Groups Cubits
+// Groups Cubits and ViewModels
 import '../../features/groups/presentation/viewmodels/groups_cubit.dart';
 import '../../features/groups/presentation/viewmodels/create_group_cubit.dart';
+import '../../features/groups/screens/groups_list/groups_list_view_model.dart';
+import '../../features/groups/screens/group_details/group_details_view_model.dart';
 
 // Groups services
 import '../../features/groups/services/groups_service.dart';
@@ -74,6 +79,20 @@ Future<void> _registerExistingServices() async {
     apiService: getIt<ApiService>(),
   ));
   
+  // Auth Screen ViewModels - Screen-specific state management
+  getIt.registerFactory<LoginViewModel>(() => LoginViewModel(
+    getIt<FirebaseAuthService>(),
+    getIt<AuthService>(),
+  ));
+  getIt.registerFactory<PhoneRegistrationViewModel>(() => PhoneRegistrationViewModel(
+    getIt<FirebaseAuthService>(),
+    getIt<AuthService>(),
+  ));
+  getIt.registerFactory<SmsVerificationViewModel>(() => SmsVerificationViewModel(
+    getIt<FirebaseAuthService>(),
+    getIt<AuthService>(),
+  ));
+  
   // Groups Cubits - Group management state management
   getIt.registerFactory<GroupsCubit>(() => GroupsCubit());
   getIt.registerFactory<CreateGroupCubit>(() => CreateGroupCubit());
@@ -82,6 +101,15 @@ Future<void> _registerExistingServices() async {
   getIt.registerLazySingleton<GroupsService>(() => GroupsService());
   getIt.registerLazySingleton<ImageUploadService>(() => ImageUploadService());
   getIt.registerLazySingleton<GroupRoleService>(() => GroupRoleService());
+  
+  // Groups Screen ViewModels - Screen-specific state management
+  getIt.registerFactory<GroupsListViewModel>(() => GroupsListViewModel(
+    getIt<GroupsService>(),
+  ));
+  getIt.registerFactory<GroupDetailsViewModel>(() => GroupDetailsViewModel(
+    getIt<GroupsService>(),
+    getIt<GroupRoleService>(),
+  ));
 }
 
 /// Reset all services (useful for testing)
@@ -144,6 +172,11 @@ extension GetItExtension on GetIt {
   // Auth Cubit - Factory registration (creates new instance each time)
   AuthCubit createAuthCubit() => get<AuthCubit>();
   
+  // Auth ViewModels - Factory registrations (create new instances each time)
+  LoginViewModel createLoginViewModel() => get<LoginViewModel>();
+  PhoneRegistrationViewModel createPhoneRegistrationViewModel() => get<PhoneRegistrationViewModel>();
+  SmsVerificationViewModel createSmsVerificationViewModel() => get<SmsVerificationViewModel>();
+  
   // Groups Cubits - Factory registrations (create new instances each time)
   GroupsCubit createGroupsCubit() => get<GroupsCubit>();
   CreateGroupCubit createCreateGroupCubit() => get<CreateGroupCubit>();
@@ -152,4 +185,8 @@ extension GetItExtension on GetIt {
   GroupsService get groupsService => get<GroupsService>();
   ImageUploadService get imageUploadService => get<ImageUploadService>();
   GroupRoleService get groupRoleService => get<GroupRoleService>();
+  
+  // Groups ViewModels - Factory registrations (create new instances each time)
+  GroupsListViewModel createGroupsListViewModel() => get<GroupsListViewModel>();
+  GroupDetailsViewModel createGroupDetailsViewModel() => get<GroupDetailsViewModel>();
 }
