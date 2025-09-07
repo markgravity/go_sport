@@ -96,11 +96,20 @@ class GroupsService {
 
   Future<List<SportLevel>> getSportLevels(String sportType) async {
     try {
+      // Validate sport type is not empty or null
+      if (sportType.isEmpty || sportType == 'null') {
+        throw Exception('Invalid sport type provided');
+      }
+      
       final response = await _apiClient.get('$_sportsUrl/$sportType/levels');
       
       if (response.data['success'] == true) {
-        final levelsResponse = SportLevelsResponse.fromJson(response.data);
-        return levelsResponse.data.levels;
+        try {
+          final levelsResponse = SportLevelsResponse.fromJson(response.data);
+          return levelsResponse.data.levels;
+        } catch (parseError) {
+          throw Exception('Failed to parse sport levels: $parseError');
+        }
       } else {
         throw Exception('Failed to load sport levels: ${response.data['message']}');
       }

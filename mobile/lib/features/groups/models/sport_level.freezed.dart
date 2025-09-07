@@ -14,19 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-SportLevel _$SportLevelFromJson(Map<String, dynamic> json) {
-  return _SportLevel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$SportLevel {
   String get levelKey => throw _privateConstructorUsedError;
   String get levelName => throw _privateConstructorUsedError;
   String get sportType => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
-
-  /// Serializes this SportLevel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of SportLevel
   /// with the given fields replaced by the non-null parameter values.
@@ -144,16 +137,13 @@ class __$$SportLevelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$SportLevelImpl implements _SportLevel {
   const _$SportLevelImpl(
       {required this.levelKey,
       required this.levelName,
       required this.sportType,
       this.description});
-
-  factory _$SportLevelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SportLevelImplFromJson(json);
 
   @override
   final String levelKey;
@@ -184,7 +174,6 @@ class _$SportLevelImpl implements _SportLevel {
                 other.description == description));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, levelKey, levelName, sportType, description);
@@ -196,13 +185,6 @@ class _$SportLevelImpl implements _SportLevel {
   @pragma('vm:prefer-inline')
   _$$SportLevelImplCopyWith<_$SportLevelImpl> get copyWith =>
       __$$SportLevelImplCopyWithImpl<_$SportLevelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$SportLevelImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _SportLevel implements SportLevel {
@@ -211,9 +193,6 @@ abstract class _SportLevel implements SportLevel {
       required final String levelName,
       required final String sportType,
       final String? description}) = _$SportLevelImpl;
-
-  factory _SportLevel.fromJson(Map<String, dynamic> json) =
-      _$SportLevelImpl.fromJson;
 
   @override
   String get levelKey;
