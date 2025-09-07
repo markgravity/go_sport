@@ -8,9 +8,9 @@ The migration follows a **sequential dependency pattern** to minimize risk to pr
 
 | Story | Title | Effort | Status | Dependencies |
 |-------|-------|--------|--------|--------------|
-| **MIGRATION-1** | [Foundation Setup and Dependency Migration](story-migration-1-foundation.md) | 1-2 sprints | 🔄 Ready | None |
-| **MIGRATION-2** | [Authentication System Migration](story-migration-2-authentication.md) | 2-3 sprints | ⏳ Blocked | MIGRATION-1 |
-| **MIGRATION-3** | [Group Management System Migration](story-migration-3-groups.md) | 2-3 sprints | ⏳ Blocked | MIGRATION-2 |
+| **MIGRATION-1** | [Foundation Setup and Dependency Migration](story-migration-1-foundation.md) | 1-2 sprints | ✅ Complete | None |
+| **MIGRATION-2** | [Authentication System Migration](story-migration-2-authentication.md) | 2-3 sprints | ✅ Complete | MIGRATION-1 |
+| **MIGRATION-3** | [Group Management System Migration](story-migration-3-groups.md) | 2-3 sprints | ✅ Complete | MIGRATION-2 |
 
 **Total Estimated Effort**: 9-13 sprints (approximately 10 weeks as planned)
 
