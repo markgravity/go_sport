@@ -6,15 +6,61 @@ import '../../../../core/dependency_injection/injection_container.dart';
 import '../../../../core/utils/phone_validator.dart';
 import '../../../../app/auto_router.dart';
 import '../../widgets/loading_overlay.dart';
+import '../../services/auth_service.dart';
 import 'login_view_model.dart';
 import 'login_state.dart';
 
 @RoutePage()
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool _isCheckingAuth = true;
+  late final AuthService _authService;
+
+  @override
+  void initState() {
+    super.initState();
+    _authService = getIt<AuthService>();
+    _checkAuthState();
+  }
+
+  Future<void> _checkAuthState() async {
+    try {
+      final isLoggedIn = await _authService.isLoggedIn();
+      if (mounted && isLoggedIn) {
+        // User is already logged in, navigate to groups list
+        context.router.push(const GroupsListRoute());
+        return;
+      }
+    } catch (e) {
+      // Error checking auth state, continue to show login screen
+    }
+    
+    if (mounted) {
+      setState(() {
+        _isCheckingAuth = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isCheckingAuth) {
+      return const Scaffold(
+        backgroundColor: Color(0xFF2E5BDA),
+        body: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ),
+      );
+    }
+    
     return BlocProvider(
       create: (context) => getIt<LoginViewModel>()..initialize(),
       child: const _LoginView(),

@@ -48,9 +48,9 @@ class AppRouter extends _$AppRouter {
       path: '/groups/create',
     ),
     
-    // Default route - redirects based on auth state
+    // Default route - start with login screen
     AutoRoute(
-      page: WrapperRoute.page,
+      page: LoginRoute.page,
       path: '/',
       initial: true,
     ),
@@ -146,14 +146,3 @@ class CreateGroupPage extends StatelessWidget {
   Widget build(BuildContext context) => const CreateGroupScreen();
 }
 
-@RoutePage()
-class WrapperPage extends StatelessWidget {
-  const WrapperPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // Simple wrapper - default to login screen
-    // TODO: Add proper authentication state checking
-    return const LoginPage();
-  }
-}

@@ -86,12 +86,12 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.factory<_i612.PhoneAuthService>(
         () => _i612.PhoneAuthService(gh<_i39.ApiService>()));
+    gh.factory<_i132.GroupsListViewModel>(
+        () => _i132.GroupsListViewModel(gh<_i578.GroupsService>()));
     gh.factory<_i898.GroupsCubit>(
         () => _i898.GroupsCubit(gh<_i578.GroupsService>()));
     gh.factory<_i196.CreateGroupCubit>(
         () => _i196.CreateGroupCubit(gh<_i578.GroupsService>()));
-    gh.factory<_i132.GroupsListViewModel>(
-        () => _i132.GroupsListViewModel(gh<_i578.GroupsService>()));
     gh.factory<_i503.GroupDetailsViewModel>(() => _i503.GroupDetailsViewModel(
           gh<_i578.GroupsService>(),
           gh<_i39.GroupRoleService>(),

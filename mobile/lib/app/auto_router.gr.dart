@@ -49,13 +49,13 @@ abstract class _$AppRouter extends RootStackRouter {
     LoginRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const LoginPage(),
+        child: const LoginScreen(),
       );
     },
     PhoneRegistrationRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const PhoneRegistrationPage(),
+        child: const PhoneRegistrationScreen(),
       );
     },
     SmsVerificationRoute.name: (routeData) {
@@ -72,19 +72,13 @@ abstract class _$AppRouter extends RootStackRouter {
               ));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: SmsVerificationPage(
+        child: SmsVerificationScreen(
           key: args.key,
           phoneNumber: args.phoneNumber,
           userName: args.userName,
           password: args.password,
           selectedSports: args.selectedSports,
         ),
-      );
-    },
-    WrapperRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const WrapperPage(),
       );
     },
   };
@@ -172,7 +166,7 @@ class GroupsListRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [LoginPage]
+/// [LoginScreen]
 class LoginRoute extends PageRouteInfo<void> {
   const LoginRoute({List<PageRouteInfo>? children})
       : super(
@@ -186,7 +180,7 @@ class LoginRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [PhoneRegistrationPage]
+/// [PhoneRegistrationScreen]
 class PhoneRegistrationRoute extends PageRouteInfo<void> {
   const PhoneRegistrationRoute({List<PageRouteInfo>? children})
       : super(
@@ -200,7 +194,7 @@ class PhoneRegistrationRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [SmsVerificationPage]
+/// [SmsVerificationScreen]
 class SmsVerificationRoute extends PageRouteInfo<SmsVerificationRouteArgs> {
   SmsVerificationRoute({
     Key? key,
@@ -256,18 +250,4 @@ class SmsVerificationRouteArgs {
   String toString() {
     return 'SmsVerificationRouteArgs{key: $key, phoneNumber: $phoneNumber, userName: $userName, password: $password, selectedSports: $selectedSports}';
   }
-}
-
-/// generated route for
-/// [WrapperPage]
-class WrapperRoute extends PageRouteInfo<void> {
-  const WrapperRoute({List<PageRouteInfo>? children})
-      : super(
-          WrapperRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'WrapperRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
