@@ -3,6 +3,7 @@ import '../models/group_role.dart';
 import '../models/group_permission.dart';
 import '../models/group.dart';
 import '../services/group_role_service.dart';
+import '../../../core/dependency_injection/injection_container.dart';
 
 class RoleManagementWidget extends StatefulWidget {
   final Group group;
@@ -21,6 +22,7 @@ class RoleManagementWidget extends StatefulWidget {
 }
 
 class _RoleManagementWidgetState extends State<RoleManagementWidget> {
+  final GroupRoleService _groupRoleService = getIt<GroupRoleService>();
   bool _isLoading = false;
 
   /// Show role change dialog
@@ -98,7 +100,7 @@ class _RoleManagementWidgetState extends State<RoleManagementWidget> {
     setState(() => _isLoading = true);
 
     try {
-      await GroupRoleService.updateMemberRole(
+      await _groupRoleService.updateMemberRole(
         widget.group.id, 
         member.userId, 
         newRole
@@ -178,7 +180,7 @@ class _RoleManagementWidgetState extends State<RoleManagementWidget> {
     setState(() => _isLoading = true);
 
     try {
-      await GroupRoleService.removeMember(widget.group.id, member.userId);
+      await _groupRoleService.removeMember(widget.group.id, member.userId);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

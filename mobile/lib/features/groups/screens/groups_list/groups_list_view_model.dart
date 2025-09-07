@@ -28,7 +28,7 @@ class GroupsListViewModel extends Cubit<GroupsListState> {
     emit(const GroupsListState.loading());
     
     try {
-      _allGroups = await GroupsService.getGroups();
+      _allGroups = await _groupsService.getGroups();
       _applyFiltersAndSearch();
     } catch (error) {
       emit(GroupsListState.error(
@@ -40,7 +40,7 @@ class GroupsListViewModel extends Cubit<GroupsListState> {
   /// Refresh groups list
   Future<void> refreshGroups() async {
     try {
-      _allGroups = await GroupsService.getGroups();
+      _allGroups = await _groupsService.getGroups();
       _applyFiltersAndSearch();
     } catch (error) {
       emit(GroupsListState.error(
@@ -83,7 +83,7 @@ class GroupsListViewModel extends Cubit<GroupsListState> {
     emit(const GroupsListState.loading());
     
     try {
-      final result = await GroupsService.joinGroup(int.parse(invitationCode));
+      final result = await _groupsService.joinGroup(int.parse(invitationCode));
       
       if (result['success'] == true) {
         // Reload groups to include the newly joined group
@@ -108,7 +108,7 @@ class GroupsListViewModel extends Cubit<GroupsListState> {
     emit(const GroupsListState.loading());
     
     try {
-      await GroupsService.leaveGroup(int.parse(groupId));
+      await _groupsService.leaveGroup(int.parse(groupId));
       
       // Remove the group from local list
       _allGroups.removeWhere((group) => group.id == int.parse(groupId));

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/default_avatar.dart';
 import '../services/image_upload_service.dart';
+import '../../../core/dependency_injection/injection_container.dart';
 import 'dart:io';
 
 class AvatarSelectionWidget extends StatefulWidget {
@@ -24,6 +25,7 @@ class AvatarSelectionWidget extends StatefulWidget {
 }
 
 class _AvatarSelectionWidgetState extends State<AvatarSelectionWidget> {
+  final ImageUploadService _imageUploadService = getIt<ImageUploadService>();
   List<DefaultAvatar> _defaultAvatars = [];
   bool _isLoading = false;
   String? _uploadedImagePath;
@@ -38,7 +40,7 @@ class _AvatarSelectionWidgetState extends State<AvatarSelectionWidget> {
   Future<void> _loadDefaultAvatars() async {
     try {
       setState(() => _isLoading = true);
-      final avatars = await ImageUploadService.getDefaultAvatars();
+      final avatars = await _imageUploadService.getDefaultAvatars();
       setState(() {
         _defaultAvatars = avatars;
         _isLoading = false;
@@ -58,10 +60,10 @@ class _AvatarSelectionWidgetState extends State<AvatarSelectionWidget> {
 
   Future<void> _pickAndUploadImage() async {
     try {
-      final image = await ImageUploadService.showImagePickerDialog(context);
+      final image = await ImageUploadService.showImagePickerDialog(context, _imageUploadService);
       if (image == null) return;
 
-      if (!ImageUploadService.isValidImage(image)) {
+      if (!_imageUploadService.isValidImage(image)) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -75,7 +77,7 @@ class _AvatarSelectionWidgetState extends State<AvatarSelectionWidget> {
 
       setState(() => _isLoading = true);
 
-      final result = await ImageUploadService.uploadGroupAvatar(image);
+      final result = await _imageUploadService.uploadGroupAvatar(image);
       
       setState(() {
         _isLoading = false;

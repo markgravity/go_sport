@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../../core/dependency_injection/injection_container.dart';
 import 'auth_service.dart';
 
 class SessionManager {
@@ -17,7 +18,7 @@ class SessionManager {
   static const String _sessionTimeoutKey = 'session_timeout';
   static const int _defaultTimeoutMinutes = 30; // 30 minutes default timeout
   
-  final AuthService _authService = AuthService();
+  final AuthService _authService = getIt<AuthService>();
   Timer? _sessionTimer;
   Timer? _refreshTimer;
   

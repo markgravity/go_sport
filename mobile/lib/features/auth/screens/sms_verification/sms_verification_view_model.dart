@@ -171,19 +171,21 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
     state.when(
       initial: () {},
       loading: (_) {},
-      waitingForCode: (phoneNumber, verificationId, userName, userPassword, preferredSports, currentCode) {
+      waitingForCode: (phoneNumber, verificationId, resendCountdown, currentCode, userName, userPassword, preferredSports) {
         emit(SmsVerificationState.waitingForCode(
           phoneNumber: phoneNumber,
           verificationId: verificationId,
+          resendCountdown: resendCountdown,
+          currentCode: code,
           userName: userName,
           userPassword: userPassword,
           preferredSports: preferredSports,
-          currentCode: code,
         ));
       },
-      codeResent: (phoneNumber, verificationId, message) {},
+      codeResent: (phoneNumber, verificationId, resendCountdown) {},
       success: (message, isRegistration) {},
       error: (message, errorCode) {},
+      navigateBack: () {},
     );
   }
 
@@ -192,10 +194,11 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
     state.when(
       initial: () {},
       loading: (_) {},
-      waitingForCode: (_, __, ___, ____, _____, ______) {},
+      waitingForCode: (_, __, ___, ____, _____, ______, _______) {},
       codeResent: (_, __, ___) {},
       success: (_, __) {},
       error: (_, __) => emit(const SmsVerificationState.initial()),
+      navigateBack: () {},
     );
   }
 
@@ -212,19 +215,34 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
     _countdownTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
-        if (state is SmsVerificationStateWaitingForCode) {
-          final currentState = state as SmsVerificationStateWaitingForCode;
-          final newCountdown = currentState.resendCountdown - 1;
-          
-          if (newCountdown <= 0) {
-            timer.cancel();
-            emit(currentState.copyWith(resendCountdown: 0));
-          } else {
-            emit(currentState.copyWith(resendCountdown: newCountdown));
-          }
-        } else {
-          timer.cancel();
-        }
+        state.whenOrNull(
+          waitingForCode: (phoneNumber, verificationId, resendCountdown, currentCode, userName, userPassword, preferredSports) {
+            final newCountdown = resendCountdown - 1;
+            
+            if (newCountdown <= 0) {
+              timer.cancel();
+              emit(SmsVerificationState.waitingForCode(
+                phoneNumber: phoneNumber,
+                verificationId: verificationId,
+                resendCountdown: 0,
+                currentCode: currentCode,
+                userName: userName,
+                userPassword: userPassword,
+                preferredSports: preferredSports,
+              ));
+            } else {
+              emit(SmsVerificationState.waitingForCode(
+                phoneNumber: phoneNumber,
+                verificationId: verificationId,
+                resendCountdown: newCountdown,
+                currentCode: currentCode,
+                userName: userName,
+                userPassword: userPassword,
+                preferredSports: preferredSports,
+              ));
+            }
+          },
+        ) ?? timer.cancel();
       },
     );
   }

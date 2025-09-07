@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/groups_service.dart';
+import '../../../core/dependency_injection/injection_container.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final Function(String location, String city, String district, double? lat, double? lng) onLocationChanged;
@@ -16,6 +17,7 @@ class LocationInputWidget extends StatefulWidget {
 }
 
 class _LocationInputWidgetState extends State<LocationInputWidget> {
+  final GroupsService _groupsService = getIt<GroupsService>();
   final _locationController = TextEditingController();
   final _cityController = TextEditingController();
   final _districtController = TextEditingController();
@@ -54,7 +56,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
     try {
       setState(() => _isLoadingSuggestions = true);
-      final suggestions = await GroupsService.getLocationSuggestions(
+      final suggestions = await _groupsService.getLocationSuggestions(
         widget.sportType!,
         city: _cityController.text.isNotEmpty ? _cityController.text : null,
       );

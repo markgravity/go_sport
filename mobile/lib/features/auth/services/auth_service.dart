@@ -28,7 +28,6 @@ class AuthService {
   static const String _biometricPhoneKey = 'biometric_phone';
   
   final LocalAuthentication _localAuth = LocalAuthentication();
-  final ApiClient _apiClient;
 
   /// Login with phone and password
   Future<void> login({

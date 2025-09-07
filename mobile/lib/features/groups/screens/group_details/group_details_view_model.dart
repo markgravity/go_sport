@@ -33,8 +33,8 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      final group = await GroupsService.getGroupDetails(groupId);
-      final users = await GroupsService.getGroupMembers(int.parse(groupId));
+      final group = await _groupsService.getGroupDetails(groupId);
+      final users = await _groupsService.getGroupMembers(int.parse(groupId));
       final members = users.map((user) => GroupMember(
         userId: user.id,
         name: user.name,
@@ -57,8 +57,8 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
   /// Refresh group details
   Future<void> refreshGroupDetails(String groupId) async {
     try {
-      final group = await GroupsService.getGroupDetails(groupId);
-      final users = await GroupsService.getGroupMembers(int.parse(groupId));
+      final group = await _groupsService.getGroupDetails(groupId);
+      final users = await _groupsService.getGroupMembers(int.parse(groupId));
       final members = users.map((user) => GroupMember(
         userId: user.id,
         name: user.name,
@@ -89,7 +89,7 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      final success = await GroupRoleService.assignMemberRole(
+      final success = await _groupRoleService.assignMemberRole(
         groupId: groupId,
         memberId: memberId,
         role: role,
@@ -124,7 +124,7 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      final success = await GroupsService.removeMemberFromGroup(
+      final success = await _groupsService.removeMemberFromGroup(
         groupId: groupId,
         memberId: memberId,
       );
@@ -154,7 +154,7 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      final invitationLink = await GroupsService.generateInvitationLink(groupId);
+      final invitationLink = await _groupsService.generateInvitationLink(groupId);
       
       emit(GroupDetailsState.invitationGenerated(
         invitationLink: invitationLink,
@@ -180,7 +180,7 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      final success = await GroupsService.updateGroupSettings(
+      final success = await _groupsService.updateGroupSettings(
         groupId: groupId,
         name: name,
         description: description,
@@ -213,7 +213,7 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      await GroupsService.leaveGroup(int.parse(groupId));
+      await _groupsService.leaveGroup(int.parse(groupId));
       
       emit(const GroupDetailsState.leftGroup(
         message: 'Đã rời khỏi nhóm thành công',
@@ -232,7 +232,7 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      await GroupsService.deleteGroup(int.parse(groupId));
+      await _groupsService.deleteGroup(int.parse(groupId));
       
       emit(const GroupDetailsState.groupDeleted(
         message: 'Đã xóa nhóm thành công',
