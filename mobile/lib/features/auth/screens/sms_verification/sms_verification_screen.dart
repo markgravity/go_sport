@@ -12,6 +12,7 @@ import 'sms_verification_state.dart';
 @RoutePage()
 class SmsVerificationScreen extends StatelessWidget {
   final String? phoneNumber;
+  final String? verificationId;
   final String? userName;
   final String? password;
   final List<String> selectedSports;
@@ -19,6 +20,7 @@ class SmsVerificationScreen extends StatelessWidget {
   const SmsVerificationScreen({
     super.key,
     @queryParam this.phoneNumber,
+    @queryParam this.verificationId,
     @queryParam this.userName,
     @queryParam this.password,
     @queryParam this.selectedSports = const [],
@@ -30,10 +32,10 @@ class SmsVerificationScreen extends StatelessWidget {
       create: (context) {
         final viewModel = getIt<SmsVerificationViewModel>();
         // Initialize with phone number and verification ID if available
-        if (phoneNumber != null) {
+        if (phoneNumber != null && verificationId != null) {
           viewModel.initialize(
             phoneNumber: phoneNumber!,
-            verificationId: '', // This should come from the previous screen
+            verificationId: verificationId!,
             userName: userName,
             userPassword: password,
             preferredSports: selectedSports,

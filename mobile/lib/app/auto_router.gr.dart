@@ -63,6 +63,7 @@ abstract class _$AppRouter extends RootStackRouter {
       final args = routeData.argsAs<SmsVerificationRouteArgs>(
           orElse: () => SmsVerificationRouteArgs(
                 phoneNumber: queryParams.optString('phoneNumber'),
+                verificationId: queryParams.optString('verificationId'),
                 userName: queryParams.optString('userName'),
                 password: queryParams.optString('password'),
                 selectedSports: queryParams.get(
@@ -75,6 +76,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: SmsVerificationScreen(
           key: args.key,
           phoneNumber: args.phoneNumber,
+          verificationId: args.verificationId,
           userName: args.userName,
           password: args.password,
           selectedSports: args.selectedSports,
@@ -199,6 +201,7 @@ class SmsVerificationRoute extends PageRouteInfo<SmsVerificationRouteArgs> {
   SmsVerificationRoute({
     Key? key,
     String? phoneNumber,
+    String? verificationId,
     String? userName,
     String? password,
     List<String> selectedSports = const [],
@@ -208,12 +211,14 @@ class SmsVerificationRoute extends PageRouteInfo<SmsVerificationRouteArgs> {
           args: SmsVerificationRouteArgs(
             key: key,
             phoneNumber: phoneNumber,
+            verificationId: verificationId,
             userName: userName,
             password: password,
             selectedSports: selectedSports,
           ),
           rawQueryParams: {
             'phoneNumber': phoneNumber,
+            'verificationId': verificationId,
             'userName': userName,
             'password': password,
             'selectedSports': selectedSports,
@@ -231,6 +236,7 @@ class SmsVerificationRouteArgs {
   const SmsVerificationRouteArgs({
     this.key,
     this.phoneNumber,
+    this.verificationId,
     this.userName,
     this.password,
     this.selectedSports = const [],
@@ -240,6 +246,8 @@ class SmsVerificationRouteArgs {
 
   final String? phoneNumber;
 
+  final String? verificationId;
+
   final String? userName;
 
   final String? password;
@@ -248,6 +256,6 @@ class SmsVerificationRouteArgs {
 
   @override
   String toString() {
-    return 'SmsVerificationRouteArgs{key: $key, phoneNumber: $phoneNumber, userName: $userName, password: $password, selectedSports: $selectedSports}';
+    return 'SmsVerificationRouteArgs{key: $key, phoneNumber: $phoneNumber, verificationId: $verificationId, userName: $userName, password: $password, selectedSports: $selectedSports}';
   }
 }

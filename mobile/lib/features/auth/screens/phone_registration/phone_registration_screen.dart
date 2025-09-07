@@ -122,9 +122,10 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
           loading: (message) {},
           verificationCodeSent: (phoneNumber, verificationId, name, password, preferredSports) {
             _showSuccess('Mã xác thực đã được gửi đến $phoneNumber');
-            // Navigate to SMS verification screen
+            // Navigate to SMS verification screen with verificationId
             context.router.push(SmsVerificationRoute(
               phoneNumber: phoneNumber,
+              verificationId: verificationId,
               userName: name,
               password: password,
               selectedSports: preferredSports,
