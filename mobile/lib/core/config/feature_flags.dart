@@ -1,100 +1,67 @@
-/// Feature flags for controlling architecture migration
+/// Feature flags for controlling app behavior
 /// 
-/// Cho phép switching giữa Riverpod và Cubit architecture trong thời gian migration
-/// Hỗ trợ gradual rollout và safe rollback
+/// Production-ready flags for the Go Sport Vietnamese app
 class FeatureFlags {
-  /// Control việc sử dụng Cubit cho authentication thay vì Riverpod
+  /// AutoRoute is the primary routing system
   /// 
-  /// `true`: Sử dụng AuthCubit (new architecture)
-  /// `false`: Sử dụng AuthProvider (legacy Riverpod)
-  static const bool USE_CUBIT_AUTH = true;
+  /// `true`: AutoRoute is enabled (production ready)
+  /// `false`: Fallback routing (for emergency only)
+  static const bool useAutoRoute = true; // Production ready
   
-  /// Control percentage-based rollout cho authentication Cubit
+  /// Enable debug settings for development
   /// 
-  /// Value từ 0.0 (0%) đến 1.0 (100%)
-  /// Cho phép gradual rollout đến một phần users
-  static const double CUBIT_AUTH_ROLLOUT_PERCENTAGE = 1.0;
+  /// `true`: Show debug options in settings
+  /// `false`: Hide debug options (production mode)
+  static const bool enableArchitectureDebug = false; // Set to false for production
   
-  /// Enable debug settings để toggle architecture systems
+  /// Control logging of state transitions
   /// 
-  /// `true`: Hiện debug options trong settings
-  /// `false`: Ẩn debug options (production mode)
-  static const bool ENABLE_ARCHITECTURE_DEBUG = true;
-  
-  /// Control việc sử dụng AutoRoute thay vì GoRouter
-  /// 
-  /// `true`: Sử dụng AutoRoute (new routing)
-  /// `false`: Sử dụng GoRouter (legacy routing)
-  static const bool USE_AUTO_ROUTE = false; // Chưa ready cho production
-  
-  /// Control việc log architecture transitions
-  /// 
-  /// `true`: Log state changes và transitions
-  /// `false`: Tắt architecture logging
-  static const bool LOG_ARCHITECTURE_TRANSITIONS = true;
+  /// `true`: Log state changes and transitions
+  /// `false`: Disable architecture logging
+  static const bool logArchitectureTransitions = false; // Set to false for production
 }
 
 /// Runtime feature flag controller
 /// 
-/// Cho phép dynamic control feature flags trong debug mode
+/// Allows dynamic control of feature flags in debug mode
 class RuntimeFeatureFlags {
-  static bool _useCubitAuth = FeatureFlags.USE_CUBIT_AUTH;
-  static bool _useAutoRoute = FeatureFlags.USE_AUTO_ROUTE;
-  static bool _logTransitions = FeatureFlags.LOG_ARCHITECTURE_TRANSITIONS;
+  static bool _useAutoRoute = FeatureFlags.useAutoRoute;
+  static bool _logTransitions = FeatureFlags.logArchitectureTransitions;
   
-  /// Get current state của Cubit auth flag
-  static bool get useCubitAuth => _useCubitAuth;
-  
-  /// Get current state của AutoRoute flag
+  /// Get current state of AutoRoute flag
   static bool get useAutoRoute => _useAutoRoute;
   
-  /// Get current state của logging flag
+  /// Get current state of logging flag
   static bool get logTransitions => _logTransitions;
-  
-  /// Toggle Cubit auth flag (debug mode only)
-  static void toggleCubitAuth() {
-    if (FeatureFlags.ENABLE_ARCHITECTURE_DEBUG) {
-      _useCubitAuth = !_useCubitAuth;
-    }
-  }
   
   /// Toggle AutoRoute flag (debug mode only)
   static void toggleAutoRoute() {
-    if (FeatureFlags.ENABLE_ARCHITECTURE_DEBUG) {
+    if (FeatureFlags.enableArchitectureDebug) {
       _useAutoRoute = !_useAutoRoute;
     }
   }
   
   /// Toggle logging flag (debug mode only)
   static void toggleLogging() {
-    if (FeatureFlags.ENABLE_ARCHITECTURE_DEBUG) {
+    if (FeatureFlags.enableArchitectureDebug) {
       _logTransitions = !_logTransitions;
-    }
-  }
-  
-  /// Set Cubit auth flag programmatically
-  static void setCubitAuth(bool enabled) {
-    if (FeatureFlags.ENABLE_ARCHITECTURE_DEBUG) {
-      _useCubitAuth = enabled;
     }
   }
   
   /// Reset all flags to compile-time defaults
   static void resetToDefaults() {
-    if (FeatureFlags.ENABLE_ARCHITECTURE_DEBUG) {
-      _useCubitAuth = FeatureFlags.USE_CUBIT_AUTH;
-      _useAutoRoute = FeatureFlags.USE_AUTO_ROUTE;
-      _logTransitions = FeatureFlags.LOG_ARCHITECTURE_TRANSITIONS;
+    if (FeatureFlags.enableArchitectureDebug) {
+      _useAutoRoute = FeatureFlags.useAutoRoute;
+      _logTransitions = FeatureFlags.logArchitectureTransitions;
     }
   }
   
   /// Get flag status summary (for debugging)
   static Map<String, bool> getStatusSummary() {
     return {
-      'useCubitAuth': _useCubitAuth,
       'useAutoRoute': _useAutoRoute,
       'logTransitions': _logTransitions,
-      'debugEnabled': FeatureFlags.ENABLE_ARCHITECTURE_DEBUG,
+      'debugEnabled': FeatureFlags.enableArchitectureDebug,
     };
   }
 }

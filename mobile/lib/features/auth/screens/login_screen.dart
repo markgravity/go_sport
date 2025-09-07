@@ -5,7 +5,6 @@ import '../widgets/loading_overlay.dart';
 import '../../../core/utils/phone_validator.dart';
 import 'phone_registration_screen.dart';
 import 'forgot_password_screen.dart';
-import '../../../main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -98,12 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
       builder: (context, authState) {
         // Handle authentication state changes
         if (authState.isAuthenticated) {
-          // Navigate to welcome screen when authenticated
+          // Navigate to home screen when authenticated
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-              (route) => false,
-            );
+            Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
           });
         }
 

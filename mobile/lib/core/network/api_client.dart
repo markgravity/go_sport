@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'interceptors/logging_interceptor.dart';
 import 'interceptors/error_interceptor.dart';
 import 'interceptors/retry_interceptor.dart';
@@ -119,7 +118,5 @@ class ApiClient {
   }
 }
 
-// Provider for API client
-final apiClientProvider = Provider<ApiClient>((ref) {
-  return ApiClient();
-});
+// ApiClient is available through GetIt dependency injection
+// Use getIt<ApiClient>() to access the instance

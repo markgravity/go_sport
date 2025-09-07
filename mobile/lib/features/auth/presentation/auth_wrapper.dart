@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/config/feature_flags.dart';
 import '../../../core/dependency_injection/injection_container.dart';
-import '../providers/auth_provider.dart';
 import 'viewmodels/auth_cubit.dart';
 import 'viewmodels/auth_state.dart' as cubit_state;
 import '../models/user_model.dart';
 
-/// Authentication wrapper cho phép coexistence giữa Riverpod và Cubit
+/// Authentication wrapper using Cubit architecture
 /// 
-/// Dựa trên feature flag để quyết định sử dụng architecture nào:
-/// - Riverpod AuthProvider (legacy)
-/// - Cubit AuthCubit (new)
+/// Provides consistent auth state management across the app
 class AuthWrapper extends StatelessWidget {
   final Widget Function(BuildContext context, AuthWrapperState state) builder;
 
@@ -24,60 +19,36 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (RuntimeFeatureFlags.useCubitAuth) {
-      // Sử dụng Cubit architecture
-      return BlocProvider(
-        create: (context) => getIt.createAuthCubit(),
-        child: BlocBuilder<AuthCubit, cubit_state.AuthState>(
-          builder: (context, state) {
-            final wrapperState = _cubitStateToWrapperState(state);
-            return builder(context, wrapperState);
-          },
-        ),
-      );
-    } else {
-      // Sử dụng Riverpod architecture (legacy)
-      return Consumer(
-        builder: (context, ref, child) {
-          final authState = ref.watch(authProvider);
-          final wrapperState = _riverpodStateToWrapperState(authState);
+    return BlocProvider(
+      create: (context) => getIt.createAuthCubit(),
+      child: BlocBuilder<AuthCubit, cubit_state.AuthState>(
+        builder: (context, state) {
+          final wrapperState = _cubitStateToWrapperState(state);
           return builder(context, wrapperState);
         },
-      );
-    }
+      ),
+    );
   }
 
-  /// Convert Cubit AuthState sang unified AuthWrapperState
+  /// Convert Cubit AuthState to unified AuthWrapperState
   AuthWrapperState _cubitStateToWrapperState(cubit_state.AuthState state) {
     return state.when(
       unauthenticated: () => const AuthWrapperState.unauthenticated(),
       authenticating: (message) => AuthWrapperState.loading(message: message),
       authenticated: (user, tokens) => AuthWrapperState.authenticated(user: user),
-      phoneVerificationRequired: (phoneNumber, verificationId) =>
+      phoneVerificationRequired: (phoneNumber, verificationId) => 
           AuthWrapperState.phoneVerificationRequired(phoneNumber: phoneNumber),
       error: (message, errorCode) => AuthWrapperState.error(message: message),
-      refreshingToken: (user, tokens) => AuthWrapperState.authenticated(user: user),
+      refreshingToken: (user, tokens) => AuthWrapperState.loading(
+        message: 'Refreshing session...'
+      ),
     );
-  }
-
-  /// Convert Riverpod AuthState sang unified AuthWrapperState
-  AuthWrapperState _riverpodStateToWrapperState(
-      dynamic riverpodState) {
-    if (riverpodState.isLoading) {
-      return const AuthWrapperState.loading();
-    } else if (riverpodState.error != null) {
-      return AuthWrapperState.error(message: riverpodState.error!);
-    } else if (riverpodState.isAuthenticated && riverpodState.user != null) {
-      return AuthWrapperState.authenticated(user: riverpodState.user!);
-    } else {
-      return const AuthWrapperState.unauthenticated();
-    }
   }
 }
 
-/// Unified authentication state cho wrapper
+/// Unified authentication state for the wrapper
 /// 
-/// Cung cấp common interface cho cả Riverpod và Cubit states
+/// Provides consistent interface regardless of underlying architecture
 class AuthWrapperState {
   final bool isLoading;
   final bool isAuthenticated;
@@ -146,8 +117,7 @@ class AuthWrapperState {
 
 /// Authentication controller wrapper
 /// 
-/// Cung cấp unified interface cho authentication actions
-/// Tự động route calls đến Riverpod hoặc Cubit based on feature flag
+/// Provides unified interface for authentication actions using Cubit
 class AuthController {
   final BuildContext context;
   
@@ -159,29 +129,24 @@ class AuthController {
     required String password,
     bool rememberMe = false,
   }) async {
-    if (RuntimeFeatureFlags.useCubitAuth) {
-      // Sử dụng Cubit - For now, forward to SMS verification flow
-      // This would need proper password authentication in the future
-      final verificationId = await sendVerificationCode(phoneNumber);
-      return verificationId != null;
-    } else {
-      // Sử dụng Riverpod
-      // TODO: Implement password login in Riverpod provider
-      return false;
-    }
+    // For now, forward to SMS verification flow
+    // This would need proper password authentication in the future
+    final verificationId = await sendVerificationCode(phoneNumber);
+    return verificationId != null;
   }
 
   /// Send SMS verification code
   Future<String?> sendVerificationCode(String phoneNumber) async {
-    if (RuntimeFeatureFlags.useCubitAuth) {
-      // Sử dụng Cubit
+    // Try to read from context, fallback to GetIt if not available
+    try {
       final authCubit = context.read<AuthCubit>();
       return await authCubit.sendVerificationCode(phoneNumber);
-    } else {
-      // Sử dụng Riverpod
-      final container = ProviderScope.containerOf(context);
-      final authNotifier = container.read(authProvider.notifier);
-      return await authNotifier.sendVerificationCode(phoneNumber);
+    } catch (e) {
+      // Fallback: Create temporary instance for this operation
+      final authCubit = getIt.createAuthCubit();
+      final result = await authCubit.sendVerificationCode(phoneNumber);
+      authCubit.close();
+      return result;
     }
   }
 
@@ -193,8 +158,8 @@ class AuthController {
     required String name,
     List<String>? preferredSports,
   }) async {
-    if (RuntimeFeatureFlags.useCubitAuth) {
-      // Sử dụng Cubit
+    // Try to read from context, fallback to GetIt if not available
+    try {
       final authCubit = context.read<AuthCubit>();
       return await authCubit.completeRegistration(
         phoneNumber: phoneNumber,
@@ -203,73 +168,68 @@ class AuthController {
         name: name,
         preferredSports: preferredSports,
       );
-    } else {
-      // Sử dụng Riverpod
-      final container = ProviderScope.containerOf(context);
-      final authNotifier = container.read(authProvider.notifier);
-      return await authNotifier.completeRegistration(
+    } catch (e) {
+      // Fallback: Create temporary instance for this operation
+      final authCubit = getIt.createAuthCubit();
+      final result = await authCubit.completeRegistration(
         phoneNumber: phoneNumber,
         verificationId: verificationId,
         smsCode: smsCode,
         name: name,
         preferredSports: preferredSports,
       );
+      authCubit.close();
+      return result;
     }
   }
 
   /// Sign out user
   Future<void> signOut() async {
-    if (RuntimeFeatureFlags.useCubitAuth) {
-      // Sử dụng Cubit
+    // Try to read from context, fallback to GetIt if not available
+    try {
       final authCubit = context.read<AuthCubit>();
       await authCubit.signOut();
-    } else {
-      // Sử dụng Riverpod
-      final container = ProviderScope.containerOf(context);
-      final authNotifier = container.read(authProvider.notifier);
-      await authNotifier.signOut();
+    } catch (e) {
+      // Fallback: Create temporary instance for this operation
+      final authCubit = getIt.createAuthCubit();
+      await authCubit.signOut();
+      authCubit.close();
     }
   }
 
   /// Clear current error
   void clearError() {
-    if (RuntimeFeatureFlags.useCubitAuth) {
-      // Sử dụng Cubit
+    // Try to read from context, fallback to GetIt if not available
+    try {
       final authCubit = context.read<AuthCubit>();
       authCubit.clearError();
-    } else {
-      // Sử dụng Riverpod
-      final container = ProviderScope.containerOf(context);
-      final authNotifier = container.read(authProvider.notifier);
-      authNotifier.clearError();
+    } catch (e) {
+      // Fallback: For clearError, we can skip if no context available
+      // since error clearing is not critical for functionality
     }
   }
 
   /// Get current user
   UserModel? get currentUser {
-    if (RuntimeFeatureFlags.useCubitAuth) {
-      // Sử dụng Cubit
+    // Try to read from context, fallback to GetIt if not available
+    try {
       final authCubit = context.read<AuthCubit>();
       return authCubit.currentUser;
-    } else {
-      // Sử dụng Riverpod
-      final container = ProviderScope.containerOf(context);
-      final authState = container.read(authProvider);
-      return authState.user;
+    } catch (e) {
+      // Fallback: Return null if no context available
+      return null;
     }
   }
 
   /// Check if user is authenticated
   bool get isAuthenticated {
-    if (RuntimeFeatureFlags.useCubitAuth) {
-      // Sử dụng Cubit
+    // Try to read from context, fallback to GetIt if not available
+    try {
       final authCubit = context.read<AuthCubit>();
       return authCubit.isAuthenticated;
-    } else {
-      // Sử dụng Riverpod
-      final container = ProviderScope.containerOf(context);
-      final authState = container.read(authProvider);
-      return authState.isAuthenticated;
+    } catch (e) {
+      // Fallback: Return false if no context available
+      return false;
     }
   }
 }

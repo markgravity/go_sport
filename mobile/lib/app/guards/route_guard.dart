@@ -1,122 +1,98 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../features/auth/providers/auth_provider.dart';
+import '../../core/dependency_injection/injection_container.dart';
 
 /// Base class for route guards
 /// 
 /// Provides common functionality for protecting routes based on authentication state
 abstract class RouteGuard {
   /// Check if navigation should be allowed
-  bool shouldAllowNavigation(BuildContext context, WidgetRef ref);
+  bool shouldAllowNavigation(BuildContext context);
   
   /// Get the redirect route if navigation is not allowed
-  String? getRedirectRoute(BuildContext context, WidgetRef ref);
+  String? getRedirectRoute(BuildContext context);
 }
 
-/// Guard để bảo vệ các route cần authentication
+/// Guard to protect routes that require authentication
 /// 
-/// Kiểm tra user đã đăng nhập chưa, nếu chưa thì redirect về login
-/// Sử dụng Riverpod provider hiện tại để check auth state
+/// Checks if user is logged in, redirects to login if not
+/// Uses AuthCubit to check authentication state
 class AuthGuard extends RouteGuard {
   @override
-  bool shouldAllowNavigation(BuildContext context, WidgetRef ref) {
-    final authState = ref.read(authProvider);
-    return authState.isAuthenticated;
+  bool shouldAllowNavigation(BuildContext context) {
+    try {
+      // Try to get AuthCubit from GetIt (fallback approach)
+      final authCubit = getIt.createAuthCubit();
+      final isAuthenticated = authCubit.isAuthenticated;
+      authCubit.close(); // Clean up temporary instance
+      return isAuthenticated;
+    } catch (e) {
+      // If we can't check auth state, assume not authenticated
+      return false;
+    }
   }
 
   @override
-  String? getRedirectRoute(BuildContext context, WidgetRef ref) {
-    if (!shouldAllowNavigation(context, ref)) {
+  String? getRedirectRoute(BuildContext context) {
+    if (!shouldAllowNavigation(context)) {
       return '/login';
     }
     return null;
   }
 }
 
-/// Guard để bảo vệ các route chỉ dành cho user chưa đăng nhập
+/// Guard to protect routes for authenticated users only
 /// 
-/// Kiểm tra user đã đăng nhập chưa, nếu đã đăng nhập thì redirect về home
-/// Sử dụng cho các trang login, register để tránh user đã login vào lại
-class UnauthGuard extends RouteGuard {
+/// Prevents authenticated users from accessing auth screens
+/// Redirects authenticated users to home screen
+class GuestOnlyGuard extends RouteGuard {
   @override
-  bool shouldAllowNavigation(BuildContext context, WidgetRef ref) {
-    final authState = ref.read(authProvider);
-    return !authState.isAuthenticated;
+  bool shouldAllowNavigation(BuildContext context) {
+    try {
+      // Try to get AuthCubit from GetIt (fallback approach)
+      final authCubit = getIt.createAuthCubit();
+      final isAuthenticated = authCubit.isAuthenticated;
+      authCubit.close(); // Clean up temporary instance
+      return !isAuthenticated; // Allow only if NOT authenticated
+    } catch (e) {
+      // If we can't check auth state, assume not authenticated (allow)
+      return true;
+    }
   }
 
   @override
-  String? getRedirectRoute(BuildContext context, WidgetRef ref) {
-    if (!shouldAllowNavigation(context, ref)) {
-      return '/';
+  String? getRedirectRoute(BuildContext context) {
+    if (!shouldAllowNavigation(context)) {
+      return '/'; // Redirect to home
     }
     return null;
   }
 }
 
-/// Utility methods for applying route guards
-class RouteGuardUtil {
-  /// Apply route guard to a navigation action
-  static bool applyGuard({
-    required BuildContext context,
-    required WidgetRef ref,
-    required RouteGuard guard,
-    VoidCallback? onRedirect,
-  }) {
-    if (!guard.shouldAllowNavigation(context, ref)) {
-      final redirectRoute = guard.getRedirectRoute(context, ref);
+/// Helper extension to apply guards to routes
+extension RouteGuardExtension on RouteGuard {
+  /// Apply the guard to a widget builder
+  Widget guardedWidget(
+    BuildContext context,
+    Widget Function(BuildContext) builder,
+  ) {
+    if (shouldAllowNavigation(context)) {
+      return builder(context);
+    } else {
+      final redirectRoute = getRedirectRoute(context);
       if (redirectRoute != null) {
-        Navigator.pushReplacementNamed(context, redirectRoute);
-        onRedirect?.call();
+        // Schedule navigation for next frame
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.of(context).pushReplacementNamed(redirectRoute);
+        });
       }
-      return false;
-    }
-    return true;
-  }
-}
-
-/// Route guard middleware template
-/// 
-/// This demonstrates how guards can be integrated with routing
-/// In a full AutoRoute implementation, this would be more sophisticated
-class RoutingMiddleware {
-  static final _authGuard = AuthGuard();
-  static final _unauthGuard = UnauthGuard();
-
-  /// Check if route requires authentication
-  static bool requiresAuth(String route) {
-    const protectedRoutes = ['/profile', '/groups', '/settings'];
-    return protectedRoutes.any((protected) => route.startsWith(protected));
-  }
-
-  /// Check if route is for unauthenticated users only
-  static bool requiresUnauth(String route) {
-    const unauthRoutes = ['/login', '/register'];
-    return unauthRoutes.contains(route);
-  }
-
-  /// Apply appropriate guard to route
-  static bool canNavigateTo({
-    required String route,
-    required BuildContext context,
-    required WidgetRef ref,
-  }) {
-    if (requiresAuth(route)) {
-      return RouteGuardUtil.applyGuard(
-        context: context,
-        ref: ref,
-        guard: _authGuard,
+      
+      // Show loading while redirecting
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     }
-
-    if (requiresUnauth(route)) {
-      return RouteGuardUtil.applyGuard(
-        context: context,
-        ref: ref,
-        guard: _unauthGuard,
-      );
-    }
-
-    return true; // Allow navigation to public routes
   }
 }

@@ -4,16 +4,13 @@ import 'package:flutter/material.dart';
 import '../features/auth/screens/login_screen.dart';
 import '../features/auth/screens/phone_registration_screen.dart';
 
-/// Simple AutoRoute foundation setup
+/// AutoRoute routing configuration
 /// 
-/// This demonstrates the foundation for AutoRoute integration
-/// In the story requirements, we need to show:
-/// 1. AutoRoute can be configured ✓
-/// 2. It can coexist with GoRouter ✓ 
-/// 3. Basic route structure is in place ✓
-/// 4. Route guards template exists ✓
-/// 
-/// The actual code generation can be refined in later iterations
+/// Centralized routing for Go Sport Vietnamese sports app:
+/// 1. Home/Welcome screen
+/// 2. Authentication screens (login, register)
+/// 3. 404 error handling
+/// 4. Vietnamese localization throughout
 class AppRouter {
   static const String initialRoute = '/';
 
@@ -47,124 +44,135 @@ class AppRouter {
   }
 }
 
-/// Welcome screen wrapper để demo AutoRoute foundation
+/// Home screen với Vietnamese localization và AutoRoute integration
 class WelcomeWrapper extends StatelessWidget {
   const WelcomeWrapper({super.key});
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('AutoRoute Foundation Ready'),
-        backgroundColor: const Color(0xFF4A90E2),
-        foregroundColor: Colors.white,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.check_circle,
-              size: 80,
-              color: Color(0xFF10B981),
-            ),
-            const SizedBox(height: 24),
-            
-            const Text(
-              'AutoRoute Foundation Setup Complete!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            
-            const SizedBox(height: 16),
-            
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32),
-              child: Text(
-                'AutoRoute đã được thiết lập thành công và có thể coexist với GoRouter. Các acceptance criteria đã hoàn thành:',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color(0xFF64748B),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            
-            const SizedBox(height: 32),
-            
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 24),
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF0FDF4),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF10B981), width: 1),
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '✅ Foundation Components:',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF065F46),
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text('• AutoRoute configuration created'),
-                  Text('• Route guards template ready'),
-                  Text('• Coexistence with GoRouter verified'),
-                  Text('• Build system integration complete'),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: 32),
-            
-            Row(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF4A90E2), // Primary start
+              Color(0xFF2E5BDA), // Primary end
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/login');
-                  },
-                  icon: const Icon(Icons.login, color: Colors.white),
-                  label: const Text(
-                    'Test Login Route',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4A90E2),
+                // App Logo
+                const Icon(
+                  Icons.sports_soccer,
+                  size: 120,
+                  color: Colors.white,
+                ),
+                
+                const SizedBox(height: 32),
+                
+                // App Title
+                const Text(
+                  'Go Sport',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
                   ),
                 ),
                 
-                const SizedBox(width: 16),
+                const SizedBox(height: 16),
                 
-                OutlinedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/register');
-                  },
-                  icon: const Icon(Icons.person_add),
-                  label: const Text('Test Register Route'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFF4A90E2),
+                // Subtitle
+                const Text(
+                  'Ứng dụng quản lý nhóm thể thao Việt Nam',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                
+                const SizedBox(height: 48),
+                
+                // Authentication Buttons
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Column(
+                    children: [
+                      // Login Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/login');
+                          },
+                          icon: const Icon(Icons.login, color: Color(0xFF2E5BDA)),
+                          label: const Text(
+                            'Đăng nhập',
+                            style: TextStyle(
+                              color: Color(0xFF2E5BDA),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            elevation: 2,
+                          ),
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 16),
+                      
+                      // Register Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/register');
+                          },
+                          icon: const Icon(Icons.person_add, color: Colors.white),
+                          label: const Text(
+                            'Đăng ký tài khoản',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Colors.white, width: 2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
-/// 404 Not Found wrapper
+/// 404 Not Found screen
 class NotFoundWrapper extends StatelessWidget {
   const NotFoundWrapper({super.key});
   
@@ -172,7 +180,7 @@ class NotFoundWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('404 - Route Not Found'),
+        title: const Text('Không tìm thấy trang'),
         backgroundColor: const Color(0xFF4A90E2),
         foregroundColor: Colors.white,
       ),
@@ -187,7 +195,7 @@ class NotFoundWrapper extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              'Route Not Found',
+              'Không tìm thấy trang',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -196,7 +204,7 @@ class NotFoundWrapper extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'AutoRoute fallback route working correctly',
+              'Trang bạn tìm kiếm không tồn tại',
               style: TextStyle(
                 fontSize: 16,
                 color: Color(0xFF64748B),
@@ -209,11 +217,14 @@ class NotFoundWrapper extends StatelessWidget {
               },
               icon: const Icon(Icons.home, color: Colors.white),
               label: const Text(
-                'Back to Home',
+                'Về trang chủ',
                 style: TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF4A90E2),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
             ),
           ],

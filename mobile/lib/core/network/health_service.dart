@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'api_client.dart';
 import 'exceptions/api_exception.dart';
 
@@ -58,14 +57,5 @@ class HealthService {
   }
 }
 
-// Provider for health service
-final healthServiceProvider = Provider<HealthService>((ref) {
-  final apiClient = ref.watch(apiClientProvider);
-  return HealthService(apiClient);
-});
-
-// Provider for health check result
-final healthCheckProvider = FutureProvider<HealthCheckResult>((ref) async {
-  final healthService = ref.watch(healthServiceProvider);
-  return await healthService.checkHealth();
-});
+// HealthService is available through GetIt dependency injection
+// Use getIt<HealthService>() to access the instance

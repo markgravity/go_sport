@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // AutoRoute configuration
 import 'app_router.dart';
 
-/// Go Sport App configuration with AutoRoute Foundation
+/// Go Sport App with AutoRoute navigation
 /// 
-/// This demonstrates AutoRoute foundation setup alongside existing GoRouter
-/// Both routing systems can coexist during migration period
-class GoSportApp extends ConsumerWidget {
+/// Vietnamese sports group coordination app using AutoRoute for navigation
+class GoSportApp extends StatelessWidget {
   const GoSportApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Go Sport - AutoRoute Foundation',
+      title: 'Go Sport - Vietnamese Sports App',
       debugShowCheckedModeBanner: false,
+      
+      // Localization setup
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('vi', 'VN'), // Default to Vietnamese
       
       // Theme configuration
       theme: ThemeData(

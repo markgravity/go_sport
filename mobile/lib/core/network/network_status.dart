@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'api_client.dart';
 
 enum NetworkConnectionStatus {
@@ -8,53 +8,45 @@ enum NetworkConnectionStatus {
   error,
 }
 
-class NetworkStatusNotifier extends StateNotifier<NetworkConnectionStatus> {
+/// Cubit for managing network connection status
+/// 
+/// Provides real-time network connectivity status using API health checks
+class NetworkStatusCubit extends Cubit<NetworkConnectionStatus> {
   final ApiClient _apiClient;
   
-  NetworkStatusNotifier(this._apiClient) : super(NetworkConnectionStatus.checking) {
+  NetworkStatusCubit(this._apiClient) : super(NetworkConnectionStatus.checking) {
     checkConnection();
   }
 
+  /// Check current network connection status
   Future<void> checkConnection() async {
-    state = NetworkConnectionStatus.checking;
+    emit(NetworkConnectionStatus.checking);
     
     try {
       await _apiClient.healthCheck();
-      state = NetworkConnectionStatus.connected;
+      emit(NetworkConnectionStatus.connected);
     } catch (e) {
-      state = NetworkConnectionStatus.disconnected;
+      emit(NetworkConnectionStatus.disconnected);
     }
   }
 
+  /// Check if currently connected
   Future<bool> isConnected() async {
     try {
       await _apiClient.healthCheck();
-      state = NetworkConnectionStatus.connected;
+      emit(NetworkConnectionStatus.connected);
       return true;
     } catch (e) {
-      state = NetworkConnectionStatus.disconnected;
+      emit(NetworkConnectionStatus.disconnected);
       return false;
     }
   }
 
-  void setError() {
-    state = NetworkConnectionStatus.error;
-  }
-
-  void reset() {
-    state = NetworkConnectionStatus.checking;
-    checkConnection();
+  /// Force reconnection check
+  Future<void> reconnect() async {
+    await checkConnection();
   }
 }
 
-// Provider for network status
-final networkStatusProvider = StateNotifierProvider<NetworkStatusNotifier, NetworkConnectionStatus>((ref) {
-  final apiClient = ref.watch(apiClientProvider);
-  return NetworkStatusNotifier(apiClient);
-});
-
-// Provider for connection status as bool
-final isConnectedProvider = Provider<bool>((ref) {
-  final status = ref.watch(networkStatusProvider);
-  return status == NetworkConnectionStatus.connected;
-});
+// NetworkStatusCubit is available through GetIt dependency injection
+// Use getIt<NetworkStatusCubit>() to access the instance

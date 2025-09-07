@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 // Core services
 import '../network/api_client.dart';
 import '../network/health_service.dart';
+import '../network/network_status.dart';
 import '../services/sports_localization_service.dart';
 
 // Auth services
@@ -13,10 +14,10 @@ import '../../features/auth/services/auth_service.dart';
 import '../../features/auth/services/firebase_auth_service.dart';
 import '../../features/auth/services/phone_auth_service.dart';
 
-// Auth Cubit (New architecture)
+// Auth Cubit
 import '../../features/auth/presentation/viewmodels/auth_cubit.dart';
 
-// Groups Cubits (New architecture)
+// Groups Cubits
 import '../../features/groups/presentation/viewmodels/groups_cubit.dart';
 import '../../features/groups/presentation/viewmodels/create_group_cubit.dart';
 
@@ -32,7 +33,7 @@ import 'injection_container.config.dart';
 final getIt = GetIt.instance;
 
 /// Configures all service dependencies for the application
-/// This setup supports coexistence with Riverpod during migration
+/// Uses GetIt for dependency injection and Cubit for state management
 @InjectableInit()
 Future<void> configureDependencies() async {
   // Initialize injectable generated code
@@ -48,8 +49,8 @@ Future<void> _initializeInjectableDependencies() async {
   getIt.init();
 }
 
-/// Register existing services that haven't been migrated to injectable yet
-/// TODO: These will be gradually moved to @injectable annotations during migration
+/// Register services with manual configuration
+/// Services are registered in dependency order for proper initialization
 Future<void> _registerExistingServices() async {
   // Core services - Register in dependency order
   getIt.registerLazySingleton<ApiService>(() => ApiService());
@@ -59,18 +60,21 @@ Future<void> _registerExistingServices() async {
   getIt.registerLazySingleton<HealthService>(() => HealthService(getIt<ApiClient>()));
   getIt.registerLazySingleton<SportsLocalizationService>(() => SportsLocalizationService());
   
+  // NetworkStatusCubit depends on ApiClient
+  getIt.registerFactory<NetworkStatusCubit>(() => NetworkStatusCubit(getIt<ApiClient>()));
+  
   // Auth services - These handle user authentication and security
   getIt.registerLazySingleton<AuthService>(() => AuthService());
   getIt.registerLazySingleton<FirebaseAuthService>(() => FirebaseAuthService());
   getIt.registerLazySingleton<PhoneAuthService>(() => PhoneAuthService());
   
-  // Auth Cubit - New Cubit architecture for authentication
+  // Auth Cubit - Authentication state management
   getIt.registerFactory<AuthCubit>(() => AuthCubit(
     firebaseAuthService: getIt<FirebaseAuthService>(),
     apiService: getIt<ApiService>(),
   ));
   
-  // Groups Cubits - New Cubit architecture for group management
+  // Groups Cubits - Group management state management
   getIt.registerFactory<GroupsCubit>(() => GroupsCubit());
   getIt.registerFactory<CreateGroupCubit>(() => CreateGroupCubit());
   
@@ -128,6 +132,9 @@ extension GetItExtension on GetIt {
   ApiClient get apiClient => get<ApiClient>();
   HealthService get healthService => get<HealthService>();
   SportsLocalizationService get sportsLocalizationService => get<SportsLocalizationService>();
+  
+  // Network status cubit - Factory registration (creates new instance each time)
+  NetworkStatusCubit createNetworkStatusCubit() => get<NetworkStatusCubit>();
   
   // Auth services
   AuthService get authService => get<AuthService>();

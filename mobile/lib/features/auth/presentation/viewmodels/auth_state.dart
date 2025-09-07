@@ -4,63 +4,63 @@ import '../../models/auth_tokens.dart';
 
 part 'auth_state.freezed.dart';
 
-/// Authentication state cho Go Sport app
+/// Authentication state for Go Sport app
 /// 
-/// Sử dụng Freezed để tạo immutable state classes với type safety
-/// Bao gồm tất cả các trạng thái authentication cần thiết cho Vietnamese users
+/// Uses Freezed to create immutable state classes with type safety
+/// Includes all authentication states needed for Vietnamese users
 @freezed
 class AuthState with _$AuthState {
-  /// Trạng thái chưa đăng nhập - initial state
+  /// Unauthenticated state - initial state
   const factory AuthState.unauthenticated() = _Unauthenticated;
   
-  /// Trạng thái đang xử lý authentication với message tùy chọn
+  /// Processing authentication state with optional message
   /// 
-  /// [message] - Thông báo loading tiếng Việt
-  /// Ví dụ: "Đang gửi mã xác thực...", "Đang đăng nhập..."
+  /// [message] - Loading message in Vietnamese
+  /// Example: "Đang gửi mã xác thực...", "Đang đăng nhập..."
   const factory AuthState.authenticating({
     String? message,
   }) = _Authenticating;
   
-  /// Trạng thái đã đăng nhập thành công
+  /// Successfully authenticated state
   /// 
-  /// [user] - Thông tin người dùng
-  /// [tokens] - Firebase và Laravel tokens
+  /// [user] - User information
+  /// [tokens] - Firebase and Laravel tokens
   const factory AuthState.authenticated({
     required UserModel user,
     required AuthTokens tokens,
   }) = _Authenticated;
   
-  /// Trạng thái yêu cầu xác thực số điện thoại Vietnamese
+  /// Vietnamese phone number verification required state
   /// 
-  /// [phoneNumber] - Số điện thoại đã gửi mã xác thực
+  /// [phoneNumber] - Phone number that verification code was sent to
   /// [verificationId] - Firebase verification ID
   const factory AuthState.phoneVerificationRequired({
     required String phoneNumber,
     String? verificationId,
   }) = _PhoneVerificationRequired;
   
-  /// Trạng thái lỗi với thông báo tiếng Việt
+  /// Error state with Vietnamese message
   /// 
-  /// [message] - Thông báo lỗi tiếng Việt
-  /// [errorCode] - Mã lỗi để xử lý cụ thể (optional)
+  /// [message] - Error message in Vietnamese
+  /// [errorCode] - Error code for specific handling (optional)
   const factory AuthState.error({
     required String message,
     String? errorCode,
   }) = _AuthError;
   
-  /// Trạng thái đang refresh token
+  /// Token refresh state
   /// 
-  /// [user] - User hiện tại (giữ nguyên)
-  /// [tokens] - Tokens hiện tại (sẽ được cập nhật)
+  /// [user] - Current user (keep unchanged)
+  /// [tokens] - Current tokens (will be updated)
   const factory AuthState.refreshingToken({
     required UserModel user,
     required AuthTokens tokens,
   }) = _RefreshingToken;
 }
 
-/// Extension methods cho AuthState để tiện sử dụng
+/// Extension methods for AuthState for convenient usage
 extension AuthStateExtensions on AuthState {
-  /// Kiểm tra có đang loading không
+  /// Check if currently loading
   bool get isLoading => when(
     unauthenticated: () => false,
     authenticating: (_) => true,
@@ -70,17 +70,17 @@ extension AuthStateExtensions on AuthState {
     refreshingToken: (_, __) => true,
   );
   
-  /// Kiểm tra đã authenticated chưa
+  /// Check if authenticated
   bool get isAuthenticated => when(
     unauthenticated: () => false,
     authenticating: (_) => false,
     authenticated: (_, __) => true,
     phoneVerificationRequired: (_, __) => false,
     error: (_, __) => false,
-    refreshingToken: (_, __) => true, // Vẫn được coi là authenticated khi refresh
+    refreshingToken: (_, __) => true, // Still considered authenticated when refreshing
   );
   
-  /// Kiểm tra có lỗi không
+  /// Check if has error
   bool get hasError => when(
     unauthenticated: () => false,
     authenticating: (_) => false,
@@ -90,7 +90,7 @@ extension AuthStateExtensions on AuthState {
     refreshingToken: (_, __) => false,
   );
   
-  /// Lấy user hiện tại (nếu có)
+  /// Get current user (if any)
   UserModel? get currentUser => when(
     unauthenticated: () => null,
     authenticating: (_) => null,
@@ -100,7 +100,7 @@ extension AuthStateExtensions on AuthState {
     refreshingToken: (user, _) => user,
   );
   
-  /// Lấy tokens hiện tại (nếu có)
+  /// Get current tokens (if any)
   AuthTokens? get currentTokens => when(
     unauthenticated: () => null,
     authenticating: (_) => null,
@@ -110,7 +110,7 @@ extension AuthStateExtensions on AuthState {
     refreshingToken: (_, tokens) => tokens,
   );
   
-  /// Lấy error message (nếu có)
+  /// Get error message (if any)
   String? get errorMessage => when(
     unauthenticated: () => null,
     authenticating: (_) => null,
@@ -120,7 +120,7 @@ extension AuthStateExtensions on AuthState {
     refreshingToken: (_, __) => null,
   );
   
-  /// Lấy loading message (nếu có)
+  /// Get loading message (if any)
   String? get loadingMessage => when(
     unauthenticated: () => null,
     authenticating: (message) => message,
@@ -130,7 +130,7 @@ extension AuthStateExtensions on AuthState {
     refreshingToken: (_, __) => 'Đang làm mới phiên đăng nhập...',
   );
   
-  /// Kiểm tra có cần xác thực phone không
+  /// Check if phone verification is required
   bool get requiresPhoneVerification => when(
     unauthenticated: () => false,
     authenticating: (_) => false,
@@ -140,7 +140,7 @@ extension AuthStateExtensions on AuthState {
     refreshingToken: (_, __) => false,
   );
   
-  /// Lấy phone number đang xác thực (nếu có)
+  /// Get phone number being verified (if any)
   String? get verifyingPhoneNumber => when(
     unauthenticated: () => null,
     authenticating: (_) => null,
