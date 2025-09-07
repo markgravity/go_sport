@@ -70,7 +70,14 @@ class ErrorInterceptor extends Interceptor {
         type = ApiExceptionType.badRequest;
         break;
       case 401:
-        message = 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+        // For 401 errors, try to use the API response message if available (e.g., login failures)
+        // This allows proper credential error messages to show instead of generic "session expired"
+        if (err.response?.data is Map<String, dynamic>) {
+          final responseData = err.response!.data as Map<String, dynamic>;
+          message = responseData['message']?.toString() ?? 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+        } else {
+          message = 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
+        }
         type = ApiExceptionType.unauthorized;
         break;
       case 403:

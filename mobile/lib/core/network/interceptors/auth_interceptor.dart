@@ -64,8 +64,11 @@ class AuthInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     // Handle 401 Unauthorized responses
     if (err.response?.statusCode == 401) {
+      debugPrint('🔍 AuthInterceptor: 401 error on path: ${err.requestOptions.path}');
+      
       // Don't handle 401 for login/auth endpoints - these are credential errors, not token expiration
       if (_isAuthEndpoint(err.requestOptions.path)) {
+        debugPrint('🔍 AuthInterceptor: Skipping 401 handling for auth endpoint');
         // Let the original 401 response pass through for auth endpoints
         return super.onError(err, handler);
       }
