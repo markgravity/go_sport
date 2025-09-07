@@ -93,7 +93,13 @@ class ErrorInterceptor extends Interceptor {
         type = ApiExceptionType.validationError;
         break;
       case 429:
-        message = 'Quá nhiều yêu cầu. Vui lòng chờ một chút rồi thử lại.';
+        // For 429 errors, try to use the API response message if available (e.g., specific rate limit messages)
+        if (err.response?.data is Map<String, dynamic>) {
+          final responseData = err.response!.data as Map<String, dynamic>;
+          message = responseData['message']?.toString() ?? 'Quá nhiều yêu cầu. Vui lòng chờ một chút rồi thử lại.';
+        } else {
+          message = 'Quá nhiều yêu cầu. Vui lòng chờ một chút rồi thử lại.';
+        }
         type = ApiExceptionType.tooManyRequests;
         break;
       case 500:

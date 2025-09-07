@@ -16,6 +16,11 @@ class RateLimitLogin
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Skip rate limiting in debug mode for development
+        if (config('app.debug')) {
+            return $next($request);
+        }
+        
         $key = $this->getRateLimitKey($request);
         $maxAttempts = 5; // Maximum 5 login attempts
         $windowMinutes = 15; // within 15 minutes
