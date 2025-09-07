@@ -1,8 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 import 'package:go_sport_app/features/groups/presentation/viewmodels/groups_cubit.dart';
 import 'package:go_sport_app/features/groups/presentation/viewmodels/groups_state.dart';
 import 'package:go_sport_app/features/groups/presentation/viewmodels/create_group_cubit.dart';
 import 'package:go_sport_app/features/groups/presentation/viewmodels/create_group_state.dart';
+import 'package:go_sport_app/features/groups/services/groups_service.dart';
+
+@GenerateMocks([GroupsService])
+import 'groups_cubit_test.mocks.dart';
 
 /// Test Vietnamese Group functionality với Cubit architecture
 /// 
@@ -10,9 +16,11 @@ import 'package:go_sport_app/features/groups/presentation/viewmodels/create_grou
 void main() {
   group('GroupsCubit Vietnamese Integration', () {
     late GroupsCubit groupsCubit;
+    late MockGroupsService mockGroupsService;
     
     setUp(() {
-      groupsCubit = GroupsCubit();
+      mockGroupsService = MockGroupsService();
+      groupsCubit = GroupsCubit(mockGroupsService);
     });
     
     tearDown(() {
@@ -66,9 +74,11 @@ void main() {
   
   group('CreateGroupCubit Vietnamese Form Management', () {
     late CreateGroupCubit createGroupCubit;
+    late MockGroupsService mockGroupsService;
     
     setUp(() {
-      createGroupCubit = CreateGroupCubit();
+      mockGroupsService = MockGroupsService();
+      createGroupCubit = CreateGroupCubit(mockGroupsService);
     });
     
     tearDown(() {

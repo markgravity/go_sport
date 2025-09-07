@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:go_sport_app/features/auth/services/auth_service.dart';
 import 'package:go_sport_app/features/auth/models/user_model.dart';
+import 'package:go_sport_app/core/network/api_client.dart';
 
 import 'auth_service_test.mocks.dart';
 
@@ -13,6 +14,7 @@ import 'auth_service_test.mocks.dart';
   http.Client,
   FlutterSecureStorage,
   LocalAuthentication,
+  ApiClient,
 ])
 void main() {
   group('AuthService', () {
@@ -20,12 +22,14 @@ void main() {
     late MockClient mockHttpClient;
     late MockFlutterSecureStorage mockStorage;
     late MockLocalAuthentication mockLocalAuth;
+    late MockApiClient mockApiClient;
 
     setUp(() {
       mockHttpClient = MockClient();
       mockStorage = MockFlutterSecureStorage();
       mockLocalAuth = MockLocalAuthentication();
-      authService = AuthService();
+      mockApiClient = MockApiClient();
+      authService = AuthService(mockApiClient);
     });
 
     group('login', () {

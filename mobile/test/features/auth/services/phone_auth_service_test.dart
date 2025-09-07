@@ -15,8 +15,7 @@ void main() {
 
     setUp(() {
       mockApiService = MockApiService();
-      // In a real implementation, we would inject the mock
-      phoneAuthService = PhoneAuthService();
+      phoneAuthService = PhoneAuthService(mockApiService);
     });
 
     group('Phone number formatting', () {

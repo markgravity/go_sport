@@ -3,19 +3,21 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
-import 'dart:convert' as _i5;
-import 'dart:typed_data' as _i7;
+import 'dart:async' as _i5;
+import 'dart:convert' as _i6;
+import 'dart:typed_data' as _i8;
 
-import 'package:flutter/foundation.dart' as _i8;
+import 'package:dio/dio.dart' as _i4;
+import 'package:flutter/foundation.dart' as _i9;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i3;
+import 'package:go_sport_app/core/network/api_client.dart' as _i14;
 import 'package:http/http.dart' as _i2;
-import 'package:local_auth/src/local_auth.dart' as _i9;
-import 'package:local_auth_android/local_auth_android.dart' as _i10;
-import 'package:local_auth_darwin/local_auth_darwin.dart' as _i11;
-import 'package:local_auth_windows/local_auth_windows.dart' as _i12;
+import 'package:local_auth/src/local_auth.dart' as _i10;
+import 'package:local_auth_android/local_auth_android.dart' as _i11;
+import 'package:local_auth_darwin/local_auth_darwin.dart' as _i12;
+import 'package:local_auth_windows/local_auth_windows.dart' as _i13;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i6;
+import 'package:mockito/src/dummies.dart' as _i7;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -114,6 +116,26 @@ class _FakeMacOsOptions_7 extends _i1.SmartFake implements _i3.MacOsOptions {
         );
 }
 
+class _FakeDio_8 extends _i1.SmartFake implements _i4.Dio {
+  _FakeDio_8(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeResponse_9<T1> extends _i1.SmartFake implements _i4.Response<T1> {
+  _FakeResponse_9(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [Client].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -123,7 +145,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
   }
 
   @override
-  _i4.Future<_i2.Response> head(
+  _i5.Future<_i2.Response> head(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -133,7 +155,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i5.Future<_i2.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #head,
@@ -141,10 +163,10 @@ class MockClient extends _i1.Mock implements _i2.Client {
             {#headers: headers},
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i5.Future<_i2.Response>);
 
   @override
-  _i4.Future<_i2.Response> get(
+  _i5.Future<_i2.Response> get(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -154,7 +176,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i5.Future<_i2.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #get,
@@ -162,14 +184,14 @@ class MockClient extends _i1.Mock implements _i2.Client {
             {#headers: headers},
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i5.Future<_i2.Response>);
 
   @override
-  _i4.Future<_i2.Response> post(
+  _i5.Future<_i2.Response> post(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i5.Encoding? encoding,
+    _i6.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -181,7 +203,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i5.Future<_i2.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #post,
@@ -193,14 +215,14 @@ class MockClient extends _i1.Mock implements _i2.Client {
             },
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i5.Future<_i2.Response>);
 
   @override
-  _i4.Future<_i2.Response> put(
+  _i5.Future<_i2.Response> put(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i5.Encoding? encoding,
+    _i6.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -212,7 +234,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i5.Future<_i2.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #put,
@@ -224,14 +246,14 @@ class MockClient extends _i1.Mock implements _i2.Client {
             },
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i5.Future<_i2.Response>);
 
   @override
-  _i4.Future<_i2.Response> patch(
+  _i5.Future<_i2.Response> patch(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i5.Encoding? encoding,
+    _i6.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -243,7 +265,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i5.Future<_i2.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #patch,
@@ -255,14 +277,14 @@ class MockClient extends _i1.Mock implements _i2.Client {
             },
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i5.Future<_i2.Response>);
 
   @override
-  _i4.Future<_i2.Response> delete(
+  _i5.Future<_i2.Response> delete(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i5.Encoding? encoding,
+    _i6.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -274,7 +296,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i4.Future<_i2.Response>.value(_FakeResponse_0(
+        returnValue: _i5.Future<_i2.Response>.value(_FakeResponse_0(
           this,
           Invocation.method(
             #delete,
@@ -286,10 +308,10 @@ class MockClient extends _i1.Mock implements _i2.Client {
             },
           ),
         )),
-      ) as _i4.Future<_i2.Response>);
+      ) as _i5.Future<_i2.Response>);
 
   @override
-  _i4.Future<String> read(
+  _i5.Future<String> read(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -299,7 +321,7 @@ class MockClient extends _i1.Mock implements _i2.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i4.Future<String>.value(_i6.dummyValue<String>(
+        returnValue: _i5.Future<String>.value(_i7.dummyValue<String>(
           this,
           Invocation.method(
             #read,
@@ -307,10 +329,10 @@ class MockClient extends _i1.Mock implements _i2.Client {
             {#headers: headers},
           ),
         )),
-      ) as _i4.Future<String>);
+      ) as _i5.Future<String>);
 
   @override
-  _i4.Future<_i7.Uint8List> readBytes(
+  _i5.Future<_i8.Uint8List> readBytes(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -320,25 +342,25 @@ class MockClient extends _i1.Mock implements _i2.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i4.Future<_i7.Uint8List>.value(_i7.Uint8List(0)),
-      ) as _i4.Future<_i7.Uint8List>);
+        returnValue: _i5.Future<_i8.Uint8List>.value(_i8.Uint8List(0)),
+      ) as _i5.Future<_i8.Uint8List>);
 
   @override
-  _i4.Future<_i2.StreamedResponse> send(_i2.BaseRequest? request) =>
+  _i5.Future<_i2.StreamedResponse> send(_i2.BaseRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #send,
           [request],
         ),
         returnValue:
-            _i4.Future<_i2.StreamedResponse>.value(_FakeStreamedResponse_1(
+            _i5.Future<_i2.StreamedResponse>.value(_FakeStreamedResponse_1(
           this,
           Invocation.method(
             #send,
             [request],
           ),
         )),
-      ) as _i4.Future<_i2.StreamedResponse>);
+      ) as _i5.Future<_i2.StreamedResponse>);
 
   @override
   void close() => super.noSuchMethod(
@@ -416,7 +438,7 @@ class MockFlutterSecureStorage extends _i1.Mock
   @override
   void registerListener({
     required String? key,
-    required _i8.ValueChanged<String?>? listener,
+    required _i9.ValueChanged<String?>? listener,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -433,7 +455,7 @@ class MockFlutterSecureStorage extends _i1.Mock
   @override
   void unregisterListener({
     required String? key,
-    required _i8.ValueChanged<String?>? listener,
+    required _i9.ValueChanged<String?>? listener,
   }) =>
       super.noSuchMethod(
         Invocation.method(
@@ -468,7 +490,7 @@ class MockFlutterSecureStorage extends _i1.Mock
       );
 
   @override
-  _i4.Future<void> write({
+  _i5.Future<void> write({
     required String? key,
     required String? value,
     _i3.IOSOptions? iOptions,
@@ -493,12 +515,12 @@ class MockFlutterSecureStorage extends _i1.Mock
             #wOptions: wOptions,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<String?> read({
+  _i5.Future<String?> read({
     required String? key,
     _i3.IOSOptions? iOptions,
     _i3.AndroidOptions? aOptions,
@@ -521,11 +543,11 @@ class MockFlutterSecureStorage extends _i1.Mock
             #wOptions: wOptions,
           },
         ),
-        returnValue: _i4.Future<String?>.value(),
-      ) as _i4.Future<String?>);
+        returnValue: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
 
   @override
-  _i4.Future<bool> containsKey({
+  _i5.Future<bool> containsKey({
     required String? key,
     _i3.IOSOptions? iOptions,
     _i3.AndroidOptions? aOptions,
@@ -548,11 +570,11 @@ class MockFlutterSecureStorage extends _i1.Mock
             #wOptions: wOptions,
           },
         ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
 
   @override
-  _i4.Future<void> delete({
+  _i5.Future<void> delete({
     required String? key,
     _i3.IOSOptions? iOptions,
     _i3.AndroidOptions? aOptions,
@@ -575,12 +597,12 @@ class MockFlutterSecureStorage extends _i1.Mock
             #wOptions: wOptions,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<Map<String, String>> readAll({
+  _i5.Future<Map<String, String>> readAll({
     _i3.IOSOptions? iOptions,
     _i3.AndroidOptions? aOptions,
     _i3.LinuxOptions? lOptions,
@@ -601,11 +623,11 @@ class MockFlutterSecureStorage extends _i1.Mock
             #wOptions: wOptions,
           },
         ),
-        returnValue: _i4.Future<Map<String, String>>.value(<String, String>{}),
-      ) as _i4.Future<Map<String, String>>);
+        returnValue: _i5.Future<Map<String, String>>.value(<String, String>{}),
+      ) as _i5.Future<Map<String, String>>);
 
   @override
-  _i4.Future<void> deleteAll({
+  _i5.Future<void> deleteAll({
     _i3.IOSOptions? iOptions,
     _i3.AndroidOptions? aOptions,
     _i3.LinuxOptions? lOptions,
@@ -626,44 +648,44 @@ class MockFlutterSecureStorage extends _i1.Mock
             #wOptions: wOptions,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i4.Future<bool?> isCupertinoProtectedDataAvailable() => (super.noSuchMethod(
+  _i5.Future<bool?> isCupertinoProtectedDataAvailable() => (super.noSuchMethod(
         Invocation.method(
           #isCupertinoProtectedDataAvailable,
           [],
         ),
-        returnValue: _i4.Future<bool?>.value(),
-      ) as _i4.Future<bool?>);
+        returnValue: _i5.Future<bool?>.value(),
+      ) as _i5.Future<bool?>);
 }
 
 /// A class which mocks [LocalAuthentication].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockLocalAuthentication extends _i1.Mock
-    implements _i9.LocalAuthentication {
+    implements _i10.LocalAuthentication {
   MockLocalAuthentication() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Future<bool> get canCheckBiometrics => (super.noSuchMethod(
+  _i5.Future<bool> get canCheckBiometrics => (super.noSuchMethod(
         Invocation.getter(#canCheckBiometrics),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
 
   @override
-  _i4.Future<bool> authenticate({
+  _i5.Future<bool> authenticate({
     required String? localizedReason,
-    Iterable<_i10.AuthMessages>? authMessages = const [
-      _i11.IOSAuthMessages(),
-      _i10.AndroidAuthMessages(),
-      _i12.WindowsAuthMessages(),
+    Iterable<_i11.AuthMessages>? authMessages = const [
+      _i12.IOSAuthMessages(),
+      _i11.AndroidAuthMessages(),
+      _i13.WindowsAuthMessages(),
     ],
-    _i10.AuthenticationOptions? options = const _i10.AuthenticationOptions(),
+    _i11.AuthenticationOptions? options = const _i11.AuthenticationOptions(),
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -675,35 +697,184 @@ class MockLocalAuthentication extends _i1.Mock
             #options: options,
           },
         ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
 
   @override
-  _i4.Future<bool> stopAuthentication() => (super.noSuchMethod(
+  _i5.Future<bool> stopAuthentication() => (super.noSuchMethod(
         Invocation.method(
           #stopAuthentication,
           [],
         ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
 
   @override
-  _i4.Future<bool> isDeviceSupported() => (super.noSuchMethod(
+  _i5.Future<bool> isDeviceSupported() => (super.noSuchMethod(
         Invocation.method(
           #isDeviceSupported,
           [],
         ),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
 
   @override
-  _i4.Future<List<_i10.BiometricType>> getAvailableBiometrics() =>
+  _i5.Future<List<_i11.BiometricType>> getAvailableBiometrics() =>
       (super.noSuchMethod(
         Invocation.method(
           #getAvailableBiometrics,
           [],
         ),
         returnValue:
-            _i4.Future<List<_i10.BiometricType>>.value(<_i10.BiometricType>[]),
-      ) as _i4.Future<List<_i10.BiometricType>>);
+            _i5.Future<List<_i11.BiometricType>>.value(<_i11.BiometricType>[]),
+      ) as _i5.Future<List<_i11.BiometricType>>);
+}
+
+/// A class which mocks [ApiClient].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockApiClient extends _i1.Mock implements _i14.ApiClient {
+  MockApiClient() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Dio get dio => (super.noSuchMethod(
+        Invocation.getter(#dio),
+        returnValue: _FakeDio_8(
+          this,
+          Invocation.getter(#dio),
+        ),
+      ) as _i4.Dio);
+
+  @override
+  _i5.Future<Map<String, dynamic>> healthCheck() => (super.noSuchMethod(
+        Invocation.method(
+          #healthCheck,
+          [],
+        ),
+        returnValue:
+            _i5.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i5.Future<Map<String, dynamic>>);
+
+  @override
+  _i5.Future<_i4.Response<T>> get<T>(
+    String? path, {
+    Map<String, dynamic>? queryParameters,
+    _i4.Options? options,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #get,
+          [path],
+          {
+            #queryParameters: queryParameters,
+            #options: options,
+          },
+        ),
+        returnValue: _i5.Future<_i4.Response<T>>.value(_FakeResponse_9<T>(
+          this,
+          Invocation.method(
+            #get,
+            [path],
+            {
+              #queryParameters: queryParameters,
+              #options: options,
+            },
+          ),
+        )),
+      ) as _i5.Future<_i4.Response<T>>);
+
+  @override
+  _i5.Future<_i4.Response<T>> post<T>(
+    String? path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    _i4.Options? options,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #post,
+          [path],
+          {
+            #data: data,
+            #queryParameters: queryParameters,
+            #options: options,
+          },
+        ),
+        returnValue: _i5.Future<_i4.Response<T>>.value(_FakeResponse_9<T>(
+          this,
+          Invocation.method(
+            #post,
+            [path],
+            {
+              #data: data,
+              #queryParameters: queryParameters,
+              #options: options,
+            },
+          ),
+        )),
+      ) as _i5.Future<_i4.Response<T>>);
+
+  @override
+  _i5.Future<_i4.Response<T>> put<T>(
+    String? path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    _i4.Options? options,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #put,
+          [path],
+          {
+            #data: data,
+            #queryParameters: queryParameters,
+            #options: options,
+          },
+        ),
+        returnValue: _i5.Future<_i4.Response<T>>.value(_FakeResponse_9<T>(
+          this,
+          Invocation.method(
+            #put,
+            [path],
+            {
+              #data: data,
+              #queryParameters: queryParameters,
+              #options: options,
+            },
+          ),
+        )),
+      ) as _i5.Future<_i4.Response<T>>);
+
+  @override
+  _i5.Future<_i4.Response<T>> delete<T>(
+    String? path, {
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    _i4.Options? options,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #delete,
+          [path],
+          {
+            #data: data,
+            #queryParameters: queryParameters,
+            #options: options,
+          },
+        ),
+        returnValue: _i5.Future<_i4.Response<T>>.value(_FakeResponse_9<T>(
+          this,
+          Invocation.method(
+            #delete,
+            [path],
+            {
+              #data: data,
+              #queryParameters: queryParameters,
+              #options: options,
+            },
+          ),
+        )),
+      ) as _i5.Future<_i4.Response<T>>);
 }
