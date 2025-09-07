@@ -62,8 +62,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   Future<void> _createGroup() async {
-    if (!_formKey.currentState!.validate()) return;
+    debugPrint('_createGroup called');
     
+    if (!_formKey.currentState!.validate()) {
+      debugPrint('Form validation failed');
+      return;
+    }
+    
+    debugPrint('Form validation passed, calling cubit.createGroup()');
     await _createGroupCubit.createGroup();
   }
 
@@ -357,31 +363,40 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           Expanded(
             child: ElevatedButton(
               onPressed: state.isLoading ? null : () {
+                debugPrint('Button pressed! Current step: $_currentStep, Total steps: $_totalSteps');
+                
                 if (_currentStep < _totalSteps - 1) {
+                  debugPrint('Not final step, validating current step');
                   // Validate current step
                   bool canProceed = false;
                   switch (_currentStep) {
                     case 0:
                       canProceed = _getSelectedSport(state) != null;
+                      debugPrint('Step 0 validation: canProceed = $canProceed');
                       break;
                     case 1:
                       canProceed = state.currentFormData.name.isNotEmpty && 
                                  state.currentFormData.location.isNotEmpty && 
                                  state.currentFormData.city.isNotEmpty;
+                      debugPrint('Step 1 validation: canProceed = $canProceed');
                       break;
                     case 2:
                       canProceed = true;
+                      debugPrint('Step 2 validation: canProceed = $canProceed');
                       break;
                   }
                   
                   if (canProceed) {
+                    debugPrint('Proceeding to next step');
                     _nextStep();
                   } else {
+                    debugPrint('Cannot proceed, showing snackbar');
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Vui lòng hoàn thành thông tin bước này')),
                     );
                   }
                 } else {
+                  debugPrint('Final step reached, calling _createGroup()');
                   _createGroup();
                 }
               },
