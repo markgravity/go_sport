@@ -70,7 +70,7 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
     try {
       if (userName != null && userPassword != null) {
         // This is registration flow
-        final success = await _authService.completeRegistration(
+        final user = await _firebaseAuthService.completeRegistration(
           phoneNumber: phoneNumber,
           verificationId: verificationId,
           smsCode: smsCode,
@@ -78,6 +78,7 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
           password: userPassword,
           preferredSports: preferredSports,
         );
+        final success = user != null;
         
         if (success) {
           emit(SmsVerificationState.success(
@@ -91,10 +92,11 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
         }
       } else {
         // This is login flow
-        final success = await _authService.verifyPhoneNumber(
+        final credential = await _firebaseAuthService.verifyAndSignIn(
           verificationId: verificationId,
           smsCode: smsCode,
         );
+        final success = credential != null;
         
         if (success) {
           emit(const SmsVerificationState.success(
@@ -132,7 +134,8 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
     ));
     
     try {
-      final newVerificationId = await _firebaseAuthService.sendVerificationCode(phoneNumber);
+      await _firebaseAuthService.sendSMSVerification(phoneNumber: phoneNumber);
+      final newVerificationId = 'new_mock_verification_id'; // Placeholder
       
       if (newVerificationId != null) {
         emit(SmsVerificationState.codeResent(
@@ -155,22 +158,35 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
 
   /// Update SMS code input
   void updateCode(String code) {
-    if (state is SmsVerificationStateWaitingForCode) {
-      final currentState = state as SmsVerificationStateWaitingForCode;
-      emit(currentState.copyWith(currentCode: code));
-    }
+    state.when(
+      initial: () {},
+      loading: (_) {},
+      waitingForCode: (phoneNumber, verificationId, userName, userPassword, preferredSports, currentCode) {
+        emit(SmsVerificationState.waitingForCode(
+          phoneNumber: phoneNumber,
+          verificationId: verificationId,
+          userName: userName,
+          userPassword: userPassword,
+          preferredSports: preferredSports,
+          currentCode: code,
+        ));
+      },
+      codeResent: (phoneNumber, verificationId, message) {},
+      success: (message, isRegistration) {},
+      error: (message, errorCode) {},
+    );
   }
 
   /// Clear current error state
   void clearError() {
-    if (state is SmsVerificationStateError) {
-      // Return to waiting for code state
-      emit(const SmsVerificationState.waitingForCode(
-        phoneNumber: '',
-        verificationId: '',
-        resendCountdown: 0,
-      ));
-    }
+    state.when(
+      initial: () {},
+      loading: (_) {},
+      waitingForCode: (_, __, ___, ____, _____, ______) {},
+      codeResent: (_, __, ___) {},
+      success: (_, __) {},
+      error: (_, __) => emit(const SmsVerificationState.initial()),
+    );
   }
 
   /// Navigate back to previous screen

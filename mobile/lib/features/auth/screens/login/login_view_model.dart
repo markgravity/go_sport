@@ -57,7 +57,8 @@ class LoginViewModel extends Cubit<LoginState> {
   /// Send SMS verification code to Vietnamese phone number
   Future<String?> sendVerificationCode(String phoneNumber) async {
     try {
-      return await _firebaseAuthService.sendVerificationCode(phoneNumber);
+      await _firebaseAuthService.sendSMSVerification(phoneNumber: phoneNumber);
+      return 'SMS_SENT'; // Placeholder return value
     } catch (error) {
       emit(LoginState.error(
         message: 'Không thể gửi mã xác thực: $error',
@@ -84,9 +85,12 @@ class LoginViewModel extends Cubit<LoginState> {
 
   /// Clear current error state
   void clearError() {
-    if (state is LoginStateError) {
-      emit(const LoginState.initial());
-    }
+    state.when(
+      initial: () {},
+      loading: (_) {},
+      success: (_) {},
+      error: (_, __) => emit(const LoginState.initial()),
+    );
   }
 
   /// Navigate to registration screen

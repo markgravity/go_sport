@@ -263,4 +263,67 @@ class GroupsService {
       throw Exception('Error fetching members: $e');
     }
   }
+
+  // Additional methods needed by ViewModels
+
+  /// Get detailed group information (alias for getGroup)
+  static Future<Group> getGroupDetails(String groupId) async {
+    return await getGroup(int.parse(groupId));
+  }
+
+  /// Remove member from group
+  static Future<bool> removeMemberFromGroup({
+    required String groupId,
+    required String memberId,
+  }) async {
+    try {
+      final response = await ApiClient.instance.delete(
+        '$_baseUrl/${int.parse(groupId)}/members/${int.parse(memberId)}'
+      );
+      return response.data['success'] == true;
+    } catch (e) {
+      throw Exception('Error removing member: $e');
+    }
+  }
+
+  /// Generate invitation link for group
+  static Future<String> generateInvitationLink(String groupId) async {
+    try {
+      final response = await ApiClient.instance.post(
+        '$_baseUrl/${int.parse(groupId)}/invite'
+      );
+      if (response.data['success'] == true) {
+        return response.data['data']['invitation_link'] as String;
+      } else {
+        throw Exception('Failed to generate invitation link: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error generating invitation link: $e');
+    }
+  }
+
+  /// Update group settings
+  static Future<bool> updateGroupSettings({
+    required String groupId,
+    String? name,
+    String? description,
+    bool? isPrivate,
+    String? location,
+  }) async {
+    try {
+      final data = <String, dynamic>{};
+      if (name != null) data['name'] = name;
+      if (description != null) data['description'] = description;
+      if (isPrivate != null) data['privacy'] = isPrivate ? 'rieng_tu' : 'cong_khai';
+      if (location != null) data['location'] = location;
+
+      final response = await ApiClient.instance.put(
+        '$_baseUrl/${int.parse(groupId)}',
+        data: data,
+      );
+      return response.data['success'] == true;
+    } catch (e) {
+      throw Exception('Error updating group settings: $e');
+    }
+  }
 }

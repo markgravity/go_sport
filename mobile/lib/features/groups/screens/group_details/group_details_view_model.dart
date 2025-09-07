@@ -33,8 +33,14 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      final group = await _groupsService.getGroupDetails(groupId);
-      final members = await _groupsService.getGroupMembers(groupId);
+      final group = await GroupsService.getGroupDetails(groupId);
+      final users = await GroupsService.getGroupMembers(int.parse(groupId));
+      final members = users.map((user) => GroupMember(
+        userId: user.id,
+        name: user.name,
+        role: 'member', // Default role
+        avatar: user.avatar,
+      )).toList();
       
       emit(GroupDetailsState.loaded(
         group: group,
@@ -51,8 +57,14 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
   /// Refresh group details
   Future<void> refreshGroupDetails(String groupId) async {
     try {
-      final group = await _groupsService.getGroupDetails(groupId);
-      final members = await _groupsService.getGroupMembers(groupId);
+      final group = await GroupsService.getGroupDetails(groupId);
+      final users = await GroupsService.getGroupMembers(int.parse(groupId));
+      final members = users.map((user) => GroupMember(
+        userId: user.id,
+        name: user.name,
+        role: 'member', // Default role
+        avatar: user.avatar,
+      )).toList();
       
       emit(GroupDetailsState.loaded(
         group: group,
@@ -77,7 +89,7 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      final success = await _groupRoleService.assignMemberRole(
+      final success = await GroupRoleService.assignMemberRole(
         groupId: groupId,
         memberId: memberId,
         role: role,
@@ -112,7 +124,7 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      final success = await _groupsService.removeMemberFromGroup(
+      final success = await GroupsService.removeMemberFromGroup(
         groupId: groupId,
         memberId: memberId,
       );
@@ -142,7 +154,7 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      final invitationLink = await _groupsService.generateInvitationLink(groupId);
+      final invitationLink = await GroupsService.generateInvitationLink(groupId);
       
       emit(GroupDetailsState.invitationGenerated(
         invitationLink: invitationLink,
@@ -168,7 +180,7 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      final success = await _groupsService.updateGroupSettings(
+      final success = await GroupsService.updateGroupSettings(
         groupId: groupId,
         name: name,
         description: description,
@@ -201,17 +213,11 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      final success = await _groupsService.leaveGroup(groupId);
+      await GroupsService.leaveGroup(int.parse(groupId));
       
-      if (success) {
-        emit(const GroupDetailsState.leftGroup(
-          message: 'Đã rời khỏi nhóm thành công',
-        ));
-      } else {
-        emit(const GroupDetailsState.error(
-          message: 'Không thể rời khỏi nhóm. Vui lòng thử lại.',
-        ));
-      }
+      emit(const GroupDetailsState.leftGroup(
+        message: 'Đã rời khỏi nhóm thành công',
+      ));
     } catch (error) {
       emit(GroupDetailsState.error(
         message: 'Có lỗi xảy ra khi rời nhóm: $error',
@@ -226,17 +232,11 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
     ));
     
     try {
-      final success = await _groupsService.deleteGroup(groupId);
+      await GroupsService.deleteGroup(int.parse(groupId));
       
-      if (success) {
-        emit(const GroupDetailsState.groupDeleted(
-          message: 'Đã xóa nhóm thành công',
-        ));
-      } else {
-        emit(const GroupDetailsState.error(
-          message: 'Không thể xóa nhóm. Vui lòng thử lại.',
-        ));
-      }
+      emit(const GroupDetailsState.groupDeleted(
+        message: 'Đã xóa nhóm thành công',
+      ));
     } catch (error) {
       emit(GroupDetailsState.error(
         message: 'Có lỗi xảy ra khi xóa nhóm: $error',

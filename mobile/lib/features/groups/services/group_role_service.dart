@@ -48,4 +48,23 @@ class GroupRoleService {
       throw Exception('Error removing member: $e');
     }
   }
+
+  // Additional methods needed by ViewModels
+
+  /// Assign role to group member
+  static Future<bool> assignMemberRole({
+    required String groupId,
+    required String memberId,
+    required VietnameseGroupRole role,
+  }) async {
+    try {
+      final response = await ApiClient.instance.put(
+        '$_baseUrl/${int.parse(groupId)}/members/${int.parse(memberId)}/role',
+        data: {'role': role.value},
+      );
+      return response.data['success'] == true;
+    } catch (e) {
+      throw Exception('Error assigning member role: $e');
+    }
+  }
 }

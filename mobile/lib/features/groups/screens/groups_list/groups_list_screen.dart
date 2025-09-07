@@ -193,7 +193,7 @@ class _GroupsListViewState extends State<_GroupsListView> {
                 group: group,
                 onTap: () {
                   context.read<GroupsListViewModel>()
-                      .navigateToGroupDetails(group.id);
+                      .navigateToGroupDetails(group.id.toString());
                 },
                 onLeave: () => _showLeaveGroupDialog(context, group),
               );
@@ -456,7 +456,7 @@ class _GroupsListViewState extends State<_GroupsListView> {
           ),
           TextButton(
             onPressed: () {
-              context.read<GroupsListViewModel>().leaveGroup(group.id);
+              context.read<GroupsListViewModel>().leaveGroup(group.id.toString());
               Navigator.pop(dialogContext);
             },
             child: const Text(
