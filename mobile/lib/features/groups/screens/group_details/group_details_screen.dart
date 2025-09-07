@@ -109,12 +109,16 @@ class _GroupDetailsView extends StatelessWidget {
             Navigator.of(context).pop();
           },
           navigateToEditGroup: (groupId) {
-            // Navigate to edit group screen
-            Navigator.of(context).pushNamed('/edit-group', arguments: groupId);
+            // TODO: Implement edit group screen route
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Chỉnh sửa nhóm - Coming soon!')),
+            );
           },
           navigateToMemberProfile: (memberId) {
-            // Navigate to member profile screen
-            Navigator.of(context).pushNamed('/member-profile', arguments: memberId);
+            // TODO: Implement member profile screen route
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Thông tin thành viên - Coming soon!')),
+            );
           },
           navigateBack: () {
             Navigator.of(context).pop();

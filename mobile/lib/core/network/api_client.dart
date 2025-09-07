@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'interceptors/auth_interceptor.dart';
 import 'interceptors/logging_interceptor.dart';
 import 'interceptors/error_interceptor.dart';
 import 'interceptors/retry_interceptor.dart';
@@ -34,6 +35,7 @@ class ApiClient {
 
   void _setupInterceptors() {
     _dio.interceptors.addAll([
+      AuthInterceptor(), // Must be first to add auth headers
       LoggingInterceptor(),
       ErrorInterceptor(),
       RetryInterceptor(),

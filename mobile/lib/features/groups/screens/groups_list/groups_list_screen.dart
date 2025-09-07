@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:auto_route/auto_route.dart';
 
 import '../../../../core/dependency_injection/injection_container.dart';
+import '../../../../app/auto_router.dart';
 import '../../models/group.dart';
 import '../../widgets/group_card_widget.dart';
 import 'groups_list_view_model.dart';
@@ -79,10 +81,10 @@ class _GroupsListViewState extends State<_GroupsListView> {
             }
           },
           navigateToCreateGroup: () {
-            Navigator.pushNamed(context, '/groups/create');
+            context.router.push(const CreateGroupRoute());
           },
           navigateToGroupDetails: (groupId) {
-            Navigator.pushNamed(context, '/groups/$groupId');
+            context.router.push(GroupDetailsRoute(groupId: groupId));
           },
         );
       },

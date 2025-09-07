@@ -43,7 +43,7 @@ class SportSelectionWidget extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 3.0,
+                childAspectRatio: 2.2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
               ),
@@ -66,7 +66,7 @@ class SportSelectionWidget extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 3.0,
+                childAspectRatio: 2.2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
               ),
@@ -93,40 +93,46 @@ class SportSelectionWidget extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                _getSportIcon(sport.key),
-                size: 28,
-                color: isSelected 
-                  ? theme.colorScheme.onPrimaryContainer
-                  : theme.colorScheme.primary,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                sport.name,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+              Flexible(
+                child: Icon(
+                  _getSportIcon(sport.key),
+                  size: 24,
                   color: isSelected 
                     ? theme.colorScheme.onPrimaryContainer
-                    : null,
+                    : theme.colorScheme.primary,
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 6),
+              Flexible(
+                child: Text(
+                  sport.name,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: isSelected 
+                      ? theme.colorScheme.onPrimaryContainer
+                      : null,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               if (isSelected)
                 Container(
-                  margin: const EdgeInsets.only(top: 4),
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  margin: const EdgeInsets.only(top: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'Đã chọn',
+                    'Chọn',
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
+                      fontSize: 10,
                     ),
                   ),
                 ),

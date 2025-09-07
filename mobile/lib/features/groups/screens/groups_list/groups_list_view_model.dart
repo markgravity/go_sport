@@ -25,27 +25,39 @@ class GroupsListViewModel extends Cubit<GroupsListState> {
 
   /// Load all user's groups from the service
   Future<void> loadGroups() async {
+    if (isClosed) return; // Prevent emit after dispose
+    
     emit(const GroupsListState.loading());
     
     try {
       _allGroups = await _groupsService.getGroups();
-      _applyFiltersAndSearch();
+      if (!isClosed) { // Check again before emitting
+        _applyFiltersAndSearch();
+      }
     } catch (error) {
-      emit(GroupsListState.error(
-        message: 'Không thể tải danh sách nhóm: $error',
-      ));
+      if (!isClosed) { // Check again before emitting
+        emit(GroupsListState.error(
+          message: 'Không thể tải danh sách nhóm: $error',
+        ));
+      }
     }
   }
 
   /// Refresh groups list
   Future<void> refreshGroups() async {
+    if (isClosed) return; // Prevent emit after dispose
+    
     try {
       _allGroups = await _groupsService.getGroups();
-      _applyFiltersAndSearch();
+      if (!isClosed) {
+        _applyFiltersAndSearch();
+      }
     } catch (error) {
-      emit(GroupsListState.error(
-        message: 'Không thể làm mới danh sách nhóm: $error',
-      ));
+      if (!isClosed) {
+        emit(GroupsListState.error(
+          message: 'Không thể làm mới danh sách nhóm: $error',
+        ));
+      }
     }
   }
 
@@ -70,62 +82,84 @@ class GroupsListViewModel extends Cubit<GroupsListState> {
 
   /// Navigate to create group screen
   void navigateToCreateGroup() {
-    emit(const GroupsListState.navigateToCreateGroup());
+    if (!isClosed) {
+      emit(const GroupsListState.navigateToCreateGroup());
+    }
   }
 
   /// Navigate to group details screen
   void navigateToGroupDetails(String groupId) {
-    emit(GroupsListState.navigateToGroupDetails(groupId: groupId));
+    if (!isClosed) {
+      emit(GroupsListState.navigateToGroupDetails(groupId: groupId));
+    }
   }
 
   /// Join a group with invitation code
   Future<void> joinGroupWithCode(String invitationCode) async {
+    if (isClosed) return; // Prevent emit after dispose
+    
     emit(const GroupsListState.loading());
     
     try {
       final result = await _groupsService.joinGroup(int.parse(invitationCode));
       
-      if (result['success'] == true) {
-        // Reload groups to include the newly joined group
-        await loadGroups();
-        emit(const GroupsListState.groupJoined(
-          message: 'Tham gia nhóm thành công!',
-        ));
-      } else {
-        emit(const GroupsListState.error(
-          message: 'Không thể tham gia nhóm. Mã mời có thể đã hết hạn.',
-        ));
+      if (!isClosed) { // Check before processing result
+        if (result['success'] == true) {
+          // Reload groups to include the newly joined group
+          await loadGroups();
+          if (!isClosed) {
+            emit(const GroupsListState.groupJoined(
+              message: 'Tham gia nhóm thành công!',
+            ));
+          }
+        } else {
+          emit(const GroupsListState.error(
+            message: 'Không thể tham gia nhóm. Mã mời có thể đã hết hạn.',
+          ));
+        }
       }
     } catch (error) {
-      emit(GroupsListState.error(
-        message: 'Có lỗi xảy ra khi tham gia nhóm: $error',
-      ));
+      if (!isClosed) {
+        emit(GroupsListState.error(
+          message: 'Có lỗi xảy ra khi tham gia nhóm: $error',
+        ));
+      }
     }
   }
 
   /// Leave a group
   Future<void> leaveGroup(String groupId) async {
+    if (isClosed) return; // Prevent emit after dispose
+    
     emit(const GroupsListState.loading());
     
     try {
       await _groupsService.leaveGroup(int.parse(groupId));
       
-      // Remove the group from local list
-      _allGroups.removeWhere((group) => group.id == int.parse(groupId));
-      _applyFiltersAndSearch();
-      
-      emit(const GroupsListState.groupLeft(
-        message: 'Đã rời khỏi nhóm thành công',
-      ));
+      if (!isClosed) { // Check before updating local state
+        // Remove the group from local list
+        _allGroups.removeWhere((group) => group.id == int.parse(groupId));
+        _applyFiltersAndSearch();
+        
+        if (!isClosed) {
+          emit(const GroupsListState.groupLeft(
+            message: 'Đã rời khỏi nhóm thành công',
+          ));
+        }
+      }
     } catch (error) {
-      emit(GroupsListState.error(
-        message: 'Có lỗi xảy ra khi rời nhóm: $error',
-      ));
+      if (!isClosed) {
+        emit(GroupsListState.error(
+          message: 'Có lỗi xảy ra khi rời nhóm: $error',
+        ));
+      }
     }
   }
 
   /// Apply current filters and search to groups list
   void _applyFiltersAndSearch() {
+    if (isClosed) return; // Prevent emit after dispose
+    
     List<Group> filteredGroups = List.from(_allGroups);
 
     // Apply sport type filter
@@ -147,12 +181,14 @@ class GroupsListViewModel extends Cubit<GroupsListState> {
     // Sort groups by activity (most recently active first)
     filteredGroups.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
 
-    emit(GroupsListState.loaded(
-      groups: filteredGroups,
-      searchQuery: _currentSearchQuery,
-      sportTypeFilter: _currentSportTypeFilter,
-      hasMore: false, // Pagination could be added later
-    ));
+    if (!isClosed) { // Check again before emitting
+      emit(GroupsListState.loaded(
+        groups: filteredGroups,
+        searchQuery: _currentSearchQuery,
+        sportTypeFilter: _currentSportTypeFilter,
+        hasMore: false, // Pagination could be added later
+      ));
+    }
   }
 
   /// Get available Vietnamese sport types for filtering

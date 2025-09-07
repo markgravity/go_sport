@@ -150,7 +150,7 @@ class Group extends Model
                 'notification_hours' => 24,
                 'typical_locations' => []
             ]
-        ];
+        };
     }
 
     public function getAdmins(): BelongsToMany
