@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'dart:async';
 import '../../../../core/dependency_injection/injection_container.dart';
@@ -97,7 +96,7 @@ class _SmsVerificationViewState extends State<_SmsVerificationView> {
   Future<void> _verifyCode() async {
     final code = _codeController.text.trim();
     if (code.length != 6) {
-      _showError(AppLocalizations.of(context).errorEnterFullCode);
+      _showError('Vui lòng nhập đầy đủ mã 6 số');
       return;
     }
 
@@ -171,23 +170,26 @@ class _SmsVerificationViewState extends State<_SmsVerificationView> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
     
     return BlocConsumer<SmsVerificationViewModel, SmsVerificationState>(
       listener: (context, state) {
         state.when(
           initial: () {},
           loading: (message) {},
+          waitingForCode: (phoneNumber, verificationId, resendCountdown, currentCode, userName, userPassword, preferredSports) {},
+          codeResent: (phoneNumber, verificationId, resendCountdown) {
+            _showSuccess('Mã xác thực đã được gửi lại đến $phoneNumber');
+          },
           success: (message, isRegistration) {
-            _showSuccess(message);
+            _showSuccess(message ?? 'Xác thực thành công');
             // Navigate to groups list or home screen
             context.router.replaceAll([const GroupsListRoute()]);
           },
           error: (message, errorCode) {
             _showError(message);
           },
-          codeResent: (phoneNumber) {
-            _showSuccess('Mã xác thực đã được gửi lại đến $phoneNumber');
+          navigateBack: () {
+            context.router.maybePop();
           },
         );
       },
@@ -199,7 +201,8 @@ class _SmsVerificationViewState extends State<_SmsVerificationView> {
         
         final phoneNumber = state.maybeWhen(
           waitingForCode: (phone, _, __, ___, ____, _____, ______) => phone,
-          orElse: () => widget.phoneNumber ?? '',
+          codeResent: (phone, _, __) => phone,
+          orElse: () => (context.findAncestorWidgetOfExactType<SmsVerificationScreen>())?.phoneNumber ?? '',
         );
         
         return Scaffold(
@@ -209,10 +212,10 @@ class _SmsVerificationViewState extends State<_SmsVerificationView> {
             elevation: 0,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => context.router.pop(),
+              onPressed: () => context.router.maybePop(),
             ),
             title: Text(
-              l10n.smsVerification,
+              'Xác thực SMS',
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 20,
@@ -235,7 +238,7 @@ class _SmsVerificationViewState extends State<_SmsVerificationView> {
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2E5BDA).withOpacity(0.1),
+                        color: const Color(0xFF2E5BDA).withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -249,7 +252,7 @@ class _SmsVerificationViewState extends State<_SmsVerificationView> {
                     
                     // Title
                     Text(
-                      l10n.enterVerificationCode,
+                      'Nhập mã xác thực',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -262,7 +265,7 @@ class _SmsVerificationViewState extends State<_SmsVerificationView> {
                     
                     // Subtitle
                     Text(
-                      l10n.codeSentTo(_formatPhoneForDisplay(phoneNumber)),
+                      'Mã xác thực đã được gửi đến ${_formatPhoneForDisplay(phoneNumber)}',
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
@@ -274,8 +277,10 @@ class _SmsVerificationViewState extends State<_SmsVerificationView> {
                     
                     // Code Input
                     VerificationCodeInput(
-                      controller: _codeController,
                       length: 6,
+                      onChanged: (code) {
+                        _codeController.text = code;
+                      },
                       onCompleted: (_) => _verifyCode(),
                     ),
                     
@@ -305,7 +310,7 @@ class _SmsVerificationViewState extends State<_SmsVerificationView> {
                                 ),
                               )
                             : Text(
-                                l10n.verify,
+                                'Xác thực',
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -321,7 +326,7 @@ class _SmsVerificationViewState extends State<_SmsVerificationView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          l10n.didntReceiveCode,
+                          'Không nhận được mã?',
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
@@ -332,8 +337,8 @@ class _SmsVerificationViewState extends State<_SmsVerificationView> {
                           onPressed: _canResend ? _resendCode : null,
                           child: Text(
                             _canResend
-                                ? l10n.resend
-                                : l10n.resendIn(_resendCountdown.toString()),
+                                ? 'Gửi lại'
+                                : 'Gửi lại sau $_resendCountdown giây',
                             style: TextStyle(
                               color: _canResend ? const Color(0xFF2E5BDA) : Colors.grey,
                               fontWeight: FontWeight.w500,
@@ -363,7 +368,7 @@ class _SmsVerificationViewState extends State<_SmsVerificationView> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              l10n.smsVerificationInfo,
+                              'Mã xác thực SMS sẽ được gửi đến số điện thoại của bạn. Vui lòng kiểm tra và nhập mã 6 số để hoàn tất xác thực.',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.blue.shade700,

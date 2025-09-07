@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:auto_route/auto_route.dart';
 import '../../../../core/dependency_injection/injection_container.dart';
 import '../../../../core/utils/phone_validator.dart';
-import '../../../../core/services/sports_localization_service.dart';
 import '../../../../app/auto_router.dart';
 import '../../widgets/loading_overlay.dart';
 import '../../widgets/vietnamese_sports_selector.dart';
@@ -115,35 +114,31 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final sportsLocalization = getIt<SportsLocalizationService>();
     
     return BlocConsumer<PhoneRegistrationViewModel, PhoneRegistrationState>(
       listener: (context, state) {
         state.when(
           initial: () {},
           loading: (message) {},
-          success: (message) {
-            _showSuccess(message);
-            // Navigate to SMS verification screen
-            context.router.push(SmsVerificationRoute(
-              phoneNumber: VietnamesePhoneValidator.normalizePhoneNumber(_phoneNumber),
-              userName: _nameController.text.trim(),
-              password: _passwordController.text,
-              selectedSports: _selectedSports,
-            ));
-          },
-          error: (message, errorCode) {
-            _showError(message);
-          },
-          verificationSent: (phoneNumber, verificationId) {
+          verificationCodeSent: (phoneNumber, verificationId, name, password, preferredSports) {
             _showSuccess('Mã xác thực đã được gửi đến $phoneNumber');
             // Navigate to SMS verification screen
             context.router.push(SmsVerificationRoute(
               phoneNumber: phoneNumber,
-              userName: _nameController.text.trim(),
-              password: _passwordController.text,
-              selectedSports: _selectedSports,
+              userName: name,
+              password: password,
+              selectedSports: preferredSports,
             ));
+          },
+          success: (message) {
+            _showSuccess(message ?? 'Thành công');
+          },
+          error: (message, errorCode) {
+            _showError(message);
+          },
+          sportsUpdated: (sports) {},
+          navigateToLogin: () {
+            context.router.maybePop();
           },
         );
       },
@@ -160,10 +155,10 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
             elevation: 0,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => context.router.pop(),
+              onPressed: () => context.router.maybePop(),
             ),
             title: Text(
-              l10n.register,
+              'Đăng ký',
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 20,
@@ -185,7 +180,7 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
                       
                       // Header
                       Text(
-                        l10n.createAccount,
+                        'Tạo tài khoản',
                         style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
@@ -194,7 +189,7 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        l10n.registerToJoinSportsGroups,
+                        'Đăng ký để tham gia các nhóm thể thao',
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
@@ -205,7 +200,7 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
                       
                       // Name Input
                       Text(
-                        l10n.fullName,
+                        'Họ và tên',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -216,7 +211,7 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
                       TextFormField(
                         controller: _nameController,
                         decoration: InputDecoration(
-                          hintText: l10n.enterFullName,
+                          hintText: 'Nhập họ và tên',
                           prefixIcon: const Icon(Icons.person_outline),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -229,7 +224,7 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return l10n.errorEnterName;
+                            return 'Vui lòng nhập họ và tên';
                           }
                           return null;
                         },
@@ -362,7 +357,7 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
                             return l10n.errorEnterPassword;
                           }
                           if (value.length < 6) {
-                            return l10n.errorPasswordTooShort;
+                            return 'Mật khẩu phải có ít nhất 6 ký tự';
                           }
                           return null;
                         },
@@ -407,10 +402,10 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return l10n.errorConfirmPassword;
+                            return 'Vui lòng xác nhận mật khẩu';
                           }
                           if (value != _passwordController.text) {
-                            return l10n.errorPasswordMismatch;
+                            return 'Mật khẩu không khớp';
                           }
                           return null;
                         },
@@ -420,7 +415,7 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
                       
                       // Sports Selector
                       Text(
-                        l10n.preferredSports,
+                        'Môn thể thao yêu thích',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -429,7 +424,7 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        l10n.selectUpTo3Sports,
+                        'Chọn tối đa 3 môn thể thao',
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
@@ -438,6 +433,7 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
                       const SizedBox(height: 12),
                       VietnameseSportsSelector(
                         selectedSports: _selectedSports,
+                        availableSports: const ['Bóng đá', 'Bóng rổ', 'Cầu lông', 'Bóng chuyền', 'Tennis', 'Bơi lội'],
                         onChanged: _onSportsChanged,
                         maxSelections: 3,
                       ),
@@ -468,7 +464,7 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
                                   ),
                                 )
                               : Text(
-                                  l10n.sendVerificationCode,
+                                  'Gửi mã xác thực',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
@@ -483,16 +479,16 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
                       Center(
                         child: Text.rich(
                           TextSpan(
-                            text: l10n.alreadyHaveAccount,
+                            text: 'Đã có tài khoản? ',
                             style: const TextStyle(fontSize: 14, color: Colors.grey),
                             children: [
                               WidgetSpan(
                                 child: GestureDetector(
                                   onTap: () {
-                                    context.router.pop();
+                                    context.router.maybePop();
                                   },
                                   child: Text(
-                                    l10n.loginNow,
+                                    'Đăng nhập ngay',
                                     style: const TextStyle(
                                       color: Color(0xFF2E5BDA),
                                       decoration: TextDecoration.underline,
