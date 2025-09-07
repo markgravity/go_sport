@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:auto_route/auto_route.dart';
+import '../../../../core/dependency_injection/injection_container.dart';
+import '../../../../core/utils/phone_validator.dart';
+import '../../../../core/services/sports_localization_service.dart';
+import '../../../../app/auto_router.dart';
 import '../../widgets/loading_overlay.dart';
 import '../../widgets/vietnamese_sports_selector.dart';
-import '../../../../core/utils/phone_validator.dart';
-import '../../../../core/dependency_injection/injection_container.dart';
-import '../../../../core/services/sports_localization_service.dart';
-import '../../services/phone_auth_service.dart';
-import '../sms_verification/sms_verification_screen.dart';
+import 'phone_registration_view_model.dart';
+import 'phone_registration_state.dart';
 
+@RoutePage()
 class PhoneRegistrationScreen extends StatelessWidget {
   const PhoneRegistrationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt.createPhoneRegistrationViewModel(),
+      create: (context) => getIt<PhoneRegistrationViewModel>()..initialize(),
       child: const _PhoneRegistrationView(),
     );
   }
@@ -38,13 +41,7 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
   List<String> _selectedSports = [];
   bool _showPassword = false;
   bool _showConfirmPassword = false;
-  
-  // Temporary variables for backward compatibility
-  String get _phoneNumber => _phoneController.text;
-  bool _isLoading = false;
-  
-  // Use dependency injection to get the service
-  late final _phoneAuthService = getIt<PhoneAuthService>();
+  String _phoneNumber = '';
 
   @override
   void dispose() {
@@ -56,10 +53,10 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
   }
 
   void _onPhoneNumberChanged(String phone) {
-    // No state change needed - phone is stored in controller
-    // The getter _phoneNumber will get the value from the controller
+    setState(() {
+      _phoneNumber = phone;
+    });
   }
-
 
   Future<void> _sendVerificationCode() async {
     if (!_formKey.currentState!.validate()) {
@@ -78,46 +75,15 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
 
     // Normalize the phone number before sending
     final normalizedPhone = VietnamesePhoneValidator.normalizePhoneNumber(_phoneNumber);
+    final viewModel = context.read<PhoneRegistrationViewModel>();
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    await _phoneAuthService.sendVerificationCode(
+    await viewModel.sendVerificationCode(
       phoneNumber: normalizedPhone,
-      onSuccess: (message) {
-        setState(() {
-          _isLoading = false;
-        });
-        
-        _showSuccess(message);
-        
-        // Navigate to SMS verification screen
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SmsVerificationScreen(
-              phoneNumber: normalizedPhone,
-              userName: _nameController.text.trim(),
-              password: _passwordController.text,
-              selectedSports: _selectedSports,
-            ),
-          ),
-        );
-      },
-      onError: (error) {
-        setState(() {
-          _isLoading = false;
-        });
-        _showError(error);
-      },
+      name: _nameController.text.trim(),
+      password: _passwordController.text,
+      confirmPassword: _confirmPasswordController.text,
+      preferredSports: _selectedSports,
     );
-  }
-
-  void _onSportsChanged(List<String> sports) {
-    setState(() {
-      _selectedSports = sports;
-    });
   }
 
   void _showError(String message) {
@@ -140,364 +106,414 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
     );
   }
 
+  void _onSportsChanged(List<String> sports) {
+    setState(() {
+      _selectedSports = sports;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final sportsLocalization = getIt<SportsLocalizationService>();
     
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          l10n.registerAccount,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-      body: LoadingOverlay(
-        isLoading: _isLoading,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  
-                  // Header
-                  Text(
-                    l10n.createGoSportAccount,
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF2E5BDA),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.enterInfoToRegister,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 40),
-                  
-                  // Name Input
-                  Text(
-                    l10n.yourName,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1E293B),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      hintText: l10n.namePlaceholder,
-                      prefixIcon: const Icon(Icons.person_outline),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return l10n.errorEnterName;
-                      }
-                      return null;
-                    },
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Phone Input
-                  Text(
-                    l10n.phoneNumber,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1E293B),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _phoneController,
-                    keyboardType: TextInputType.phone,
-                    inputFormatters: [
-                      VietnamesePhoneValidator.createVietnamesePhoneFormatter(),
-                    ],
-                    decoration: InputDecoration(
-                      hintText: '0XXX XXX XXX',
-                      prefixIcon: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const SizedBox(width: 12),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Text(
-                              '+84',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF1E293B),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.red),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      _onPhoneNumberChanged(value);
-                    },
-                    validator: (value) {
-                      return VietnamesePhoneValidator.getValidationErrorWithContext(value ?? '', l10n);
-                    },
-                  ),
-                  
-                  // Phone carrier info
-                  if (_phoneNumber.isNotEmpty && VietnamesePhoneValidator.isValidVietnameseMobile(_phoneNumber))
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            size: 16,
-                            color: Colors.blue.shade600,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            l10n.carrier(VietnamesePhoneValidator.getCarrierName(_phoneNumber) ?? l10n.unknownCarrier),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.blue.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Password Input
-                  Text(
-                    l10n.password,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1E293B),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: !_showPassword,
-                    decoration: InputDecoration(
-                      hintText: l10n.enterPassword,
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _showPassword ? Icons.visibility_off : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _showPassword = !_showPassword;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return l10n.errorEnterPassword;
-                      }
-                      if (value.length < 8) {
-                        return l10n.errorPasswordTooShort;
-                      }
-                      return null;
-                    },
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Confirm Password Input
-                  Text(
-                    l10n.confirmPassword,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1E293B),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _confirmPasswordController,
-                    obscureText: !_showConfirmPassword,
-                    decoration: InputDecoration(
-                      hintText: l10n.reenterPassword,
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _showConfirmPassword ? Icons.visibility_off : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _showConfirmPassword = !_showConfirmPassword;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return l10n.errorConfirmPassword;
-                      }
-                      if (value != _passwordController.text) {
-                        return l10n.errorPasswordMismatch;
-                      }
-                      return null;
-                    },
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Sports Selection
-                  Text(
-                    l10n.favoriteSports,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1E293B),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  VietnameseSportsSelector(
-                    availableSports: SportsLocalizationService.getSportsListForLocale(l10n),
-                    selectedSports: _selectedSports,
-                    onChanged: _onSportsChanged,
-                  ),
-                  
-                  const SizedBox(height: 40),
-                  
-                  // Register Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _sendVerificationCode,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2E5BDA),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 2,
-                      ),
-                      child: _isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                          : Text(
-                              l10n.sendVerificationCode,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Terms and Privacy
-                  Center(
-                    child: Text.rich(
-                      TextSpan(
-                        text: l10n.agreeToTerms,
-                        style: const TextStyle(fontSize: 14, color: Colors.grey),
-                        children: [
-                          TextSpan(
-                            text: l10n.termsOfService,
-                            style: const TextStyle(
-                              color: Color(0xFF2E5BDA),
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                          TextSpan(text: l10n.and),
-                          TextSpan(
-                            text: l10n.privacyPolicy,
-                            style: const TextStyle(
-                              color: Color(0xFF2E5BDA),
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                          const TextSpan(text: '.'),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
+    return BlocConsumer<PhoneRegistrationViewModel, PhoneRegistrationState>(
+      listener: (context, state) {
+        state.when(
+          initial: () {},
+          loading: (message) {},
+          success: (message) {
+            _showSuccess(message);
+            // Navigate to SMS verification screen
+            context.router.push(SmsVerificationRoute(
+              phoneNumber: VietnamesePhoneValidator.normalizePhoneNumber(_phoneNumber),
+              userName: _nameController.text.trim(),
+              password: _passwordController.text,
+              selectedSports: _selectedSports,
+            ));
+          },
+          error: (message, errorCode) {
+            _showError(message);
+          },
+          verificationSent: (phoneNumber, verificationId) {
+            _showSuccess('Mã xác thực đã được gửi đến $phoneNumber');
+            // Navigate to SMS verification screen
+            context.router.push(SmsVerificationRoute(
+              phoneNumber: phoneNumber,
+              userName: _nameController.text.trim(),
+              password: _passwordController.text,
+              selectedSports: _selectedSports,
+            ));
+          },
+        );
+      },
+      builder: (context, state) {
+        final isLoading = state.maybeWhen(
+          loading: (_) => true,
+          orElse: () => false,
+        );
+        
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => context.router.pop(),
+            ),
+            title: Text(
+              l10n.register,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
-        ),
-      ),
+          body: LoadingOverlay(
+            isLoading: isLoading,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      
+                      // Header
+                      Text(
+                        l10n.createAccount,
+                        style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF2E5BDA),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.registerToJoinSportsGroups,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 40),
+                      
+                      // Name Input
+                      Text(
+                        l10n.fullName,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF1E293B),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          hintText: l10n.enterFullName,
+                          prefixIcon: const Icon(Icons.person_outline),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return l10n.errorEnterName;
+                          }
+                          return null;
+                        },
+                      ),
+                      
+                      const SizedBox(height: 24),
+                      
+                      // Phone Input
+                      Text(
+                        l10n.phoneNumber,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF1E293B),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        inputFormatters: [
+                          VietnamesePhoneValidator.createVietnamesePhoneFormatter(),
+                        ],
+                        decoration: InputDecoration(
+                          hintText: '0XXX XXX XXX',
+                          prefixIcon: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(width: 12),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: const Text(
+                                  '+84',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFF1E293B),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Colors.red),
+                          ),
+                        ),
+                        onChanged: _onPhoneNumberChanged,
+                        validator: (value) {
+                          return VietnamesePhoneValidator.getValidationErrorWithContext(value ?? '', l10n);
+                        },
+                      ),
+                      
+                      // Phone carrier info
+                      if (_phoneNumber.isNotEmpty && VietnamesePhoneValidator.isValidVietnameseMobile(_phoneNumber))
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline,
+                                size: 16,
+                                color: Colors.blue.shade600,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                l10n.carrier(VietnamesePhoneValidator.getCarrierName(_phoneNumber) ?? l10n.unknownCarrier),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.blue.shade600,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      
+                      const SizedBox(height: 24),
+                      
+                      // Password Input
+                      Text(
+                        l10n.password,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF1E293B),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: !_showPassword,
+                        decoration: InputDecoration(
+                          hintText: l10n.enterPassword,
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _showPassword ? Icons.visibility_off : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _showPassword = !_showPassword;
+                              });
+                            },
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return l10n.errorEnterPassword;
+                          }
+                          if (value.length < 6) {
+                            return l10n.errorPasswordTooShort;
+                          }
+                          return null;
+                        },
+                      ),
+                      
+                      const SizedBox(height: 24),
+                      
+                      // Confirm Password Input
+                      Text(
+                        l10n.confirmPassword,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF1E293B),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _confirmPasswordController,
+                        obscureText: !_showConfirmPassword,
+                        decoration: InputDecoration(
+                          hintText: l10n.confirmPassword,
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _showConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _showConfirmPassword = !_showConfirmPassword;
+                              });
+                            },
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return l10n.errorConfirmPassword;
+                          }
+                          if (value != _passwordController.text) {
+                            return l10n.errorPasswordMismatch;
+                          }
+                          return null;
+                        },
+                      ),
+                      
+                      const SizedBox(height: 32),
+                      
+                      // Sports Selector
+                      Text(
+                        l10n.preferredSports,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF1E293B),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.selectUpTo3Sports,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      VietnameseSportsSelector(
+                        selectedSports: _selectedSports,
+                        onChanged: _onSportsChanged,
+                        maxSelections: 3,
+                      ),
+                      
+                      const SizedBox(height: 40),
+                      
+                      // Register Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: isLoading ? null : _sendVerificationCode,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF2E5BDA),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 2,
+                          ),
+                          child: isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                )
+                              : Text(
+                                  l10n.sendVerificationCode,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                        ),
+                      ),
+                      
+                      const SizedBox(height: 24),
+                      
+                      // Login link
+                      Center(
+                        child: Text.rich(
+                          TextSpan(
+                            text: l10n.alreadyHaveAccount,
+                            style: const TextStyle(fontSize: 14, color: Colors.grey),
+                            children: [
+                              WidgetSpan(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    context.router.pop();
+                                  },
+                                  child: Text(
+                                    l10n.loginNow,
+                                    style: const TextStyle(
+                                      color: Color(0xFF2E5BDA),
+                                      decoration: TextDecoration.underline,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
