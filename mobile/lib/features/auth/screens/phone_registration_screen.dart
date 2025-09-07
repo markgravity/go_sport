@@ -1,29 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../services/phone_auth_service.dart';
 import '../widgets/loading_overlay.dart';
 import '../widgets/vietnamese_sports_selector.dart';
 import '../../../core/utils/phone_validator.dart';
-import '../../../core/services/sports_localization_service.dart';
+import '../../../core/dependency_injection/injection_container.dart';
+import 'phone_registration/phone_registration_view_model.dart';
+import 'phone_registration/phone_registration_state.dart';
 import 'sms_verification_screen.dart';
 
-class PhoneRegistrationScreen extends StatefulWidget {
+class PhoneRegistrationScreen extends StatelessWidget {
   const PhoneRegistrationScreen({super.key});
 
   @override
-  State<PhoneRegistrationScreen> createState() => _PhoneRegistrationScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt.createPhoneRegistrationViewModel(),
+      child: const _PhoneRegistrationView(),
+    );
+  }
 }
 
-class _PhoneRegistrationScreenState extends State<PhoneRegistrationScreen> {
+class _PhoneRegistrationView extends StatefulWidget {
+  const _PhoneRegistrationView();
+
+  @override
+  State<_PhoneRegistrationView> createState() => _PhoneRegistrationViewState();
+}
+
+class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _phoneAuthService = PhoneAuthService();
   
-  bool _isLoading = false;
-  String _phoneNumber = '';
   List<String> _selectedSports = [];
   bool _showPassword = false;
   bool _showConfirmPassword = false;

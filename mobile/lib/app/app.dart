@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // AutoRoute configuration
-import 'app_router.dart';
+import 'auto_router.dart';
 
 /// Go Sport App with AutoRoute navigation
 /// 
@@ -12,7 +12,9 @@ class GoSportApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final appRouter = AppRouter();
+    
+    return MaterialApp.router(
       title: 'Go Sport - Vietnamese Sports App',
       debugShowCheckedModeBanner: false,
       
@@ -32,9 +34,8 @@ class GoSportApp extends StatelessWidget {
         ),
       ),
       
-      // AutoRoute foundation setup
-      onGenerateRoute: AppRouter.onGenerateRoute,
-      initialRoute: AppRouter.initialRoute,
+      // AutoRoute configuration
+      routerConfig: appRouter.config(),
     );
   }
 }

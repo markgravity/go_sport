@@ -630,16 +630,13 @@ class _$LoadedImpl implements _Loaded {
             other is _$LoadedImpl &&
             (identical(other.group, group) || other.group == group) &&
             const DeepCollectionEquality().equals(other._members, _members) &&
-            const DeepCollectionEquality()
-                .equals(other.currentUserRole, currentUserRole));
+            (identical(other.currentUserRole, currentUserRole) ||
+                other.currentUserRole == currentUserRole));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      group,
-      const DeepCollectionEquality().hash(_members),
-      const DeepCollectionEquality().hash(currentUserRole));
+  int get hashCode => Object.hash(runtimeType, group,
+      const DeepCollectionEquality().hash(_members), currentUserRole);
 
   /// Create a copy of GroupDetailsState
   /// with the given fields replaced by the non-null parameter values.
