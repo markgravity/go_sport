@@ -58,16 +58,6 @@ class AuthWrapperState {
   final bool requiresPhoneVerification;
   final String? phoneNumber;
 
-  const AuthWrapperState._({
-    required this.isLoading,
-    required this.isAuthenticated,
-    this.user,
-    this.error,
-    this.message,
-    required this.requiresPhoneVerification,
-    this.phoneNumber,
-  });
-
   const AuthWrapperState.unauthenticated()
       : isLoading = false,
         isAuthenticated = false,
@@ -78,7 +68,8 @@ class AuthWrapperState {
         phoneNumber = null;
 
   const AuthWrapperState.loading({this.message})
-      : isLoading = true,
+      :
+        isLoading = true,
         isAuthenticated = false,
         user = null,
         error = null,
@@ -86,7 +77,8 @@ class AuthWrapperState {
         phoneNumber = null;
 
   const AuthWrapperState.authenticated({required this.user})
-      : isLoading = false,
+      :
+        isLoading = false,
         isAuthenticated = true,
         error = null,
         message = null,
@@ -103,7 +95,8 @@ class AuthWrapperState {
         phoneNumber = null;
 
   const AuthWrapperState.phoneVerificationRequired({required this.phoneNumber})
-      : isLoading = false,
+      :
+        isLoading = false,
         isAuthenticated = false,
         user = null,
         error = null,

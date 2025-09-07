@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/dependency_injection/injection_container.dart';
 import '../../models/group.dart';
 import '../../widgets/group_card_widget.dart';
-import '../../widgets/sport_filter_widget.dart';
 import 'groups_list_view_model.dart';
 import 'groups_list_state.dart';
 

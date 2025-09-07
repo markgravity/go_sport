@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/dependency_injection/injection_container.dart';
 import '../../models/group_role.dart';
-import '../../widgets/group_card_widget.dart';
 import 'group_details_state.dart';
 import 'group_details_view_model.dart';
 

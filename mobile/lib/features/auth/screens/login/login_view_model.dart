@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../services/auth_service.dart';
 import '../../services/firebase_auth_service.dart';
 import 'login_state.dart';
 
@@ -12,11 +11,9 @@ import 'login_state.dart';
 @injectable
 class LoginViewModel extends Cubit<LoginState> {
   final FirebaseAuthService _firebaseAuthService;
-  final AuthService _authService;
   
   LoginViewModel(
     this._firebaseAuthService,
-    this._authService,
   ) : super(const LoginState.initial());
 
   /// Initialize login screen with default state

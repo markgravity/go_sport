@@ -1,72 +1,123 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../presentation/auth_wrapper.dart';
-import '../widgets/loading_overlay.dart';
-import '../../../core/utils/phone_validator.dart';
-import 'phone_registration_screen.dart';
-import 'forgot_password_screen.dart';
+import '../../widgets/loading_overlay.dart';
+import '../../widgets/vietnamese_sports_selector.dart';
+import '../../../../core/utils/phone_validator.dart';
+import '../../../../core/dependency_injection/injection_container.dart';
+import '../../../../core/services/sports_localization_service.dart';
+import '../../services/phone_auth_service.dart';
+import '../sms_verification/sms_verification_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class PhoneRegistrationScreen extends StatelessWidget {
+  const PhoneRegistrationScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt.createPhoneRegistrationViewModel(),
+      child: const _PhoneRegistrationView(),
+    );
+  }
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _PhoneRegistrationView extends StatefulWidget {
+  const _PhoneRegistrationView();
+
+  @override
+  State<_PhoneRegistrationView> createState() => _PhoneRegistrationViewState();
+}
+
+class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
+  final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   
+  List<String> _selectedSports = [];
   bool _showPassword = false;
-  bool _rememberMe = false;
-  String _phoneNumber = '';
+  bool _showConfirmPassword = false;
+  
+  // Temporary variables for backward compatibility
+  String get _phoneNumber => _phoneController.text;
+  bool _isLoading = false;
+  
+  // Use dependency injection to get the service
+  late final _phoneAuthService = getIt<PhoneAuthService>();
 
   @override
   void dispose() {
     _phoneController.dispose();
+    _nameController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   void _onPhoneNumberChanged(String phone) {
-    setState(() {
-      _phoneNumber = phone;
-    });
+    // No state change needed - phone is stored in controller
+    // The getter _phoneNumber will get the value from the controller
   }
 
-  Future<void> _login() async {
+
+  Future<void> _sendVerificationCode() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    final normalizedPhone = VietnamesePhoneValidator.normalizePhoneNumber(_phoneNumber);
-    final authController = AuthController(context);
-    
-    try {
-      final success = await authController.loginWithPassword(
-        phoneNumber: normalizedPhone,
-        password: _passwordController.text,
-        rememberMe: _rememberMe,
-      );
-      
-      if (success) {
-        _showSuccess('Mã xác thực đã được gửi đến số điện thoại của bạn');
-      } else {
-        _showError('Đăng nhập thất bại. Vui lòng kiểm tra thông tin và thử lại.');
-      }
-    } catch (error) {
-      _showError('Có lỗi xảy ra khi đăng nhập: $error');
+    if (_nameController.text.trim().isEmpty) {
+      _showError(AppLocalizations.of(context).errorEnterName);
+      return;
     }
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      _showError(AppLocalizations.of(context).errorPasswordMismatch);
+      return;
+    }
+
+    // Normalize the phone number before sending
+    final normalizedPhone = VietnamesePhoneValidator.normalizePhoneNumber(_phoneNumber);
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    await _phoneAuthService.sendVerificationCode(
+      phoneNumber: normalizedPhone,
+      onSuccess: (message) {
+        setState(() {
+          _isLoading = false;
+        });
+        
+        _showSuccess(message);
+        
+        // Navigate to SMS verification screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SmsVerificationScreen(
+              phoneNumber: normalizedPhone,
+              userName: _nameController.text.trim(),
+              password: _passwordController.text,
+              selectedSports: _selectedSports,
+            ),
+          ),
+        );
+      },
+      onError: (error) {
+        setState(() {
+          _isLoading = false;
+        });
+        _showError(error);
+      },
+    );
   }
 
-  Future<void> _loginWithBiometric() async {
-    try {
-      // Biometric login would need to be implemented in AuthController
-      _showError('Đăng nhập sinh trắc học chưa được triển khai trong kiến trúc mới');
-    } catch (error) {
-      _showError('Có lỗi xảy ra với đăng nhập sinh trắc học: $error');
-    }
+  void _onSportsChanged(List<String> sports) {
+    setState(() {
+      _selectedSports = sports;
+    });
   }
 
   void _showError(String message) {
@@ -93,52 +144,39 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     
-    return AuthWrapper(
-      builder: (context, authState) {
-        // Handle authentication state changes
-        if (authState.isAuthenticated) {
-          // Navigate to home screen when authenticated
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
-          });
-        }
-
-        if (authState.hasError) {
-          // Show error message
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _showError(authState.displayMessage ?? 'Có lỗi xảy ra');
-          });
-        }
-
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: Text(
-              l10n.login,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          l10n.registerAccount,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
           ),
-          body: LoadingOverlay(
-            isLoading: authState.isLoading,
-            child: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+        ),
+      ),
+      body: LoadingOverlay(
+        isLoading: _isLoading,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   const SizedBox(height: 20),
                   
                   // Header
                   Text(
-                    l10n.welcomeBack,
+                    l10n.createGoSportAccount,
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -147,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    l10n.loginToYourAccount,
+                    l10n.enterInfoToRegister,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
@@ -155,6 +193,40 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   
                   const SizedBox(height: 40),
+                  
+                  // Name Input
+                  Text(
+                    l10n.yourName,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1E293B),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      hintText: l10n.namePlaceholder,
+                      prefixIcon: const Icon(Icons.person_outline),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return l10n.errorEnterName;
+                      }
+                      return null;
+                    },
+                  ),
+                  
+                  const SizedBox(height: 24),
                   
                   // Phone Input
                   Text(
@@ -209,7 +281,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderSide: const BorderSide(color: Colors.red),
                       ),
                     ),
-                    onChanged: _onPhoneNumberChanged,
+                    onChanged: (value) {
+                      _onPhoneNumberChanged(value);
+                    },
                     validator: (value) {
                       return VietnamesePhoneValidator.getValidationErrorWithContext(value ?? '', l10n);
                     },
@@ -280,60 +354,87 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (value == null || value.isEmpty) {
                         return l10n.errorEnterPassword;
                       }
+                      if (value.length < 8) {
+                        return l10n.errorPasswordTooShort;
+                      }
                       return null;
                     },
                   ),
                   
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 24),
                   
-                  // Remember me checkbox
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: _rememberMe,
-                        onChanged: (value) {
+                  // Confirm Password Input
+                  Text(
+                    l10n.confirmPassword,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1E293B),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    obscureText: !_showConfirmPassword,
+                    decoration: InputDecoration(
+                      hintText: l10n.reenterPassword,
+                      prefixIcon: const Icon(Icons.lock_outline),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _showConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                        ),
+                        onPressed: () {
                           setState(() {
-                            _rememberMe = value ?? false;
+                            _showConfirmPassword = !_showConfirmPassword;
                           });
                         },
-                        activeColor: const Color(0xFF2E5BDA),
                       ),
-                      Text(
-                        l10n.rememberMe,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF1E293B),
-                        ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.grey),
                       ),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ForgotPasswordScreen(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          l10n.forgotPassword,
-                          style: const TextStyle(
-                            color: Color(0xFF2E5BDA),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFF2E5BDA)),
                       ),
-                    ],
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return l10n.errorConfirmPassword;
+                      }
+                      if (value != _passwordController.text) {
+                        return l10n.errorPasswordMismatch;
+                      }
+                      return null;
+                    },
                   ),
                   
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
                   
-                  // Login Button
+                  // Sports Selection
+                  Text(
+                    l10n.favoriteSports,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF1E293B),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  VietnameseSportsSelector(
+                    availableSports: SportsLocalizationService.getSportsListForLocale(l10n),
+                    selectedSports: _selectedSports,
+                    onChanged: _onSportsChanged,
+                  ),
+                  
+                  const SizedBox(height: 40),
+                  
+                  // Register Button
                   SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: authState.isLoading ? null : _login,
+                      onPressed: _isLoading ? null : _sendVerificationCode,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF2E5BDA),
                         foregroundColor: Colors.white,
@@ -342,7 +443,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         elevation: 2,
                       ),
-                      child: authState.isLoading
+                      child: _isLoading
                           ? const SizedBox(
                               height: 20,
                               width: 20,
@@ -352,7 +453,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             )
                           : Text(
-                              l10n.login,
+                              l10n.sendVerificationCode,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -363,60 +464,40 @@ class _LoginScreenState extends State<LoginScreen> {
                   
                   const SizedBox(height: 24),
                   
-                  // Biometric login option
-                  Center(
-                    child: TextButton.icon(
-                      onPressed: _loginWithBiometric,
-                      icon: const Icon(Icons.fingerprint),
-                      label: Text(l10n.loginWithBiometric),
-                      style: TextButton.styleFrom(
-                        foregroundColor: const Color(0xFF2E5BDA),
-                      ),
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Register link
+                  // Terms and Privacy
                   Center(
                     child: Text.rich(
                       TextSpan(
-                        text: l10n.dontHaveAccount,
+                        text: l10n.agreeToTerms,
                         style: const TextStyle(fontSize: 14, color: Colors.grey),
                         children: [
-                          WidgetSpan(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const PhoneRegistrationScreen(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                l10n.registerNow,
-                                style: const TextStyle(
-                                  color: Color(0xFF2E5BDA),
-                                  decoration: TextDecoration.underline,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                          TextSpan(
+                            text: l10n.termsOfService,
+                            style: const TextStyle(
+                              color: Color(0xFF2E5BDA),
+                              decoration: TextDecoration.underline,
                             ),
                           ),
+                          TextSpan(text: l10n.and),
+                          TextSpan(
+                            text: l10n.privacyPolicy,
+                            style: const TextStyle(
+                              color: Color(0xFF2E5BDA),
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                          const TextSpan(text: '.'),
                         ],
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                    ],
-                  ),
-                ),
+                ],
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

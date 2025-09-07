@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
-import '../services/phone_auth_service.dart';
-import '../../../core/dependency_injection/injection_container.dart';
-import '../widgets/loading_overlay.dart';
-import '../widgets/verification_code_input.dart';
+import '../../services/phone_auth_service.dart';
+import '../../../../core/dependency_injection/injection_container.dart';
+import '../../widgets/loading_overlay.dart';
+import '../../widgets/verification_code_input.dart';
 
 class SmsVerificationScreen extends StatefulWidget {
   final String phoneNumber;

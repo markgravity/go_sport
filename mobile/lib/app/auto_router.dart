@@ -1,15 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-import '../features/auth/presentation/viewmodels/auth_cubit.dart';
-import '../features/auth/screens/login_screen.dart';
-import '../features/auth/screens/phone_registration_screen.dart';
-import '../features/auth/screens/sms_verification_screen.dart';
+import '../features/auth/screens/login/login_screen.dart';
+import '../features/auth/screens/phone_registration/phone_registration_screen.dart';
+import '../features/auth/screens/sms_verification/sms_verification_screen.dart';
 import '../features/auth/screens/forgot_password_screen.dart';
 import '../features/groups/screens/create_group_screen.dart';
 import '../features/groups/screens/groups_list/groups_list_screen.dart';
 import '../features/groups/screens/group_details/group_details_screen.dart';
-import '../core/dependency_injection/injection_container.dart';
 
 part 'auto_router.gr.dart';
 

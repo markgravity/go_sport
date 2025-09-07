@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 // Import screens for routing
-import '../features/auth/screens/login_screen.dart';
-import '../features/auth/screens/phone_registration_screen.dart';
+import '../features/auth/screens/login/login_screen.dart';
+import '../features/auth/screens/phone_registration/phone_registration_screen.dart';
 
 /// AutoRoute routing configuration
 /// 

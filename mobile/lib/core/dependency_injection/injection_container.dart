@@ -4,15 +4,11 @@ import 'package:injectable/injectable.dart';
 
 // Core services
 import '../network/api_client.dart';
-import '../network/health_service.dart';
 import '../network/network_status.dart';
-import '../services/sports_localization_service.dart';
 
 // Auth services
-import '../../features/auth/services/api_service.dart';
 import '../../features/auth/services/auth_service.dart';
 import '../../features/auth/services/firebase_auth_service.dart';
-import '../../features/auth/services/phone_auth_service.dart';
 
 // Auth Cubit and ViewModels
 import '../../features/auth/presentation/viewmodels/auth_cubit.dart';
@@ -28,7 +24,6 @@ import '../../features/groups/screens/group_details/group_details_view_model.dar
 
 // Groups services
 import '../../features/groups/services/groups_service.dart';
-import '../../features/groups/services/image_upload_service.dart';
 import '../../features/groups/services/group_role_service.dart';
 
 // Injectable auto-generated configuration

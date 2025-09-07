@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../services/firebase_auth_service.dart';
-import '../../services/auth_service.dart';
 import 'phone_registration_state.dart';
 
 /// ViewModel for Phone Registration Screen using Cubit pattern
@@ -12,11 +11,9 @@ import 'phone_registration_state.dart';
 @injectable
 class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
   final FirebaseAuthService _firebaseAuthService;
-  final AuthService _authService;
   
   PhoneRegistrationViewModel(
     this._firebaseAuthService,
-    this._authService,
   ) : super(const PhoneRegistrationState.initial());
 
   /// Initialize registration screen with default state
@@ -64,19 +61,13 @@ class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
       );
       final verificationId = receivedVerificationId ?? 'mock_verification_id';
       
-      if (verificationId != null) {
-        emit(PhoneRegistrationState.verificationCodeSent(
-          phoneNumber: phoneNumber,
-          verificationId: verificationId,
-          name: name,
-          password: password,
-          preferredSports: preferredSports ?? [],
-        ));
-      } else {
-        emit(const PhoneRegistrationState.error(
-          message: 'Không thể gửi mã xác thực. Vui lòng kiểm tra số điện thoại và thử lại.',
-        ));
-      }
+      emit(PhoneRegistrationState.verificationCodeSent(
+        phoneNumber: phoneNumber,
+        verificationId: verificationId,
+        name: name,
+        password: password,
+        preferredSports: preferredSports ?? [],
+      ));
     } catch (error) {
       emit(PhoneRegistrationState.error(
         message: 'Có lỗi xảy ra khi gửi mã xác thực: $error',
@@ -98,24 +89,16 @@ class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
     ));
     
     try {
-      final user = await _firebaseAuthService.completeRegistration(
+      await _firebaseAuthService.completeRegistration(
         phoneNumber: phoneNumber,
         verificationId: verificationId,
         smsCode: smsCode,
         name: name,
         preferredSports: preferredSports,
       );
-      final success = user != null;
-      
-      if (success) {
-        emit(PhoneRegistrationState.success(
-          message: 'Đăng ký thành công! Chào mừng bạn đến với Go Sport.',
-        ));
-      } else {
-        emit(const PhoneRegistrationState.error(
-          message: 'Đăng ký không thành công. Vui lòng thử lại.',
-        ));
-      }
+      emit(PhoneRegistrationState.success(
+        message: 'Đăng ký thành công! Chào mừng bạn đến với Go Sport.',
+      ));
     } catch (error) {
       emit(PhoneRegistrationState.error(
         message: 'Có lỗi xảy ra khi đăng ký: $error',

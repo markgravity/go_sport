@@ -3,7 +3,6 @@ import 'package:injectable/injectable.dart';
 import 'dart:async';
 
 import '../../services/firebase_auth_service.dart';
-import '../../services/auth_service.dart';
 import 'sms_verification_state.dart';
 
 /// ViewModel for SMS Verification Screen using Cubit pattern
@@ -13,12 +12,10 @@ import 'sms_verification_state.dart';
 @injectable
 class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
   final FirebaseAuthService _firebaseAuthService;
-  final AuthService _authService;
   Timer? _countdownTimer;
   
   SmsVerificationViewModel(
     this._firebaseAuthService,
-    this._authService,
   ) : super(const SmsVerificationState.initial());
 
   @override
@@ -70,43 +67,27 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
     try {
       if (userName != null && userPassword != null) {
         // This is registration flow
-        final user = await _firebaseAuthService.completeRegistration(
+        await _firebaseAuthService.completeRegistration(
           phoneNumber: phoneNumber,
           verificationId: verificationId,
           smsCode: smsCode,
           name: userName,
           preferredSports: preferredSports,
         );
-        final success = user != null;
-        
-        if (success) {
-          emit(SmsVerificationState.success(
-            message: 'Đăng ký thành công! Chào mừng bạn đến với Go Sport.',
-            isRegistration: true,
-          ));
-        } else {
-          emit(const SmsVerificationState.error(
-            message: 'Mã xác thực không chính xác. Vui lòng thử lại.',
-          ));
-        }
+        emit(SmsVerificationState.success(
+          message: 'Đăng ký thành công! Chào mừng bạn đến với Go Sport.',
+          isRegistration: true,
+        ));
       } else {
         // This is login flow
-        final credential = await _firebaseAuthService.verifyAndSignIn(
+        await _firebaseAuthService.verifyAndSignIn(
           verificationId: verificationId,
           smsCode: smsCode,
         );
-        final success = credential != null;
-        
-        if (success) {
-          emit(const SmsVerificationState.success(
-            message: 'Đăng nhập thành công!',
-            isRegistration: false,
-          ));
-        } else {
-          emit(const SmsVerificationState.error(
-            message: 'Mã xác thực không chính xác. Vui lòng thử lại.',
-          ));
-        }
+        emit(const SmsVerificationState.success(
+          message: 'Đăng nhập thành công!',
+          isRegistration: false,
+        ));
       }
     } catch (error) {
       String errorMessage = 'Có lỗi xảy ra khi xác thực';
@@ -147,18 +128,12 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
       );
       final finalVerificationId = newVerificationId ?? 'mock_verification_id';
       
-      if (finalVerificationId != null) {
-        emit(SmsVerificationState.codeResent(
-          phoneNumber: phoneNumber,
-          verificationId: finalVerificationId,
-          resendCountdown: 60, // Reset countdown
-        ));
-        _startResendCountdown();
-      } else {
-        emit(const SmsVerificationState.error(
-          message: 'Không thể gửi lại mã xác thực. Vui lòng thử lại sau.',
-        ));
-      }
+      emit(SmsVerificationState.codeResent(
+        phoneNumber: phoneNumber,
+        verificationId: finalVerificationId,
+        resendCountdown: 60, // Reset countdown
+      ));
+      _startResendCountdown();
     } catch (error) {
       emit(SmsVerificationState.error(
         message: 'Có lỗi xảy ra khi gửi lại mã: $error',

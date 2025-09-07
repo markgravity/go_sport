@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:go_sport_app/features/groups/presentation/viewmodels/groups_cubit.dart';
 import 'package:go_sport_app/features/groups/presentation/viewmodels/groups_state.dart';
