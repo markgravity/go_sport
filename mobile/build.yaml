@@ -1,0 +1,23 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          # Global configuration for all JsonSerializable models
+          field_rename: snake
+          explicit_to_json: true
+          create_to_json: true
+          create_factory: true
+          # This will automatically convert between:
+          # API (snake_case): level_key, sport_type, user_name
+          # Dart (camelCase): levelKey, sportType, userName
+          
+      freezed:
+        options:
+          # Ensure freezed works well with json_serializable
+          json: true
+          when: true
+          map: true
+          copyWith: true
+          equal: true
+          toString: true

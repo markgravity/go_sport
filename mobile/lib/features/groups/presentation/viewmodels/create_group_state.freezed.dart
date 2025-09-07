@@ -1764,6 +1764,86 @@ mixin _$GroupFormData {
 
   /// Custom fields for Vietnamese cultural patterns
   Map<String, dynamic> get customFields => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            String name,
+            String description,
+            String? sportType,
+            List<String> levelRequirements,
+            String location,
+            String city,
+            String district,
+            double? latitude,
+            double? longitude,
+            Map<String, dynamic> schedule,
+            double monthlyFee,
+            String? privacy,
+            String? avatar,
+            Map<String, dynamic> rules,
+            Map<String, dynamic> customFields)
+        $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            String name,
+            String description,
+            String? sportType,
+            List<String> levelRequirements,
+            String location,
+            String city,
+            String district,
+            double? latitude,
+            double? longitude,
+            Map<String, dynamic> schedule,
+            double monthlyFee,
+            String? privacy,
+            String? avatar,
+            Map<String, dynamic> rules,
+            Map<String, dynamic> customFields)?
+        $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            String name,
+            String description,
+            String? sportType,
+            List<String> levelRequirements,
+            String location,
+            String city,
+            String district,
+            double? latitude,
+            double? longitude,
+            Map<String, dynamic> schedule,
+            double monthlyFee,
+            String? privacy,
+            String? avatar,
+            Map<String, dynamic> rules,
+            Map<String, dynamic> customFields)?
+        $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_GroupFormData value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_GroupFormData value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_GroupFormData value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of GroupFormData
   /// with the given fields replaced by the non-null parameter values.
@@ -2197,6 +2277,155 @@ class _$GroupFormDataImpl implements _GroupFormData {
   @pragma('vm:prefer-inline')
   _$$GroupFormDataImplCopyWith<_$GroupFormDataImpl> get copyWith =>
       __$$GroupFormDataImplCopyWithImpl<_$GroupFormDataImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(
+            String name,
+            String description,
+            String? sportType,
+            List<String> levelRequirements,
+            String location,
+            String city,
+            String district,
+            double? latitude,
+            double? longitude,
+            Map<String, dynamic> schedule,
+            double monthlyFee,
+            String? privacy,
+            String? avatar,
+            Map<String, dynamic> rules,
+            Map<String, dynamic> customFields)
+        $default,
+  ) {
+    return $default(
+        name,
+        description,
+        sportType,
+        levelRequirements,
+        location,
+        city,
+        district,
+        latitude,
+        longitude,
+        schedule,
+        monthlyFee,
+        privacy,
+        avatar,
+        rules,
+        customFields);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(
+            String name,
+            String description,
+            String? sportType,
+            List<String> levelRequirements,
+            String location,
+            String city,
+            String district,
+            double? latitude,
+            double? longitude,
+            Map<String, dynamic> schedule,
+            double monthlyFee,
+            String? privacy,
+            String? avatar,
+            Map<String, dynamic> rules,
+            Map<String, dynamic> customFields)?
+        $default,
+  ) {
+    return $default?.call(
+        name,
+        description,
+        sportType,
+        levelRequirements,
+        location,
+        city,
+        district,
+        latitude,
+        longitude,
+        schedule,
+        monthlyFee,
+        privacy,
+        avatar,
+        rules,
+        customFields);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(
+            String name,
+            String description,
+            String? sportType,
+            List<String> levelRequirements,
+            String location,
+            String city,
+            String district,
+            double? latitude,
+            double? longitude,
+            Map<String, dynamic> schedule,
+            double monthlyFee,
+            String? privacy,
+            String? avatar,
+            Map<String, dynamic> rules,
+            Map<String, dynamic> customFields)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(
+          name,
+          description,
+          sportType,
+          levelRequirements,
+          location,
+          city,
+          district,
+          latitude,
+          longitude,
+          schedule,
+          monthlyFee,
+          privacy,
+          avatar,
+          rules,
+          customFields);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_GroupFormData value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_GroupFormData value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_GroupFormData value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 }
 
 abstract class _GroupFormData implements GroupFormData {

@@ -33,7 +33,7 @@ Map<String, dynamic> _$$SportLevelsResponseImplToJson(
         _$SportLevelsResponseImpl instance) =>
     <String, dynamic>{
       'success': instance.success,
-      'data': instance.data,
+      'data': instance.data.toJson(),
     };
 
 _$SportLevelsDataImpl _$$SportLevelsDataImplFromJson(
@@ -49,5 +49,5 @@ Map<String, dynamic> _$$SportLevelsDataImplToJson(
         _$SportLevelsDataImpl instance) =>
     <String, dynamic>{
       'sport_type': instance.sportType,
-      'levels': instance.levels,
+      'levels': instance.levels.map((e) => e.toJson()).toList(),
     };

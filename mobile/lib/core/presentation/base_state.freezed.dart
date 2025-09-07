@@ -1869,6 +1869,44 @@ mixin _$PaginationState<T> {
   bool get hasMore => throw _privateConstructorUsedError;
   int get currentPage => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(List<T> items, bool isLoading, bool isLoadingMore,
+            bool hasMore, int currentPage, String? error)
+        $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(List<T> items, bool isLoading, bool isLoadingMore,
+            bool hasMore, int currentPage, String? error)?
+        $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(List<T> items, bool isLoading, bool isLoadingMore,
+            bool hasMore, int currentPage, String? error)?
+        $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_PaginationState<T> value) $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_PaginationState<T> value)? $default,
+  ) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_PaginationState<T> value)? $default, {
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of PaginationState
   /// with the given fields replaced by the non-null parameter values.
@@ -2084,6 +2122,71 @@ class _$PaginationStateImpl<T> implements _PaginationState<T> {
   _$$PaginationStateImplCopyWith<T, _$PaginationStateImpl<T>> get copyWith =>
       __$$PaginationStateImplCopyWithImpl<T, _$PaginationStateImpl<T>>(
           this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(List<T> items, bool isLoading, bool isLoadingMore,
+            bool hasMore, int currentPage, String? error)
+        $default,
+  ) {
+    return $default(
+        items, isLoading, isLoadingMore, hasMore, currentPage, error);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(List<T> items, bool isLoading, bool isLoadingMore,
+            bool hasMore, int currentPage, String? error)?
+        $default,
+  ) {
+    return $default?.call(
+        items, isLoading, isLoadingMore, hasMore, currentPage, error);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(List<T> items, bool isLoading, bool isLoadingMore,
+            bool hasMore, int currentPage, String? error)?
+        $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(
+          items, isLoading, isLoadingMore, hasMore, currentPage, error);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_PaginationState<T> value) $default,
+  ) {
+    return $default(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_PaginationState<T> value)? $default,
+  ) {
+    return $default?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_PaginationState<T> value)? $default, {
+    required TResult orElse(),
+  }) {
+    if ($default != null) {
+      return $default(this);
+    }
+    return orElse();
+  }
 }
 
 abstract class _PaginationState<T> implements PaginationState<T> {
