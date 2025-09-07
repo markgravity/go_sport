@@ -107,28 +107,18 @@ class AuthCubit extends Cubit<AuthState> {
         message: 'Đang gửi mã xác thực SMS...',
       ));
       
-      String? verificationId;
-      
-      await _firebaseAuthService.sendSMSVerification(
+      final verificationId = await _firebaseAuthService.sendSMSVerification(
         phoneNumber: phoneNumber,
-        onCodeSent: (id) {
-          verificationId = id;
-          emit(AuthState.phoneVerificationRequired(
-            phoneNumber: phoneNumber,
-            verificationId: id,
-          ));
-          
-          if (kDebugMode) {
-            debugPrint('AuthCubit: SMS sent to $phoneNumber, verification ID: $id');
-          }
-        },
-        onError: (error) {
-          emit(AuthState.error(
-            message: _getVietnameseSMSErrorMessage(error),
-            errorCode: 'SMS_ERROR',
-          ));
-        },
       );
+      
+      emit(AuthState.phoneVerificationRequired(
+        phoneNumber: phoneNumber,
+        verificationId: verificationId,
+      ));
+      
+      if (kDebugMode) {
+        debugPrint('AuthCubit: SMS sent to $phoneNumber, verification ID: $verificationId');
+      }
       
       return verificationId;
     } catch (error) {

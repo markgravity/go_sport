@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
@@ -48,55 +49,72 @@ class FirebaseAuthService {
     return _vietnamesePhoneRegex.hasMatch(phone);
   }
 
-  // Send SMS verification code
-  Future<void> sendSMSVerification({
+  // Send SMS verification code - returns verification ID or throws exception
+  Future<String> sendSMSVerification({
     required String phoneNumber,
-    required Function(String verificationId) onCodeSent,
-    required Function(FirebaseAuthException error) onError,
     Function(PhoneAuthCredential credential)? onAutoVerify,
   }) async {
-    try {
-      final formattedPhone = formatVietnamesePhone(phoneNumber);
-      
-      if (!isValidVietnamesePhone(formattedPhone)) {
-        throw FirebaseAuthException(
-          code: 'invalid-phone-number',
-          message: 'Số điện thoại không đúng định dạng Việt Nam',
-        );
-      }
+    final formattedPhone = formatVietnamesePhone(phoneNumber);
+    
+    if (!isValidVietnamesePhone(formattedPhone)) {
+      throw FirebaseAuthException(
+        code: 'invalid-phone-number',
+        message: 'Số điện thoại không đúng định dạng Việt Nam',
+      );
+    }
 
+    // Use a Completer to convert callback-based API to Future-based
+    final completer = Completer<String>();
+    
+    try {
       await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: formattedPhone,
         verificationCompleted: (PhoneAuthCredential credential) {
           debugPrint('Phone verification completed automatically');
-          onAutoVerify?.call(credential);
+          if (onAutoVerify != null) {
+            onAutoVerify(credential);
+          }
+          // For auto-verification, we complete with a special identifier
+          // This will be handled in completeRegistration method
+          if (!completer.isCompleted) {
+            completer.complete('auto-verified:${credential.verificationId ?? 'instant'}');
+          }
         },
         verificationFailed: (FirebaseAuthException e) {
           debugPrint('Phone verification failed: ${e.code} - ${e.message}');
           debugPrint('Error details: ${e.toString()}');
           debugPrint('Phone number attempted: $formattedPhone');
-          onError(e);
+          if (!completer.isCompleted) {
+            completer.completeError(e);
+          }
         },
         codeSent: (String verificationId, int? resendToken) {
           debugPrint('SMS code sent to $formattedPhone');
-          onCodeSent(verificationId);
+          if (!completer.isCompleted) {
+            completer.complete(verificationId);
+          }
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           debugPrint('Code auto-retrieval timeout');
+          // Don't complete here as this is just a timeout notification
         },
         timeout: const Duration(seconds: 60),
       );
     } catch (e) {
       debugPrint('SMS verification error: $e');
-      if (e is FirebaseAuthException) {
-        onError(e);
-      } else {
-        onError(FirebaseAuthException(
-          code: 'unknown',
-          message: e.toString(),
-        ));
+      if (!completer.isCompleted) {
+        if (e is FirebaseAuthException) {
+          completer.completeError(e);
+        } else {
+          completer.completeError(FirebaseAuthException(
+            code: 'unknown',
+            message: e.toString(),
+          ));
+        }
       }
     }
+
+    return completer.future;
   }
 
   // Verify SMS code and sign in
@@ -155,26 +173,61 @@ class FirebaseAuthService {
     }
   }
 
-  // Complete registration flow (Firebase + Backend)
+  // Send SMS and complete registration flow (Firebase + Backend)
   Future<UserModel> completeRegistration({
     required String phoneNumber,
-    required String verificationId,
     required String smsCode,
     required String name,
     List<String>? preferredSports,
+    String? verificationId,
   }) async {
     try {
-      // Step 1: Verify SMS and sign in to Firebase
-      final userCredential = await verifyAndSignIn(
-        verificationId: verificationId,
-        smsCode: smsCode,
-      );
-
-      if (userCredential?.user == null) {
-        throw Exception('Firebase sign-in failed');
+      // Validate inputs
+      if (phoneNumber.isEmpty) {
+        throw Exception('Phone number is required');
+      }
+      if (smsCode.isEmpty) {
+        throw Exception('SMS code is required');
+      }
+      if (name.isEmpty) {
+        throw Exception('Name is required');
       }
 
-      // Step 2: Authenticate with Laravel backend
+      // Step 1: Get verification ID (either provided or generate new one)
+      String actualVerificationId;
+      if (verificationId != null && verificationId.isNotEmpty) {
+        actualVerificationId = verificationId;
+      } else {
+        // Generate new verification ID by sending SMS
+        actualVerificationId = await sendSMSVerification(phoneNumber: phoneNumber);
+      }
+      
+      // Step 2: Check if this is auto-verification case
+      if (actualVerificationId.startsWith('auto-verified:')) {
+        // Auto-verification occurred, user should already be signed in
+        final currentUser = currentFirebaseUser;
+        if (currentUser == null) {
+          throw Exception('Auto-verification completed but no user found');
+        }
+        debugPrint('Auto-verification detected, user already signed in: ${currentUser.uid}');
+      } else {
+        // Validate verification ID format
+        if (actualVerificationId.isEmpty) {
+          throw Exception('Invalid verification ID');
+        }
+        
+        // Normal verification flow
+        final userCredential = await verifyAndSignIn(
+          verificationId: actualVerificationId,
+          smsCode: smsCode,
+        );
+        
+        if (userCredential?.user == null) {
+          throw Exception('Firebase sign-in failed');
+        }
+      }
+
+      // Step 3: Authenticate with Laravel backend
       final user = await authenticateWithBackend(
         name: name,
         preferredSports: preferredSports,

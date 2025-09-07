@@ -180,9 +180,7 @@ class FirebaseAuthService
     {
         try {
             $serviceAccountPath = config('firebase.service_account_path');
-            return !empty($serviceAccountPath) && 
-                   file_exists($serviceAccountPath) &&
-                   $this->auth !== null;
+            return !empty($serviceAccountPath) && file_exists($serviceAccountPath);
         } catch (\Exception $e) {
             return false;
         }

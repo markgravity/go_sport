@@ -47,19 +47,9 @@ class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
     ));
     
     try {
-      String? receivedVerificationId;
-      await _firebaseAuthService.sendSMSVerification(
+      final verificationId = await _firebaseAuthService.sendSMSVerification(
         phoneNumber: phoneNumber,
-        onCodeSent: (verificationId) {
-          receivedVerificationId = verificationId;
-        },
-        onError: (error) {
-          emit(PhoneRegistrationState.error(
-            message: 'Không thể gửi mã xác thực: $error',
-          ));
-        },
       );
-      final verificationId = receivedVerificationId ?? 'mock_verification_id';
       
       emit(PhoneRegistrationState.verificationCodeSent(
         phoneNumber: phoneNumber,

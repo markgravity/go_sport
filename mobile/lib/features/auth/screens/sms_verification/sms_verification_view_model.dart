@@ -114,23 +114,13 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
     ));
     
     try {
-      String? newVerificationId;
-      await _firebaseAuthService.sendSMSVerification(
+      final newVerificationId = await _firebaseAuthService.sendSMSVerification(
         phoneNumber: phoneNumber,
-        onCodeSent: (verificationId) {
-          newVerificationId = verificationId;
-        },
-        onError: (error) {
-          emit(SmsVerificationState.error(
-            message: 'Có lỗi xảy ra khi gửi lại mã: $error',
-          ));
-        },
       );
-      final finalVerificationId = newVerificationId ?? 'mock_verification_id';
       
       emit(SmsVerificationState.codeResent(
         phoneNumber: phoneNumber,
-        verificationId: finalVerificationId,
+        verificationId: newVerificationId,
         resendCountdown: 60, // Reset countdown
       ));
       _startResendCountdown();
