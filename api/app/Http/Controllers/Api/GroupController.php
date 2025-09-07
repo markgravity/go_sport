@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Group;
+use App\Models\GroupLevelRequirement;
 use App\Models\User;
 use App\Services\SportsConfigurationService;
 use App\SportType;
@@ -74,11 +75,7 @@ class GroupController extends Controller
                 'description' => 'nullable|string|max:1000',
                 'sport_type' => [
                     'required',
-                    Rule::in(SportType::values())
-                ],
-                'skill_level' => [
-                    'required',
-                    Rule::in(['moi_bat_dau', 'trung_binh', 'gioi', 'chuyen_nghiep'])
+                    Rule::in(['football', 'badminton', 'tennis', 'pickleball'])
                 ],
                 'location' => 'required|string|max:500',
                 'city' => 'required|string|max:100',
@@ -86,46 +83,56 @@ class GroupController extends Controller
                 'latitude' => 'nullable|numeric|between:-90,90',
                 'longitude' => 'nullable|numeric|between:-180,180',
                 'schedule' => 'nullable|array',
-                'max_members' => 'nullable|integer|min:1|max:100',
-                'membership_fee' => 'nullable|numeric|min:0|max:10000000',
+                'monthly_fee' => 'nullable|numeric|min:0|max:10000000',
                 'privacy' => [
                     'required',
                     Rule::in(['cong_khai', 'rieng_tu'])
                 ],
                 'avatar' => 'nullable|string|max:255',
-                'rules' => 'nullable|array'
+                'rules' => 'nullable|array',
+                'level_requirements' => 'nullable|array',
+                'level_requirements.*.level_key' => [
+                    'required_with:level_requirements',
+                    Rule::in(['moi_bat_dau', 'so_cap', 'trung_cap', 'cao_cap', 'chuyen_nghiep'])
+                ],
+                'level_requirements.*.level_name' => 'required_with:level_requirements|string|max:255'
             ]);
-
-            // Get sport defaults for validation and fallbacks
-            $sportDefaults = SportsConfigurationService::getDefaultSettings($validated['sport_type']);
-            
-            // Apply sport-specific defaults if not provided
-            if (!isset($validated['max_members'])) {
-                $validated['max_members'] = $sportDefaults['max_members'] ?? 20;
-            }
 
             DB::beginTransaction();
 
+            // Create the group
             $group = Group::create([
                 'name' => $validated['name'],
                 'description' => $validated['description'] ?? null,
                 'sport_type' => $validated['sport_type'],
-                'skill_level' => $validated['skill_level'],
                 'location' => $validated['location'],
                 'city' => $validated['city'],
                 'district' => $validated['district'] ?? null,
                 'latitude' => $validated['latitude'] ?? null,
                 'longitude' => $validated['longitude'] ?? null,
                 'schedule' => $validated['schedule'] ?? null,
-                'max_members' => $validated['max_members'],
                 'current_members' => 1, // Creator counts as first member
-                'membership_fee' => $validated['membership_fee'] ?? 0,
+                'monthly_fee' => $validated['monthly_fee'] ?? 0,
                 'privacy' => $validated['privacy'],
                 'status' => 'hoat_dong',
                 'avatar' => $validated['avatar'] ?? null,
                 'rules' => $validated['rules'] ?? null,
                 'creator_id' => Auth::id()
             ]);
+
+            // Add level requirements if provided
+            if (isset($validated['level_requirements']) && is_array($validated['level_requirements'])) {
+                foreach ($validated['level_requirements'] as $requirement) {
+                    // Validate that the level is valid for this sport
+                    if (GroupLevelRequirement::isValidLevelForSport($validated['sport_type'], $requirement['level_key'])) {
+                        $group->addLevelRequirement(
+                            $requirement['level_key'],
+                            $requirement['level_name'],
+                            $requirement['level_description'] ?? null
+                        );
+                    }
+                }
+            }
 
             // Add creator as admin member automatically
             $group->assignCreatorAsAdmin();
@@ -135,7 +142,7 @@ class GroupController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Tạo nhóm thành công',
-                'data' => $group->load(['creator', 'activeMembers'])
+                'data' => $group->load(['creator', 'activeMembers', 'levelRequirements'])
             ], 201);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -157,7 +164,7 @@ class GroupController extends Controller
     public function show(string $id): JsonResponse
     {
         try {
-            $group = Group::with(['creator', 'activeMembers', 'pendingMembers'])
+            $group = Group::with(['creator', 'activeMembers', 'pendingMembers', 'levelRequirements'])
                           ->findOrFail($id);
 
             $user = Auth::user();
@@ -603,6 +610,48 @@ class GroupController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Không thể lấy thông tin quyền',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get available sport level options for group creation
+     */
+    public function getSportLevels(string $sportType): JsonResponse
+    {
+        try {
+            $levels = GroupLevelRequirement::getSportLevels($sportType);
+            
+            if (empty($levels)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Môn thể thao không được hỗ trợ'
+                ], 400);
+            }
+
+            // Convert to array of objects for easier use in frontend
+            $levelOptions = [];
+            foreach ($levels as $key => $name) {
+                $levelOptions[] = [
+                    'level_key' => $key,
+                    'level_name' => $name,
+                    'sport_type' => $sportType
+                ];
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'sport_type' => $sportType,
+                    'levels' => $levelOptions
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể lấy thông tin cấp độ',
                 'error' => $e->getMessage()
             ], 500);
         }

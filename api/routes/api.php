@@ -34,6 +34,7 @@ Route::prefix('sports')->group(function () {
     Route::get('/{sportType}/defaults', [SportsController::class, 'getDefaults']);
     Route::get('/{sportType}/locations', [SportsController::class, 'getLocationSuggestions']);
     Route::get('/{sportType}/name-suggestions', [SportsController::class, 'getNameSuggestions']);
+    Route::get('/{sportType}/levels', [GroupController::class, 'getSportLevels']); // Get skill levels for sport
 });
 
 // Image upload (public endpoint for default avatars)

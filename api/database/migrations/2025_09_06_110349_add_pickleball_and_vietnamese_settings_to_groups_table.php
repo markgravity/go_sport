@@ -12,11 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Update sport_type enum to only supported sports in English
-        DB::statement("ALTER TABLE groups MODIFY COLUMN sport_type ENUM('football', 'badminton', 'tennis', 'pickleball')");
-        
-        // Add Vietnamese-specific fields for group settings
         Schema::table('groups', function (Blueprint $table) {
+            // Update sport_type enum to only supported sports in English
+            $table->enum('sport_type', ['football', 'badminton', 'tennis', 'pickleball'])->change();
+            
+            // Add Vietnamese-specific fields for group settings
             $table->integer('min_players')->nullable()->after('max_members'); // Sport-specific minimum players
             $table->integer('notification_hours_before')->default(2)->after('min_players'); // Hours before game to notify
             $table->json('default_locations')->nullable()->after('notification_hours_before'); // Common Vietnamese venues for this sport
@@ -40,9 +40,9 @@ return new class extends Migration
                 'auto_approve_members',
                 'sport_specific_settings'
             ]);
+            
+            // Revert sport_type enum to original
+            $table->enum('sport_type', ['bong_da', 'bong_ro', 'cau_long', 'tennis', 'bong_chuyen', 'bong_ban', 'chay_bo', 'dap_xe', 'boi_loi', 'yoga', 'gym', 'khac'])->change();
         });
-        
-        // Revert sport_type enum to original
-        DB::statement("ALTER TABLE groups MODIFY COLUMN sport_type ENUM('bong_da', 'bong_ro', 'cau_long', 'tennis', 'bong_chuyen', 'bong_ban', 'chay_bo', 'dap_xe', 'boi_loi', 'yoga', 'gym', 'khac')");
     }
 };

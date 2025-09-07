@@ -7,6 +7,7 @@ use App\Enums\GroupRole;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Group extends Model
@@ -18,17 +19,15 @@ class Group extends Model
         'vietnamese_name',
         'description',
         'sport_type',
-        'skill_level',
         'location',
         'city',
         'district',
         'latitude',
         'longitude',
         'schedule',
-        'max_members',
         'min_players',
         'current_members',
-        'membership_fee',
+        'monthly_fee', // renamed from membership_fee
         'privacy',
         'auto_approve_members',
         'status',
@@ -47,8 +46,7 @@ class Group extends Model
         'sport_specific_settings' => 'array',
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
-        'membership_fee' => 'decimal:2',
-        'max_members' => 'integer',
+        'monthly_fee' => 'decimal:2',
         'min_players' => 'integer',
         'current_members' => 'integer',
         'notification_hours_before' => 'integer',
@@ -77,6 +75,11 @@ class Group extends Model
         return $this->memberships()->wherePivot('status', 'pending');
     }
 
+    public function levelRequirements(): HasMany
+    {
+        return $this->hasMany(GroupLevelRequirement::class);
+    }
+
     public function getSportNameAttribute(): string
     {
         return match($this->sport_type) {
@@ -88,15 +91,33 @@ class Group extends Model
         };
     }
 
-    public function getSkillLevelNameAttribute(): string
+    public function getFeePerMemberAttribute(): float
     {
-        return match($this->skill_level) {
-            'moi_bat_dau' => 'Mới bắt đầu',
-            'trung_binh' => 'Trung bình',
-            'gioi' => 'Giỏi',
-            'chuyen_nghiep' => 'Chuyên nghiệp',
-            default => $this->skill_level
-        };
+        if ($this->current_members <= 0) {
+            return 0.0;
+        }
+        
+        return round($this->monthly_fee / $this->current_members, 2);
+    }
+
+    public function getLevelRequirementNamesAttribute(): array
+    {
+        return $this->levelRequirements->pluck('level_name')->toArray();
+    }
+
+    public function hasLevelRequirements(): bool
+    {
+        return $this->levelRequirements()->count() > 0;
+    }
+
+    public function addLevelRequirement(string $levelKey, string $levelName, ?string $description = null): GroupLevelRequirement
+    {
+        return $this->levelRequirements()->create([
+            'sport_type' => $this->sport_type,
+            'level_key' => $levelKey,
+            'level_name' => $levelName,
+            'level_description' => $description,
+        ]);
     }
 
     public function getPrivacyNameAttribute(): string
@@ -123,25 +144,21 @@ class Group extends Model
         return match($this->sport_type) {
             'badminton' => [
                 'min_players' => 2,
-                'max_players' => 4,
                 'notification_hours' => 24,
                 'typical_locations' => ['Sân cầu lông', 'Trung tâm thể thao']
             ],
             'football' => [
                 'min_players' => 10,
-                'max_players' => 22,
                 'notification_hours' => 48,
                 'typical_locations' => ['Sân bóng đá', 'Sân cỏ nhân tạo']
             ],
             'pickleball' => [
                 'min_players' => 2,
-                'max_players' => 4,
                 'notification_hours' => 12,
                 'typical_locations' => ['Sân pickleball', 'Sân tennis đa năng']
             ],
             'tennis' => [
                 'min_players' => 2,
-                'max_players' => 4,
                 'notification_hours' => 12,
                 'typical_locations' => ['Sân tennis', 'Câu lạc bộ tennis']
             ],
@@ -351,16 +368,14 @@ class Group extends Model
             'vietnamese_name' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
             'sport_type' => 'required|in:football,badminton,tennis,pickleball',
-            'skill_level' => 'required|in:moi_bat_dau,trung_binh,gioi,chuyen_nghiep',
             'location' => 'required|string|max:500',
             'city' => 'required|string|max:100',
             'district' => 'nullable|string|max:100',
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
             'schedule' => 'nullable|array',
-            'max_members' => 'required|integer|min:2|max:50',
             'min_players' => 'nullable|integer|min:1',
-            'membership_fee' => 'nullable|numeric|min:0',
+            'monthly_fee' => 'nullable|numeric|min:0',
             'privacy' => 'required|in:cong_khai,rieng_tu',
             'auto_approve_members' => 'nullable|boolean',
             'status' => 'in:hoat_dong,tam_dung,dong_cua',
@@ -381,19 +396,15 @@ class Group extends Model
         return match($sportType) {
             'football' => array_merge($baseRules, [
                 'min_players' => 'nullable|integer|min:6|max:11',
-                'max_members' => 'required|integer|min:10|max:30',
             ]),
             'badminton' => array_merge($baseRules, [
                 'min_players' => 'nullable|integer|min:2|max:2',
-                'max_members' => 'required|integer|min:2|max:8',
             ]),
             'tennis' => array_merge($baseRules, [
                 'min_players' => 'nullable|integer|min:2|max:2',
-                'max_members' => 'required|integer|min:2|max:6',
             ]),
             'pickleball' => array_merge($baseRules, [
                 'min_players' => 'nullable|integer|min:2|max:2',
-                'max_members' => 'required|integer|min:2|max:8',
             ]),
             default => $baseRules
         };

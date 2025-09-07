@@ -7,9 +7,9 @@ part 'sport_level.g.dart';
 @freezed
 class SportLevel with _$SportLevel {
   const factory SportLevel({
-    required String levelKey,
-    required String levelName,
-    required String sportType,
+    @JsonKey(name: 'level_key') required String levelKey,
+    @JsonKey(name: 'level_name') required String levelName,
+    @JsonKey(name: 'sport_type') required String sportType,
     String? description,
   }) = _SportLevel;
 
@@ -30,7 +30,7 @@ class SportLevelsResponse with _$SportLevelsResponse {
 @freezed
 class SportLevelsData with _$SportLevelsData {
   const factory SportLevelsData({
-    required String sportType,
+    @JsonKey(name: 'sport_type') required String sportType,
     required List<SportLevel> levels,
   }) = _SportLevelsData;
 

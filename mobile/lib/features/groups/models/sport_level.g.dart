@@ -8,17 +8,17 @@ part of 'sport_level.dart';
 
 _$SportLevelImpl _$$SportLevelImplFromJson(Map<String, dynamic> json) =>
     _$SportLevelImpl(
-      levelKey: json['levelKey'] as String,
-      levelName: json['levelName'] as String,
-      sportType: json['sportType'] as String,
+      levelKey: json['level_key'] as String,
+      levelName: json['level_name'] as String,
+      sportType: json['sport_type'] as String,
       description: json['description'] as String?,
     );
 
 Map<String, dynamic> _$$SportLevelImplToJson(_$SportLevelImpl instance) =>
     <String, dynamic>{
-      'levelKey': instance.levelKey,
-      'levelName': instance.levelName,
-      'sportType': instance.sportType,
+      'level_key': instance.levelKey,
+      'level_name': instance.levelName,
+      'sport_type': instance.sportType,
       'description': instance.description,
     };
 
@@ -39,7 +39,7 @@ Map<String, dynamic> _$$SportLevelsResponseImplToJson(
 _$SportLevelsDataImpl _$$SportLevelsDataImplFromJson(
         Map<String, dynamic> json) =>
     _$SportLevelsDataImpl(
-      sportType: json['sportType'] as String,
+      sportType: json['sport_type'] as String,
       levels: (json['levels'] as List<dynamic>)
           .map((e) => SportLevel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -48,6 +48,6 @@ _$SportLevelsDataImpl _$$SportLevelsDataImplFromJson(
 Map<String, dynamic> _$$SportLevelsDataImplToJson(
         _$SportLevelsDataImpl instance) =>
     <String, dynamic>{
-      'sportType': instance.sportType,
+      'sport_type': instance.sportType,
       'levels': instance.levels,
     };
