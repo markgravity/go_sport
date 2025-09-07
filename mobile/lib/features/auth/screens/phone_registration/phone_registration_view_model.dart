@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../services/firebase_auth_service.dart';
+import '../../services/api_service.dart';
 import 'phone_registration_state.dart';
 
 /// ViewModel for Phone Registration Screen using Cubit pattern
@@ -10,10 +10,10 @@ import 'phone_registration_state.dart';
 /// Supports Vietnamese sports preferences and cultural patterns
 @injectable
 class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
-  final FirebaseAuthService _firebaseAuthService;
+  final ApiService _apiService;
   
   PhoneRegistrationViewModel(
-    this._firebaseAuthService,
+    this._apiService,
   ) : super(const PhoneRegistrationState.initial());
 
   /// Initialize registration screen with default state
@@ -47,7 +47,7 @@ class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
     ));
     
     try {
-      final verificationId = await _firebaseAuthService.sendSMSVerification(
+      final verificationId = await _apiService.sendSMSVerification(
         phoneNumber: phoneNumber,
       );
       
@@ -79,11 +79,12 @@ class PhoneRegistrationViewModel extends Cubit<PhoneRegistrationState> {
     ));
     
     try {
-      await _firebaseAuthService.completeRegistration(
+      await _apiService.register(
         phoneNumber: phoneNumber,
+        name: name,
+        password: password,
         verificationId: verificationId,
         smsCode: smsCode,
-        name: name,
         preferredSports: preferredSports,
       );
       emit(PhoneRegistrationState.success(

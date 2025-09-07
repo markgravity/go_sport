@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'dart:async';
 
-import '../../services/firebase_auth_service.dart';
+import '../../services/api_service.dart';
 import 'sms_verification_state.dart';
 
 /// ViewModel for SMS Verification Screen using Cubit pattern
@@ -11,11 +11,11 @@ import 'sms_verification_state.dart';
 /// Supports Vietnamese cultural patterns for phone verification
 @injectable
 class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
-  final FirebaseAuthService _firebaseAuthService;
+  final ApiService _apiService;
   Timer? _countdownTimer;
   
   SmsVerificationViewModel(
-    this._firebaseAuthService,
+    this._apiService,
   ) : super(const SmsVerificationState.initial());
 
   @override
@@ -67,11 +67,12 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
     try {
       if (userName != null && userPassword != null) {
         // This is registration flow
-        await _firebaseAuthService.completeRegistration(
+        await _apiService.register(
           phoneNumber: phoneNumber,
+          name: userName,
+          password: userPassword,
           verificationId: verificationId,
           smsCode: smsCode,
-          name: userName,
           preferredSports: preferredSports,
         );
         emit(SmsVerificationState.success(
@@ -79,14 +80,9 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
           isRegistration: true,
         ));
       } else {
-        // This is login flow
-        await _firebaseAuthService.verifyAndSignIn(
-          verificationId: verificationId,
-          smsCode: smsCode,
-        );
-        emit(const SmsVerificationState.success(
-          message: 'Đăng nhập thành công!',
-          isRegistration: false,
+        // This is login flow - for now, show error as login SMS not implemented
+        emit(const SmsVerificationState.error(
+          message: 'Đăng nhập bằng SMS chưa được triển khai. Vui lòng sử dụng mật khẩu.',
         ));
       }
     } catch (error) {
@@ -114,7 +110,7 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
     ));
     
     try {
-      final newVerificationId = await _firebaseAuthService.sendSMSVerification(
+      final newVerificationId = await _apiService.sendSMSVerification(
         phoneNumber: phoneNumber,
       );
       

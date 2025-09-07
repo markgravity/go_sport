@@ -8,10 +8,9 @@ import '../network/network_status.dart';
 
 // Auth services
 import '../../features/auth/services/auth_service.dart';
-import '../../features/auth/services/firebase_auth_service.dart';
+import '../../features/auth/services/api_service.dart';
 
-// Auth Cubit and ViewModels
-import '../../features/auth/presentation/viewmodels/auth_cubit.dart';
+// Auth ViewModels
 import '../../features/auth/screens/login/login_view_model.dart';
 import '../../features/auth/screens/phone_registration/phone_registration_view_model.dart';
 import '../../features/auth/screens/sms_verification/sms_verification_view_model.dart';
@@ -62,7 +61,7 @@ bool verifyDependencies() {
     
     // Test auth services
     getIt<AuthService>();
-    getIt<FirebaseAuthService>();
+    getIt<ApiService>();
     
     // Test groups services
     getIt<GroupsService>();
@@ -82,14 +81,13 @@ extension GetItExtension on GetIt {
   
   // Auth services
   AuthService get authService => get<AuthService>();
-  FirebaseAuthService get firebaseAuthService => get<FirebaseAuthService>();
+  ApiService get apiService => get<ApiService>();
   
   // Groups services
   GroupsService get groupsService => get<GroupsService>();
   GroupRoleService get groupRoleService => get<GroupRoleService>();
   
   // Factory methods for ViewModels and Cubits
-  AuthCubit createAuthCubit() => get<AuthCubit>();
   LoginViewModel createLoginViewModel() => get<LoginViewModel>();
   PhoneRegistrationViewModel createPhoneRegistrationViewModel() => get<PhoneRegistrationViewModel>();
   SmsVerificationViewModel createSmsVerificationViewModel() => get<SmsVerificationViewModel>();

@@ -1,16 +1,51 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../models/user_model.dart';
 
 @injectable
 class ApiService {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  
   // TODO: Move to environment configuration
   static const String _baseUrl = kDebugMode
       ? 'http://localhost/api' // Development (Laravel Sail)
       : 'https://api.gosport.vn/api'; // Production
 
   static const Duration _timeout = Duration(seconds: 30);
+
+  // Vietnamese phone number format validation
+  static final RegExp _vietnamesePhoneRegex = 
+      RegExp(r'^(\+84|84|0)[3-9][0-9]{8}$');
+
+  // Format Vietnamese phone number to +84 format
+  String formatVietnamesePhone(String phone) {
+    // Remove all non-digit characters
+    String digitsOnly = phone.replaceAll(RegExp(r'[^\d]'), '');
+    
+    // Handle different Vietnamese phone formats
+    if (digitsOnly.startsWith('0') && digitsOnly.length == 10) {
+      // 0xxxxxxxxx -> +84xxxxxxxxx
+      return '+84${digitsOnly.substring(1)}';
+    } else if (digitsOnly.startsWith('84') && digitsOnly.length == 11) {
+      // 84xxxxxxxxx -> +84xxxxxxxxx
+      return '+$digitsOnly';
+    } else if (digitsOnly.startsWith('84') && digitsOnly.length == 12) {
+      // +84xxxxxxxxx (already correct format)
+      return '+$digitsOnly';
+    }
+    
+    // Return as-is if format doesn't match expected patterns
+    return phone;
+  }
+
+  // Validate Vietnamese phone number
+  bool isValidVietnamesePhone(String phone) {
+    return _vietnamesePhoneRegex.hasMatch(phone);
+  }
 
   // HTTP headers for JSON requests
   Map<String, String> get _defaultHeaders => {
@@ -106,6 +141,117 @@ class ApiService {
       method: 'GET',
       endpoint: '/auth/firebase/status',
     );
+  }
+
+  // Send SMS verification code - returns verification ID or throws exception
+  Future<String> sendSMSVerification({
+    required String phoneNumber,
+    Function(PhoneAuthCredential credential)? onAutoVerify,
+  }) async {
+    final formattedPhone = formatVietnamesePhone(phoneNumber);
+    
+    if (!isValidVietnamesePhone(formattedPhone)) {
+      throw FirebaseAuthException(
+        code: 'invalid-phone-number',
+        message: 'Số điện thoại không đúng định dạng Việt Nam',
+      );
+    }
+
+    // Use a Completer to convert callback-based API to Future-based
+    final completer = Completer<String>();
+    
+    try {
+      await _firebaseAuth.verifyPhoneNumber(
+        phoneNumber: formattedPhone,
+        verificationCompleted: (PhoneAuthCredential credential) {
+          debugPrint('Phone verification completed automatically');
+          if (onAutoVerify != null) {
+            onAutoVerify(credential);
+          }
+          // For auto-verification, we complete with a special identifier
+          if (!completer.isCompleted) {
+            completer.complete('auto-verified:${credential.verificationId ?? 'instant'}');
+          }
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          debugPrint('Phone verification failed: ${e.code} - ${e.message}');
+          if (!completer.isCompleted) {
+            completer.completeError(e);
+          }
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          debugPrint('SMS code sent to $formattedPhone');
+          if (!completer.isCompleted) {
+            completer.complete(verificationId);
+          }
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          debugPrint('Code auto-retrieval timeout');
+          // Don't complete here as this is just a timeout notification
+        },
+        timeout: const Duration(seconds: 60),
+      );
+    } catch (e) {
+      debugPrint('SMS verification error: $e');
+      if (!completer.isCompleted) {
+        if (e is FirebaseAuthException) {
+          completer.completeError(e);
+        } else {
+          completer.completeError(FirebaseAuthException(
+            code: 'unknown',
+            message: e.toString(),
+          ));
+        }
+      }
+    }
+
+    return completer.future;
+  }
+
+  // Register with Firebase SMS verification and API call
+  Future<UserModel> register({
+    required String phoneNumber,
+    required String name,
+    required String password,
+    required String smsCode,
+    List<String>? preferredSports,
+    String? verificationId,
+  }) async {
+    try {
+      // Step 1: Get verification ID (either provided or generate new one)
+      String actualVerificationId;
+      if (verificationId != null && verificationId.isNotEmpty) {
+        actualVerificationId = verificationId;
+      } else {
+        // Generate new verification ID by sending SMS
+        actualVerificationId = await sendSMSVerification(phoneNumber: phoneNumber);
+      }
+      
+      // Step 2: Call backend registration API
+      final response = await _makeRequest(
+        method: 'POST',
+        endpoint: '/auth/register',
+        body: {
+          'name': name,
+          'phone': phoneNumber,
+          'password': password,
+          'password_confirmation': password,
+          'verification_id': actualVerificationId,
+          'sms_code': smsCode,
+          'preferred_sports': preferredSports ?? [],
+        },
+      );
+
+      if (response['success'] == true) {
+        final userData = response['user'] as Map<String, dynamic>;
+        return UserModel.fromJson(userData);
+      } else {
+        throw Exception(response['message'] ?? 'Registration failed');
+      }
+    } catch (e) {
+      debugPrint('Registration error: $e');
+      rethrow;
+    }
   }
 
   // Authenticate with Firebase ID token
@@ -260,7 +406,7 @@ class ApiService {
   }
 
   // Login with phone and password
-  Future<Map<String, dynamic>> loginWithPhone({
+  Future<Map<String, dynamic>> login({
     required String phone,
     required String password,
   }) async {
