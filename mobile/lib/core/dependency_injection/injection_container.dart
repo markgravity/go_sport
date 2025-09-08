@@ -23,6 +23,8 @@ import '../../features/groups/screens/create_group/create_group_view_model.dart'
 // Groups services
 import '../../features/groups/services/groups_service.dart';
 import '../../features/groups/services/group_role_service.dart';
+import '../../features/groups/services/invitation_service.dart';
+import '../../features/groups/services/analytics_service.dart';
 
 // Injectable auto-generated configuration
 import 'injection_container.config.dart';
@@ -64,6 +66,8 @@ bool verifyDependencies() {
     // Test groups services
     getIt<GroupsService>();
     getIt<GroupRoleService>();
+    getIt<InvitationService>();
+    getIt<AnalyticsService>();
     
     return true;
   } catch (e) {
@@ -83,6 +87,8 @@ extension GetItExtension on GetIt {
   // Groups services
   GroupsService get groupsService => get<GroupsService>();
   GroupRoleService get groupRoleService => get<GroupRoleService>();
+  InvitationService get invitationService => get<InvitationService>();
+  AnalyticsService get analyticsService => get<AnalyticsService>();
   
   // Factory methods for ViewModels and Cubits
   LoginViewModel createLoginViewModel() => get<LoginViewModel>();

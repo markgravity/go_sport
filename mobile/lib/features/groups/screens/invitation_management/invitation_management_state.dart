@@ -21,6 +21,7 @@ class InvitationManagementState with _$InvitationManagementState {
 enum InvitationTab {
   invitations,
   joinRequests,
+  analytics,
 }
 
 extension InvitationTabExtension on InvitationTab {
@@ -30,6 +31,8 @@ extension InvitationTabExtension on InvitationTab {
         return 'Lời mời';
       case InvitationTab.joinRequests:
         return 'Yêu cầu tham gia';
+      case InvitationTab.analytics:
+        return 'Thống kê';
     }
   }
 }

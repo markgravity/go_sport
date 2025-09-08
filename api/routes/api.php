@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\GroupInvitationController;
 use App\Http\Controllers\Api\GroupJoinRequestController;
+use App\Http\Controllers\Api\InvitationAnalyticsController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\ImageUploadController;
 use App\Http\Controllers\Api\NotificationController;
@@ -104,6 +105,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/join-requests', [GroupJoinRequestController::class, 'index']);
         Route::post('/join-requests/{joinRequest}/approve', [GroupJoinRequestController::class, 'approve']);
         Route::post('/join-requests/{joinRequest}/reject', [GroupJoinRequestController::class, 'reject']);
+        
+        // Analytics - for group admins/moderators
+        Route::get('/analytics', [InvitationAnalyticsController::class, 'getGroupAnalytics']);
+        Route::get('/analytics/growth', [InvitationAnalyticsController::class, 'getMemberGrowthAnalytics']);
+        Route::get('/invitations/{invitation}/analytics', [InvitationAnalyticsController::class, 'getInvitationAnalytics']);
     });
 
     // Attendance management

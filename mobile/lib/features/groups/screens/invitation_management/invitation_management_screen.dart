@@ -10,6 +10,8 @@ import 'invitation_management_state.dart';
 import '../../widgets/invitation_item_widget.dart';
 import '../../widgets/join_request_item_widget.dart';
 import '../../widgets/create_invitation_dialog.dart';
+import '../../widgets/analytics_card_widget.dart';
+import '../group_analytics/group_analytics_view_model.dart';
 
 @RoutePage()
 class InvitationManagementScreen extends StatelessWidget {
@@ -136,6 +138,7 @@ class _InvitationManagementView extends StatelessWidget {
               children: [
                 _InvitationsTab(),
                 _JoinRequestsTab(),
+                _AnalyticsTab(group: viewModel.group),
               ],
             ),
           ),
@@ -459,6 +462,263 @@ class _JoinRequestsTab extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _AnalyticsTab extends StatefulWidget {
+  final Group group;
+
+  const _AnalyticsTab({required this.group});
+
+  @override
+  State<_AnalyticsTab> createState() => _AnalyticsTabState();
+}
+
+class _AnalyticsTabState extends State<_AnalyticsTab> {
+  late GroupAnalyticsViewModel _analyticsViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _analyticsViewModel = getIt<GroupAnalyticsViewModel>();
+    _analyticsViewModel.loadAnalytics(widget.group.id);
+  }
+
+  @override
+  void dispose() {
+    _analyticsViewModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: _analyticsViewModel,
+      builder: (context, child) {
+        if (_analyticsViewModel.isLoading) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text('Đang tải thống kê...'),
+              ],
+            ),
+          );
+        }
+
+        if (_analyticsViewModel.hasError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error, size: 64, color: Colors.red),
+                SizedBox(height: 16),
+                Text(_analyticsViewModel.errorMessage ?? 'Có lỗi xảy ra'),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => _analyticsViewModel.loadAnalytics(widget.group.id),
+                  child: Text('Thử lại'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final analytics = _analyticsViewModel.groupAnalytics;
+        final growth = _analyticsViewModel.memberGrowthAnalytics;
+
+        if (analytics == null && growth == null) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.analytics_outlined, size: 64, color: Colors.grey),
+                SizedBox(height: 16),
+                Text('Chưa có dữ liệu thống kê'),
+                SizedBox(height: 8),
+                Text(
+                  'Tạo lời mời để bắt đầu thu thập thống kê',
+                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return SingleChildScrollView(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Quick Summary Cards
+              if (analytics != null) ...[
+                Text(
+                  'Tổng quan lời mời',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AnalyticsCard(
+                        title: 'Lời mời',
+                        value: '${analytics.summary.totalInvitations}',
+                        icon: Icons.link,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: AnalyticsCard(
+                        title: 'Lượt nhấn',
+                        value: '${analytics.summary.totalClicks}',
+                        icon: Icons.mouse,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AnalyticsCard(
+                        title: 'Tham gia',
+                        value: '${analytics.summary.totalJoins}',
+                        icon: Icons.person_add,
+                        color: Colors.purple,
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: AnalyticsCard(
+                        title: 'Tỷ lệ chuyển đổi',
+                        value: analytics.summary.conversionRate,
+                        icon: Icons.trending_up,
+                        color: Colors.orange,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 24),
+              ],
+
+              // Member Growth Summary
+              if (growth != null) ...[
+                Text(
+                  'Tăng trưởng thành viên',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AnalyticsCard(
+                        title: 'Thành viên mới',
+                        value: '${growth.summary.newMembers}',
+                        icon: Icons.person_add,
+                        color: Colors.indigo,
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: AnalyticsCard(
+                        title: 'Tỷ lệ tăng trưởng',
+                        value: growth.summary.growthRate,
+                        icon: Icons.trending_up,
+                        color: Colors.teal,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12),
+                AnalyticsProgressCard(
+                  title: 'Sử dụng công suất',
+                  value: '${growth.summary.currentTotal}/${widget.group.maxMembers}',
+                  progress: growth.summary.currentTotal / widget.group.maxMembers,
+                  subtitle: 'thành viên',
+                  color: Colors.deepPurple,
+                ),
+                SizedBox(height: 24),
+              ],
+
+              // Top Performing Invitations
+              if (analytics != null && analytics.topPerformers.isNotEmpty) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Lời mời hiệu quả nhất',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    TextButton(
+                      onPressed: () => _showFullAnalytics(context),
+                      child: Text('Xem tất cả'),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12),
+                ...analytics.topPerformers.take(3).map((invitation) => Card(
+                  margin: EdgeInsets.only(bottom: 8),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.green.withOpacity(0.1),
+                      child: Icon(Icons.trending_up, color: Colors.green),
+                    ),
+                    title: Text('Tạo bởi: ${invitation.createdBy}'),
+                    subtitle: Text('${invitation.clicks} lượt nhấn • ${invitation.joins} tham gia'),
+                    trailing: Chip(
+                      label: Text('${invitation.conversionRate.toStringAsFixed(1)}%'),
+                      backgroundColor: _getConversionColor(invitation.conversionRate).withOpacity(0.1),
+                      labelStyle: TextStyle(
+                        color: _getConversionColor(invitation.conversionRate),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                )),
+                SizedBox(height: 16),
+              ],
+
+              // Action Buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _analyticsViewModel.loadAnalytics(widget.group.id),
+                      icon: Icon(Icons.refresh),
+                      label: Text('Làm mới'),
+                    ),
+                  ),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _showFullAnalytics(context),
+                      icon: Icon(Icons.analytics),
+                      label: Text('Chi tiết'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Color _getConversionColor(double rate) {
+    if (rate >= 10) return Colors.green;
+    if (rate >= 5) return Colors.orange;
+    return Colors.red;
+  }
+
+  void _showFullAnalytics(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Thống kê chi tiết sẽ được triển khai')),
     );
   }
 }

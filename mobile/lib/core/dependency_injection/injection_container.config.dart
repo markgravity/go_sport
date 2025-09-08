@@ -29,12 +29,16 @@ import 'package:go_sport_app/features/groups/presentation/viewmodels/groups_cubi
     as _i898;
 import 'package:go_sport_app/features/groups/screens/create_group/create_group_view_model.dart'
     as _i811;
+import 'package:go_sport_app/features/groups/screens/group_analytics/group_analytics_view_model.dart'
+    as _i637;
 import 'package:go_sport_app/features/groups/screens/group_details/group_details_view_model.dart'
     as _i503;
 import 'package:go_sport_app/features/groups/screens/groups_list/groups_list_view_model.dart'
     as _i132;
 import 'package:go_sport_app/features/groups/screens/invitation_management/invitation_management_view_model.dart'
     as _i846;
+import 'package:go_sport_app/features/groups/services/analytics_service.dart'
+    as _i744;
 import 'package:go_sport_app/features/groups/services/group_role_service.dart'
     as _i39;
 import 'package:go_sport_app/features/groups/services/groups_service.dart'
@@ -59,6 +63,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i70.SportsLocalizationService>(
         () => _i70.SportsLocalizationService());
     gh.factory<_i775.AuthInterceptor>(() => _i775.AuthInterceptor());
+    gh.factory<_i637.GroupAnalyticsViewModel>(
+        () => _i637.GroupAnalyticsViewModel());
     gh.lazySingleton<_i283.NavigationService>(() => _i283.NavigationService());
     gh.singleton<_i951.ApiClient>(
         () => _i951.ApiClient(gh<_i775.AuthInterceptor>()));
@@ -76,6 +82,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i88.ImageUploadService(gh<_i951.ApiClient>()));
     gh.factory<_i474.InvitationService>(
         () => _i474.InvitationService(gh<_i951.ApiClient>()));
+    gh.factory<_i744.AnalyticsService>(
+        () => _i744.AnalyticsService(gh<_i951.ApiClient>()));
     gh.factoryParam<_i846.InvitationManagementViewModel, _i496.Group, dynamic>((
       _group,
       _,
