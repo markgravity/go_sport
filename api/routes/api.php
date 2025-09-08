@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SportsController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\JoinRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -103,9 +104,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
               ->middleware('throttle:5,60'); // 5 resends per hour
         
         // Join request management - for group admins/moderators
-        Route::get('/join-requests', [GroupJoinRequestController::class, 'index']);
-        Route::post('/join-requests/{joinRequest}/approve', [GroupJoinRequestController::class, 'approve']);
-        Route::post('/join-requests/{joinRequest}/reject', [GroupJoinRequestController::class, 'reject']);
+        Route::get('/join-requests', [JoinRequestController::class, 'getGroupRequests']);
+        Route::post('/join-requests/{joinRequest}/approve', [JoinRequestController::class, 'approveRequest']);
+        Route::post('/join-requests/{joinRequest}/reject', [JoinRequestController::class, 'rejectRequest']);
         
         // Analytics - for group admins/moderators
         Route::get('/analytics', [InvitationAnalyticsController::class, 'getGroupAnalytics']);
@@ -147,10 +148,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Join request management - for users
     Route::prefix('join-requests')->group(function () {
-        Route::get('/my-requests', [GroupJoinRequestController::class, 'myRequests']);
-        Route::post('/', [GroupJoinRequestController::class, 'store'])
+        Route::get('/my-requests', [JoinRequestController::class, 'getMyRequests']);
+        Route::post('/', [JoinRequestController::class, 'createJoinRequest'])
               ->middleware('throttle:5,60'); // 5 join requests per hour
-        Route::delete('/{joinRequest}', [GroupJoinRequestController::class, 'destroy']);
+        Route::delete('/{joinRequest}', [JoinRequestController::class, 'cancelRequest']);
     });
 
     // Global invitation management (for revoking invitations)
