@@ -70,6 +70,9 @@ return [
         'verification' => 'Ma xac thuc Go Sport cua ban la: {code}. Ma co hieu luc trong 5 phut. Khong chia se ma nay voi bat ki ai.',
         'welcome' => 'Chao mung ban den voi Go Sport! Tai khoan cua ban da duoc tao thanh cong.',
         'password_reset' => 'Ma dat lai mat khau Go Sport: {code}. Ma co hieu luc trong 10 phut.',
+        'invitation' => '🏸 Mời tham gia nhóm {sport_name}!\n\n"{group_name}"{location}\nNgười mời: {creator_name}\n\nNhấn vào liên kết để tham gia{expiry}:\n{invitation_url}\n\nGoSport - Kết nối đam mê thể thao',
+        'invitation_friendly' => 'Chào bạn! 👋\n\n{creator_name} mời bạn tham gia nhóm {sport_name} "{group_name}"{location}.\n\nCùng chơi thể thao và kết bạn nhé!\n{invitation_url}{expiry}\n\nGoSport',
+        'invitation_formal' => 'Thư mời tham gia nhóm thể thao\n\nNhóm: {group_name}\nMôn: {sport_name}{location}\nNgười mời: {creator_name}\n\nVui lòng truy cập: {invitation_url}{expiry}\n\nTrân trọng,\nGoSport Team',
     ],
 
     /*

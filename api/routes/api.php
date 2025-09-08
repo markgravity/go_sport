@@ -99,6 +99,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/invitations', [InvitationController::class, 'getGroupInvitations']);
         Route::post('/invitations', [InvitationController::class, 'createInvitation'])
               ->middleware('throttle:10,60'); // 10 invitations per hour
+        Route::post('/invitations/{invitation}/resend-sms', [InvitationController::class, 'resendSmsInvitation'])
+              ->middleware('throttle:5,60'); // 5 resends per hour
         
         // Join request management - for group admins/moderators
         Route::get('/join-requests', [GroupJoinRequestController::class, 'index']);

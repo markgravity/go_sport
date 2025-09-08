@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Models\GroupInvitation;
 use App\Models\InvitationAnalytics;
+use App\Services\SmsInvitationService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,12 @@ use Carbon\Carbon;
 
 class InvitationController extends Controller
 {
+    protected SmsInvitationService $smsInvitationService;
+
+    public function __construct(SmsInvitationService $smsInvitationService)
+    {
+        $this->smsInvitationService = $smsInvitationService;
+    }
     /**
      * Create a new invitation for a group
      * POST /api/groups/{id}/invitations
@@ -32,9 +39,30 @@ class InvitationController extends Controller
         $validator = Validator::make($request->all(), [
             'type' => 'required|in:link,sms',
             'expires_in' => 'nullable|in:1d,1w,permanent',
-            'recipient_phone' => 'nullable|string|max:20',
+            'recipient_phone' => 'required_if:type,sms|nullable|string|max:20',
             'metadata' => 'nullable|array',
         ]);
+
+        // Additional validation for SMS type
+        if ($request->type === 'sms') {
+            $phoneValidator = Validator::make($request->all(), [
+                'recipient_phone' => 'required|string',
+            ]);
+
+            if ($phoneValidator->fails()) {
+                return response()->json([
+                    'message' => 'Số điện thoại bắt buộc cho lời mời SMS',
+                    'errors' => $phoneValidator->errors()
+                ], 422);
+            }
+
+            if (!$this->smsInvitationService->validatePhoneNumber($request->recipient_phone)) {
+                return response()->json([
+                    'message' => 'Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại Việt Nam.',
+                    'error' => 'invalid_phone_number'
+                ], 422);
+            }
+        }
 
         if ($validator->fails()) {
             return response()->json([
@@ -68,12 +96,17 @@ class InvitationController extends Controller
         // Calculate expiration
         $expiresAt = $this->calculateExpiration($request->expires_in);
 
+        // Normalize phone number for SMS invitations
+        $recipientPhone = $request->type === 'sms' 
+            ? $this->smsInvitationService->normalizePhoneNumber($request->recipient_phone)
+            : $request->recipient_phone;
+
         // Create invitation
         $invitation = GroupInvitation::create([
             'group_id' => $groupId,
             'creator_id' => Auth::id(),
             'type' => $request->type,
-            'recipient_phone' => $request->recipient_phone,
+            'recipient_phone' => $recipientPhone,
             'expires_at' => $expiresAt,
             'metadata' => $request->metadata ?? [],
         ]);
@@ -85,9 +118,15 @@ class InvitationController extends Controller
             'ip_address' => $request->ip(),
         ]);
 
+        // Send SMS if type is SMS
+        $smsSuccess = true;
+        if ($request->type === 'sms') {
+            $smsSuccess = $this->smsInvitationService->sendInvitation($invitation);
+        }
+
         RateLimiter::hit($key);
 
-        return response()->json([
+        $response = [
             'message' => 'Lời mời được tạo thành công',
             'invitation' => [
                 'id' => $invitation->id,
@@ -100,7 +139,22 @@ class InvitationController extends Controller
                 'invitation_url' => $invitation->getInvitationUrl(),
                 'created_at' => $invitation->created_at,
             ]
-        ], 201);
+        ];
+
+        // Add SMS-specific information
+        if ($request->type === 'sms') {
+            $response['invitation']['recipient_phone'] = $invitation->recipient_phone;
+            $response['sms_status'] = $smsSuccess ? 'sent' : 'failed';
+            $response['sms_message'] = $smsSuccess 
+                ? 'SMS được gửi thành công' 
+                : 'Gửi SMS thất bại, nhưng lời mời vẫn được tạo';
+            
+            if (!$smsSuccess) {
+                $response['message'] = 'Lời mời được tạo nhưng gửi SMS thất bại';
+            }
+        }
+
+        return response()->json($response, 201);
     }
 
     /**
@@ -362,5 +416,59 @@ class InvitationController extends Controller
             'permanent' => null,
             default => now()->addWeek(), // Default to 1 week
         };
+    }
+
+    /**
+     * Resend SMS invitation
+     * POST /api/groups/{group}/invitations/{invitation}/resend-sms
+     */
+    public function resendSmsInvitation(Request $request, int $groupId, int $invitationId): JsonResponse
+    {
+        $invitation = GroupInvitation::where('id', $invitationId)
+            ->where('group_id', $groupId)
+            ->first();
+
+        if (!$invitation) {
+            return response()->json([
+                'message' => 'Lời mời không tồn tại',
+                'error' => 'invitation_not_found'
+            ], 404);
+        }
+
+        if ($invitation->type !== 'sms') {
+            return response()->json([
+                'message' => 'Chỉ có thể gửi lại SMS cho lời mời loại SMS',
+                'error' => 'invalid_invitation_type'
+            ], 422);
+        }
+
+        if (!$invitation->isValid()) {
+            return response()->json([
+                'message' => 'Lời mời không còn hợp lệ hoặc đã hết hạn',
+                'error' => 'invitation_invalid'
+            ], 422);
+        }
+
+        // Check permissions
+        $group = $invitation->group;
+        if (!$this->canCreateInvitation(Auth::user(), $group)) {
+            return response()->json([
+                'message' => 'Bạn không có quyền gửi lại lời mời này',
+                'error' => 'forbidden'
+            ], 403);
+        }
+
+        $success = $this->smsInvitationService->resendInvitation($invitation);
+
+        return response()->json([
+            'message' => $success ? 'SMS được gửi lại thành công' : 'Gửi lại SMS thất bại',
+            'sms_status' => $success ? 'sent' : 'failed',
+            'invitation' => [
+                'id' => $invitation->id,
+                'token' => $invitation->token,
+                'recipient_phone' => $invitation->recipient_phone,
+                'status' => $invitation->status,
+            ]
+        ], $success ? 200 : 422);
     }
 }
