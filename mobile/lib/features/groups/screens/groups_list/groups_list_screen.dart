@@ -42,6 +42,27 @@ class _GroupsListViewState extends State<_GroupsListView> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh groups when returning from navigation
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final viewModel = context.read<GroupsListViewModel>();
+        final currentState = viewModel.state;
+        // If we're in a navigation state, reset to loaded state by refreshing
+        currentState.whenOrNull(
+          navigateToGroupDetails: (_) {
+            viewModel.refreshGroups();
+          },
+          navigateToCreateGroup: () {
+            viewModel.refreshGroups();
+          },
+        );
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<GroupsListViewModel, GroupsListState>(
       listener: (context, state) {

@@ -1,4 +1,4 @@
-// Hot reload trigger
+// Hot reload trigger - fix navigation
 class Group {
   final int id;
   final String name;

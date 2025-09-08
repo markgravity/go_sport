@@ -112,6 +112,12 @@ class GroupsListViewModel extends Cubit<GroupsListState> {
   void navigateToCreateGroup() {
     if (!isClosed) {
       emit(const GroupsListState.navigateToCreateGroup());
+      // Return to loaded state after navigation
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (!isClosed) {
+          _applyFiltersAndSearch();
+        }
+      });
     }
   }
 
@@ -119,6 +125,12 @@ class GroupsListViewModel extends Cubit<GroupsListState> {
   void navigateToGroupDetails(String groupId) {
     if (!isClosed) {
       emit(GroupsListState.navigateToGroupDetails(groupId: groupId));
+      // Return to loaded state after navigation
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (!isClosed) {
+          _applyFiltersAndSearch();
+        }
+      });
     }
   }
 
