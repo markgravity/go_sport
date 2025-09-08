@@ -151,16 +151,5 @@ class CreateGroupPage extends StatelessWidget {
   Widget build(BuildContext context) => const CreateGroupScreen();
 }
 
-@RoutePage()
-class InvitationManagementPage extends StatelessWidget {
-  final String groupId;
-  
-  const InvitationManagementPage({
-    super.key,
-    @pathParam required this.groupId,
-  });
-
-  @override
-  Widget build(BuildContext context) => InvitationManagementScreen(groupId: groupId);
-}
+// InvitationManagementPage removed - using InvitationManagementScreen directly with @RoutePage annotation
 

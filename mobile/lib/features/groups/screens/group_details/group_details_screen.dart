@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:auto_route/auto_route.dart';
+import '../../../../app/auto_router.dart';
 import '../../../../core/dependency_injection/injection_container.dart';
 import '../../models/group_role.dart';
 import 'group_details_state.dart';
@@ -144,8 +146,9 @@ class _GroupDetailsView extends StatelessWidget {
                       viewModel.generateInvitationLink(state.group?.id.toString() ?? '');
                       break;
                     case 'manage_invitations':
-                      // TODO: Navigate to invitation management screen
-                      // context.router.push(InvitationManagementRoute(groupId: state.group?.id.toString() ?? ''));
+                      context.router.push(InvitationManagementRoute(
+                        groupId: state.group?.id.toString() ?? '',
+                      ));
                       break;
                     case 'settings':
                       _showGroupSettings(context, state, viewModel);

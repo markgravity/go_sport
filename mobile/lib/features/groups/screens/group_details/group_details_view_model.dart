@@ -38,8 +38,9 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
       final members = users.map((user) => GroupMember(
         userId: user.id,
         name: user.name,
-        role: 'member', // Default role
+        role: 'admin', // TODO: Extract from API pivot.role field
         avatar: user.avatar,
+        isCurrentUser: true, // TODO: Compare with actual current user ID
       )).toList();
       
       emit(GroupDetailsState.loaded(
@@ -62,8 +63,9 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
       final members = users.map((user) => GroupMember(
         userId: user.id,
         name: user.name,
-        role: 'member', // Default role
+        role: 'admin', // TODO: Extract from API pivot.role field
         avatar: user.avatar,
+        isCurrentUser: true, // TODO: Compare with actual current user ID
       )).toList();
       
       emit(GroupDetailsState.loaded(
@@ -273,9 +275,11 @@ class GroupDetailsViewModel extends Cubit<GroupDetailsState> {
   /// Map string role to Vietnamese group role enum
   VietnameseGroupRole _mapStringRoleToVietnameseRole(String role) {
     switch (role.toLowerCase()) {
+      case 'admin':
       case 'leader':
       case 'truong_nhom':
         return VietnameseGroupRole.leader;
+      case 'moderator':
       case 'co_leader':
       case 'pho_nhom':
         return VietnameseGroupRole.coLeader;
