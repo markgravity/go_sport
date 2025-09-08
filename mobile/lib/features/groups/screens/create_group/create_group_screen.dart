@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/dependency_injection/injection_container.dart';
-import '../models/sport.dart';
-import '../presentation/viewmodels/create_group_cubit.dart';
-import '../presentation/viewmodels/create_group_state.dart';
-import '../widgets/sport_selection_widget.dart';
-import '../widgets/location_input_widget.dart';
-import '../widgets/group_settings_widget.dart';
-import '../widgets/avatar_selection_widget.dart';
-import '../widgets/level_requirements_widget.dart';
+import '../../../../core/dependency_injection/injection_container.dart';
+import '../../models/sport.dart';
+import '../../widgets/sport_selection_widget.dart';
+import '../../widgets/location_input_widget.dart';
+import '../../widgets/group_settings_widget.dart';
+import '../../widgets/avatar_selection_widget.dart';
+import '../../widgets/level_requirements_widget.dart';
+import 'create_group_view_model.dart';
+import 'create_group_state.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   const CreateGroupScreen({super.key});
@@ -21,23 +21,30 @@ class CreateGroupScreen extends StatefulWidget {
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _pageController = PageController();
-  late final CreateGroupCubit _createGroupCubit;
+  late final CreateGroupViewModel _viewModel;
   
   int _currentStep = 0;
   final int _totalSteps = 3;
-
-  bool _showNameSuggestions = false;
+  
+  // Track selected sport for UI updates
+  Sport? _selectedSport;
+  String _selectedPrivacy = 'cong_khai';
 
   @override
   void initState() {
     super.initState();
-    _createGroupCubit = getIt<CreateGroupCubit>();
-    _createGroupCubit.initializeForm();
+    _viewModel = getIt<CreateGroupViewModel>();
+    _viewModel.initialize();
+    // Set default privacy in ViewModel
+    _viewModel.updateField('privacy', _selectedPrivacy);
   }
 
 
   void _onSportSelected(Sport sport) {
-    _createGroupCubit.updateField('sportType', sport.key);
+    setState(() {
+      _selectedSport = sport;
+    });
+    _viewModel.updateField('sportType', sport.key);
   }
 
 
@@ -62,38 +69,55 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   }
 
   Future<void> _createGroup() async {
-    debugPrint('_createGroup called');
-    
     if (!_formKey.currentState!.validate()) {
-      debugPrint('Form validation failed');
       return;
     }
     
-    debugPrint('Form validation passed, calling cubit.createGroup()');
-    await _createGroupCubit.createGroup();
+    await _viewModel.createGroup();
+  }
+
+  String? _validateCurrentStep() {
+    switch (_currentStep) {
+      case 0: // Sport selection step
+        if (_selectedSport == null) {
+          return 'Vui lòng chọn môn thể thao';
+        }
+        break;
+      case 1: // Basic info step
+        if (!_formKey.currentState!.validate()) {
+          return 'Vui lòng hoàn thành thông tin bắt buộc';
+        }
+        break;
+      case 2: // Settings step
+        if (_selectedPrivacy.isEmpty) {
+          return 'Vui lòng chọn quyền riêng tư';
+        }
+        break;
+    }
+    return null; // No validation errors
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CreateGroupCubit>(
-      create: (context) => _createGroupCubit,
-      child: BlocConsumer<CreateGroupCubit, CreateGroupState>(
-        listener: (context, state) {
-          state.when(
+    return BlocProvider<CreateGroupViewModel>(
+      create: (context) => _viewModel,
+      child: BlocConsumer<CreateGroupViewModel, CreateGroupViewState>(
+        listener: (context, viewState) {
+          viewState.when(
             initial: () {},
-            loadingForm: (_) {},
-            formReady: (_, __, ___, ____, _____, ______, _______) {},
-            creating: (_, __, ___) {},
+            loading: () {},
+            ready: () {},
+            creating: (message, progress) {},
             success: (group, message) {
               Navigator.of(context).pop(group);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Tạo nhóm "${group.name}" thành công!'),
+                  content: Text(message),
                   backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
               );
             },
-            error: (message, _, __, ___, ____) {
+            error: (message) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(message),
@@ -103,12 +127,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             },
           );
         },
-        builder: (context, state) => _buildScaffold(context, state),
+        builder: (context, viewState) {
+          return _buildScaffold(context, viewState);
+        },
       ),
     );
   }
 
-  Widget _buildScaffold(BuildContext context, CreateGroupState state) {
+  Widget _buildScaffold(BuildContext context, CreateGroupViewState viewState) {
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -127,7 +153,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           ),
         ),
       ),
-      body: state.isLoading
+      body: viewState.isLoading
           ? const Center(child: CircularProgressIndicator())
           : Form(
               key: _formKey,
@@ -135,17 +161,17 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 controller: _pageController,
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  _buildSportSelectionStep(state),
-                  _buildBasicInfoStep(state),
-                  _buildSettingsStep(state),
+                  _buildSportSelectionStep(),
+                  _buildBasicInfoStep(),
+                  _buildSettingsStep(),
                 ],
               ),
             ),
-      bottomNavigationBar: _buildBottomNavigation(state),
+      bottomNavigationBar: _buildBottomNavigation(viewState),
     );
   }
 
-  Widget _buildSportSelectionStep(CreateGroupState state) {
+  Widget _buildSportSelectionStep() {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -167,8 +193,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           const SizedBox(height: 24),
           Expanded(
             child: SportSelectionWidget(
-              sports: state.availableSports,
-              selectedSport: _getSelectedSport(state),
+              sports: _viewModel.availableSports,
+              selectedSport: _selectedSport,
               onSportSelected: _onSportSelected,
             ),
           ),
@@ -177,7 +203,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     );
   }
 
-  Widget _buildBasicInfoStep(CreateGroupState state) {
+  Widget _buildBasicInfoStep() {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: SingleChildScrollView(
@@ -194,11 +220,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
             // Avatar selection
             AvatarSelectionWidget(
-              selectedAvatarUrl: state.currentFormData.avatar,
+              selectedAvatarUrl: null,
               uploadedImagePath: null,
-              sportType: state.currentFormData.sportType,
-              onAvatarSelected: (url) => _createGroupCubit.updateField('avatar', url),
-              onImageUploaded: (url) => _createGroupCubit.updateField('avatar', url),
+              sportType: null,
+              onAvatarSelected: (url) => _viewModel.updateField('avatar', url),
+              onImageUploaded: (url) => _viewModel.updateField('avatar', url),
             ),
             const SizedBox(height: 24),
 
@@ -211,17 +237,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     labelText: 'Tên nhóm *',
                     hintText: 'VD: Nhóm cầu lông Hà Nội',
                     border: const OutlineInputBorder(),
-                    suffixIcon: state.nameSuggestions.isNotEmpty 
-                      ? IconButton(
-                          icon: Icon(_showNameSuggestions ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
-                          onPressed: () => setState(() => _showNameSuggestions = !_showNameSuggestions),
-                        )
-                      : null,
+                    suffixIcon: null,
                   ),
-                  initialValue: state.currentFormData.name,
+                  initialValue: '',
                   validator: (value) {
-                    final error = state.getFieldError('name');
-                    if (error != null) return error;
                     if (value == null || value.trim().isEmpty) {
                       return 'Vui lòng nhập tên nhóm';
                     }
@@ -230,39 +249,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     }
                     return null;
                   },
-                  onChanged: (value) => _createGroupCubit.updateField('name', value.trim()),
+                  onChanged: (value) => _viewModel.updateField('name', value.trim()),
                 ),
-                if (_showNameSuggestions && state.nameSuggestions.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Theme.of(context).colorScheme.outline),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Text(
-                            'Gợi ý tên nhóm:',
-                            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                        ...(state.nameSuggestions.take(5).map((suggestion) => ListTile(
-                          dense: true,
-                          title: Text(suggestion),
-                          onTap: () {
-                            _createGroupCubit.updateField('name', suggestion);
-                            setState(() => _showNameSuggestions = false);
-                          },
-                        ))),
-                      ],
-                    ),
-                  ),
-                ],
+                // Name suggestions removed for simplicity
               ],
             ),
             const SizedBox(height: 16),
@@ -274,18 +263,19 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 hintText: 'Mô tả về nhóm của bạn...',
                 border: OutlineInputBorder(),
               ),
-              initialValue: state.currentFormData.description,
+              initialValue: '',
               maxLines: 3,
-              onChanged: (value) => _createGroupCubit.updateField('description', value.trim()),
+              onChanged: (value) => _viewModel.updateField('description', value.trim()),
             ),
             const SizedBox(height: 16),
 
             // Level requirements
-            if (_getSelectedSport(state) != null) ...[
+            // Always show level requirements for simplicity
+            if (true) ...[
               LevelRequirementsWidget(
-                sportType: state.currentFormData.sportType,
-                selectedLevels: state.currentFormData.levelRequirements,
-                onLevelsChanged: (levels) => _createGroupCubit.updateField('levelRequirements', levels),
+                sportType: null,
+                selectedLevels: [],
+                onLevelsChanged: (levels) => _viewModel.updateField('levelRequirements', levels),
               ),
               const SizedBox(height: 16),
             ],
@@ -293,13 +283,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             // Location
             LocationInputWidget(
               onLocationChanged: (location, city, district, lat, lng) {
-                _createGroupCubit.updateField('location', location);
-                _createGroupCubit.updateField('city', city);
-                _createGroupCubit.updateField('district', district);
-                _createGroupCubit.updateField('latitude', lat);
-                _createGroupCubit.updateField('longitude', lng);
+                _viewModel.updateField('location', location);
+                _viewModel.updateField('city', city);
+                _viewModel.updateField('district', district);
+                _viewModel.updateField('latitude', lat);
+                _viewModel.updateField('longitude', lng);
               },
-              sportType: state.currentFormData.sportType,
+              sportType: null,
             ),
           ],
         ),
@@ -307,7 +297,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     );
   }
 
-  Widget _buildSettingsStep(CreateGroupState state) {
+  Widget _buildSettingsStep() {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: SingleChildScrollView(
@@ -323,13 +313,18 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             const SizedBox(height: 24),
 
             GroupSettingsWidget(
-              selectedSport: _getSelectedSport(state),
-              monthlyFee: state.currentFormData.monthlyFee,
-              privacy: state.currentFormData.privacy ?? 'cong_khai',
-              rules: _convertRulesToList(state.currentFormData.rules),
-              onMonthlyFeeChanged: (value) => _createGroupCubit.updateField('monthlyFee', value),
-              onPrivacyChanged: (value) => _createGroupCubit.updateField('privacy', value),
-              onRulesChanged: (value) => _createGroupCubit.updateField('rules', _convertRulesFromList(value)),
+              selectedSport: _selectedSport,
+              monthlyFee: 0.0,
+              privacy: _selectedPrivacy,
+              rules: [],
+              onMonthlyFeeChanged: (value) => _viewModel.updateField('monthlyFee', value),
+              onPrivacyChanged: (value) {
+                setState(() {
+                  _selectedPrivacy = value;
+                });
+                _viewModel.updateField('privacy', value);
+              },
+              onRulesChanged: (value) => _viewModel.updateField('rules', _convertRulesFromList(value)),
             ),
           ],
         ),
@@ -337,7 +332,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     );
   }
 
-  Widget _buildBottomNavigation(CreateGroupState state) {
+  Widget _buildBottomNavigation(CreateGroupViewState viewState) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -355,48 +350,25 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           if (_currentStep > 0)
             Expanded(
               child: OutlinedButton(
-                onPressed: state.isLoading ? null : _previousStep,
+                onPressed: viewState.isLoading ? null : _previousStep,
                 child: const Text('Trở lại'),
               ),
             ),
           if (_currentStep > 0) const SizedBox(width: 16),
           Expanded(
             child: ElevatedButton(
-              onPressed: state.isLoading ? null : () {
-                debugPrint('Button pressed! Current step: $_currentStep, Total steps: $_totalSteps');
-                
+              onPressed: viewState.isLoading ? null : () {
                 if (_currentStep < _totalSteps - 1) {
-                  debugPrint('Not final step, validating current step');
-                  // Validate current step
-                  bool canProceed = false;
-                  switch (_currentStep) {
-                    case 0:
-                      canProceed = _getSelectedSport(state) != null;
-                      debugPrint('Step 0 validation: canProceed = $canProceed');
-                      break;
-                    case 1:
-                      canProceed = state.currentFormData.name.isNotEmpty && 
-                                 state.currentFormData.location.isNotEmpty && 
-                                 state.currentFormData.city.isNotEmpty;
-                      debugPrint('Step 1 validation: canProceed = $canProceed');
-                      break;
-                    case 2:
-                      canProceed = true;
-                      debugPrint('Step 2 validation: canProceed = $canProceed');
-                      break;
-                  }
+                  String? validationError = _validateCurrentStep();
                   
-                  if (canProceed) {
-                    debugPrint('Proceeding to next step');
+                  if (validationError == null) {
                     _nextStep();
                   } else {
-                    debugPrint('Cannot proceed, showing snackbar');
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Vui lòng hoàn thành thông tin bước này')),
+                      SnackBar(content: Text(validationError)),
                     );
                   }
                 } else {
-                  debugPrint('Final step reached, calling _createGroup()');
                   _createGroup();
                 }
               },
@@ -408,17 +380,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     );
   }
 
-  Sport? _getSelectedSport(CreateGroupState state) {
-    if (state.currentFormData.sportType == null) return null;
-    
-    try {
-      return state.availableSports.firstWhere(
-        (sport) => sport.key == state.currentFormData.sportType,
-      );
-    } catch (_) {
-      return null;
-    }
-  }
 
   List<String> _convertRulesToList(Map<String, dynamic> rulesMap) {
     if (rulesMap.containsKey('rules') && rulesMap['rules'] is List) {
@@ -434,7 +395,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   @override
   void dispose() {
     _pageController.dispose();
-    _createGroupCubit.close();
+    _viewModel.close();
     super.dispose();
   }
 }

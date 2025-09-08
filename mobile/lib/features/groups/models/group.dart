@@ -1,3 +1,4 @@
+// Hot reload trigger
 class Group {
   final int id;
   final String name;
@@ -61,16 +62,20 @@ class Group {
       location: json['location'] as String? ?? 'Chưa xác định',
       city: json['city'] as String? ?? 'Chưa xác định',
       district: json['district'] as String?,
-      latitude: json['latitude']?.toDouble(),
-      longitude: json['longitude']?.toDouble(),
-      schedule: json['schedule'] as Map<String, dynamic>?,
+      latitude: _convertToDouble(json['latitude']),
+      longitude: _convertToDouble(json['longitude']),
+      schedule: json['schedule'] is List 
+          ? (json['schedule'] as List).isEmpty ? null : null
+          : json['schedule'] as Map<String, dynamic>?,
       maxMembers: json['max_members'] as int? ?? 20,
       currentMembers: json['current_members'] as int? ?? 0,
-      membershipFee: (json['membership_fee'] ?? json['monthly_fee'])?.toDouble() ?? 0.0,
+      membershipFee: _convertToDouble(json['membership_fee'] ?? json['monthly_fee']) ?? 0.0,
       privacy: json['privacy'] as String? ?? 'cong_khai',
       status: json['status'] as String? ?? 'hoat_dong',
       avatar: json['avatar'] as String?,
-      rules: json['rules'] as Map<String, dynamic>?,
+      rules: json['rules'] is List 
+          ? (json['rules'] as List).isEmpty ? null : null
+          : json['rules'] as Map<String, dynamic>?,
       creatorId: json['creator_id'] as int? ?? 0,
       createdAt: json['created_at'] != null 
           ? DateTime.parse(json['created_at'] as String)
@@ -244,6 +249,16 @@ class Group {
   bool get isFull => currentMembers >= maxMembers;
   bool get isActive => status == 'hoat_dong';
   bool get isPublic => privacy == 'cong_khai';
+
+  static double? _convertToDouble(dynamic value) {
+    if (value == null) return null;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) {
+      return double.tryParse(value);
+    }
+    return null;
+  }
 }
 
 class User {

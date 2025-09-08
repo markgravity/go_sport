@@ -54,9 +54,64 @@ class GroupController extends Controller
             $groups = $query->with(['creator', 'activeMembers'])
                            ->paginate($request->get('per_page', 15));
 
+            // Transform the groups data to match Flutter expectations
+            $transformedGroups = $groups->getCollection()->map(function ($group) {
+                return [
+                    'id' => $group->id,
+                    'name' => $group->name,
+                    'description' => $group->description,
+                    'sport_type' => $group->sport_type,
+                    'skill_level' => $group->skill_level,
+                    'location' => $group->location,
+                    'city' => $group->city,
+                    'district' => $group->district,
+                    'latitude' => $group->latitude,
+                    'longitude' => $group->longitude,
+                    'schedule' => $group->schedule,
+                    'max_members' => $group->max_members,
+                    'current_members' => $group->current_members,
+                    'monthly_fee' => $group->monthly_fee,
+                    'privacy' => $group->privacy,
+                    'status' => $group->status,
+                    'avatar' => $group->avatar,
+                    'rules' => $group->rules,
+                    'creator_id' => $group->creator_id,
+                    'created_at' => $group->created_at->toISOString(),
+                    'updated_at' => $group->updated_at->toISOString(),
+                    'creator' => $group->creator ? [
+                        'id' => $group->creator->id,
+                        'name' => $group->creator->name,
+                        'email' => $group->creator->email,
+                        'avatar' => $group->creator->avatar,
+                    ] : null,
+                    'active_members' => $group->activeMembers->map(function ($user) {
+                        return [
+                            'id' => $user->id,
+                            'name' => $user->name,
+                            'email' => $user->email,
+                            'avatar' => $user->avatar,
+                        ];
+                    }),
+                ];
+            });
+
             return response()->json([
                 'success' => true,
-                'data' => $groups
+                'data' => [
+                    'current_page' => $groups->currentPage(),
+                    'data' => $transformedGroups,
+                    'first_page_url' => $groups->url(1),
+                    'from' => $groups->firstItem(),
+                    'last_page' => $groups->lastPage(),
+                    'last_page_url' => $groups->url($groups->lastPage()),
+                    'links' => $groups->linkCollection(),
+                    'next_page_url' => $groups->nextPageUrl(),
+                    'path' => $groups->path(),
+                    'per_page' => $groups->perPage(),
+                    'prev_page_url' => $groups->previousPageUrl(),
+                    'to' => $groups->lastItem(),
+                    'total' => $groups->total(),
+                ]
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -139,10 +194,55 @@ class GroupController extends Controller
 
             DB::commit();
 
+            // Load the group with relationships
+            $group->load(['creator', 'activeMembers', 'levelRequirements']);
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Tạo nhóm thành công',
-                'data' => $group->load(['creator', 'activeMembers', 'levelRequirements'])
+                'data' => [
+                    'id' => $group->id,
+                    'name' => $group->name,
+                    'description' => $group->description,
+                    'sport_type' => $group->sport_type,
+                    'skill_level' => $group->skill_level,
+                    'location' => $group->location,
+                    'city' => $group->city,
+                    'district' => $group->district,
+                    'latitude' => $group->latitude,
+                    'longitude' => $group->longitude,
+                    'schedule' => $group->schedule,
+                    'max_members' => $group->max_members,
+                    'current_members' => $group->current_members,
+                    'monthly_fee' => $group->monthly_fee,
+                    'privacy' => $group->privacy,
+                    'status' => $group->status,
+                    'avatar' => $group->avatar,
+                    'rules' => $group->rules,
+                    'creator_id' => $group->creator_id,
+                    'created_at' => $group->created_at->toISOString(),
+                    'updated_at' => $group->updated_at->toISOString(),
+                    'creator' => $group->creator ? [
+                        'id' => $group->creator->id,
+                        'name' => $group->creator->name,
+                        'email' => $group->creator->email,
+                        'avatar' => $group->creator->avatar,
+                    ] : null,
+                    'active_members' => $group->activeMembers->map(function ($user) {
+                        return [
+                            'id' => $user->id,
+                            'name' => $user->name,
+                            'email' => $user->email,
+                            'avatar' => $user->avatar,
+                        ];
+                    }),
+                    'level_requirements' => $group->levelRequirements->map(function ($req) {
+                        return [
+                            'level_key' => $req->level_key,
+                            'level_name' => $req->level_name,
+                        ];
+                    }),
+                ]
             ], 201);
 
         } catch (\Illuminate\Validation\ValidationException $e) {

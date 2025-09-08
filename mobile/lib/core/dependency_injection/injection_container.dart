@@ -16,9 +16,9 @@ import '../../features/auth/screens/sms_verification/sms_verification_view_model
 
 // Groups Cubits and ViewModels
 import '../../features/groups/presentation/viewmodels/groups_cubit.dart';
-import '../../features/groups/presentation/viewmodels/create_group_cubit.dart';
 import '../../features/groups/screens/groups_list/groups_list_view_model.dart';
 import '../../features/groups/screens/group_details/group_details_view_model.dart';
+import '../../features/groups/screens/create_group/create_group_view_model.dart';
 
 // Groups services
 import '../../features/groups/services/groups_service.dart';
@@ -89,7 +89,7 @@ extension GetItExtension on GetIt {
   PhoneRegistrationViewModel createPhoneRegistrationViewModel() => get<PhoneRegistrationViewModel>();
   SmsVerificationViewModel createSmsVerificationViewModel() => get<SmsVerificationViewModel>();
   GroupsCubit createGroupsCubit() => get<GroupsCubit>();
-  CreateGroupCubit createCreateGroupCubit() => get<CreateGroupCubit>();
+  CreateGroupViewModel createCreateGroupViewModel() => get<CreateGroupViewModel>();
   GroupsListViewModel createGroupsListViewModel() => get<GroupsListViewModel>();
   GroupDetailsViewModel createGroupDetailsViewModel() => get<GroupDetailsViewModel>();
   NetworkStatusCubit createNetworkStatusCubit() => get<NetworkStatusCubit>();

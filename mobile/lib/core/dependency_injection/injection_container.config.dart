@@ -24,10 +24,10 @@ import 'package:go_sport_app/features/auth/screens/phone_registration/phone_regi
 import 'package:go_sport_app/features/auth/screens/sms_verification/sms_verification_view_model.dart'
     as _i1031;
 import 'package:go_sport_app/features/auth/services/auth_service.dart' as _i882;
-import 'package:go_sport_app/features/groups/presentation/viewmodels/create_group_cubit.dart'
-    as _i196;
 import 'package:go_sport_app/features/groups/presentation/viewmodels/groups_cubit.dart'
     as _i898;
+import 'package:go_sport_app/features/groups/screens/create_group/create_group_view_model.dart'
+    as _i811;
 import 'package:go_sport_app/features/groups/screens/group_details/group_details_view_model.dart'
     as _i503;
 import 'package:go_sport_app/features/groups/screens/groups_list/groups_list_view_model.dart'
@@ -81,8 +81,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i428.LoginViewModel(gh<_i882.AuthService>()));
     gh.factory<_i898.GroupsCubit>(
         () => _i898.GroupsCubit(gh<_i578.GroupsService>()));
-    gh.factory<_i196.CreateGroupCubit>(
-        () => _i196.CreateGroupCubit(gh<_i578.GroupsService>()));
+    gh.factory<_i811.CreateGroupViewModel>(
+        () => _i811.CreateGroupViewModel(gh<_i578.GroupsService>()));
     gh.factory<_i503.GroupDetailsViewModel>(() => _i503.GroupDetailsViewModel(
           gh<_i578.GroupsService>(),
           gh<_i39.GroupRoleService>(),

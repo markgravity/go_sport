@@ -5,7 +5,7 @@ import '../features/auth/screens/login/login_screen.dart';
 import '../features/auth/screens/phone_registration/phone_registration_screen.dart';
 import '../features/auth/screens/sms_verification/sms_verification_screen.dart';
 import '../features/auth/screens/forgot_password_screen.dart';
-import '../features/groups/screens/create_group_screen.dart';
+import '../features/groups/screens/create_group/create_group_screen.dart';
 import '../features/groups/screens/groups_list/groups_list_screen.dart';
 import '../features/groups/screens/group_details/group_details_screen.dart';
 
