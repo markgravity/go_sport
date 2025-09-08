@@ -111,6 +111,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Analytics - for group admins/moderators
         Route::get('/analytics', [InvitationAnalyticsController::class, 'getGroupAnalytics']);
         Route::get('/analytics/growth', [InvitationAnalyticsController::class, 'getMemberGrowthAnalytics']);
+        Route::get('/analytics/comparison', [InvitationAnalyticsController::class, 'getInvitationComparison']);
         Route::get('/invitations/{invitation}/analytics', [InvitationAnalyticsController::class, 'getInvitationAnalytics']);
     });
 

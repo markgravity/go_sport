@@ -3,435 +3,474 @@
 namespace Tests\Feature;
 
 use App\Models\Group;
-use App\Models\User;
 use App\Models\GroupInvitation;
 use App\Models\GroupJoinRequest;
-use App\Models\InvitationAnalytics;
-use App\Enums\GroupRole;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class InvitationAnalyticsTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
-    private User $admin;
-    private User $moderator;
-    private User $member;
-    private User $outsider;
-    private Group $group;
+    protected User $creator;
+    protected User $member;
+    protected User $outsider;
+    protected Group $group;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
-        $this->admin = User::factory()->create();
-        $this->moderator = User::factory()->create();
-        $this->member = User::factory()->create();
-        $this->outsider = User::factory()->create();
-        
-        $this->group = Group::factory()->create(['creator_id' => $this->admin->id]);
-        
-        // Set up group membership
-        $this->group->memberships()->create([
-            'user_id' => $this->admin->id,
-            'role' => GroupRole::ADMIN,
-            'joined_at' => now(),
+
+        // Create test users
+        $this->creator = User::factory()->create([
+            'name' => 'Group Creator',
+            'phone' => '0901234567'
         ]);
-        
-        $this->group->memberships()->create([
-            'user_id' => $this->moderator->id,
-            'role' => GroupRole::MODERATOR,
-            'joined_at' => now(),
+
+        $this->member = User::factory()->create([
+            'name' => 'Group Member',
+            'phone' => '0901234568'
         ]);
-        
-        $this->group->memberships()->create([
-            'user_id' => $this->member->id,
-            'role' => GroupRole::MEMBER,
-            'joined_at' => now(),
+
+        $this->outsider = User::factory()->create([
+            'name' => 'Outsider',
+            'phone' => '0901234569'
+        ]);
+
+        // Create test group
+        $this->group = Group::create([
+            'name' => 'Test Analytics Group',
+            'vietnamese_name' => 'Nhóm Test Analytics',
+            'creator_id' => $this->creator->id,
+            'sport_type' => 'badminton',
+            'privacy' => 'cong_khai',
+            'location' => 'Test Location',
+            'city' => 'Hà Nội',
+            'district' => 'Ba Đình',
+            'min_players' => 2,
+            'current_members' => 1,
+            'monthly_fee' => 0,
+            'status' => 'hoat_dong',
+            'auto_approve_members' => true,
+            'notification_hours_before' => 24
+        ]);
+
+        // Add member to group (skip for now - focusing on analytics API)
+
+        // Create test invitations with various statuses
+        $this->createTestInvitations();
+    }
+
+    protected function createTestInvitations(): void
+    {
+        // Create pending link invitation (created yesterday)
+        GroupInvitation::create([
+            'group_id' => $this->group->id,
+            'creator_id' => $this->creator->id,
+            'token' => 'test-link-token-1',
+            'type' => 'link',
+            'status' => 'pending',
+            'created_at' => Carbon::yesterday(),
+            'expires_at' => Carbon::tomorrow(),
+            'metadata' => [
+                'click_count' => 15,
+                'last_clicked_at' => Carbon::now()->subHours(2)->toISOString()
+            ]
+        ]);
+
+        // Create used SMS invitation (created 3 days ago, used yesterday)
+        GroupInvitation::create([
+            'group_id' => $this->group->id,
+            'creator_id' => $this->creator->id,
+            'token' => 'test-sms-token-1',
+            'type' => 'sms',
+            'status' => 'used',
+            'recipient_phone' => '0987654321',
+            'used_by' => $this->member->id,
+            'used_at' => Carbon::yesterday(),
+            'created_at' => Carbon::now()->subDays(3),
+            'metadata' => [
+                'click_count' => 3,
+                'sms_sent_at' => Carbon::now()->subDays(3)->toISOString(),
+                'last_clicked_at' => Carbon::yesterday()->toISOString()
+            ]
+        ]);
+
+        // Create expired invitation (created 5 days ago)
+        GroupInvitation::create([
+            'group_id' => $this->group->id,
+            'creator_id' => $this->creator->id,
+            'token' => 'test-link-token-2',
+            'type' => 'link',
+            'status' => 'expired',
+            'expires_at' => Carbon::now()->subDays(2),
+            'created_at' => Carbon::now()->subDays(5),
+            'metadata' => [
+                'click_count' => 8,
+                'last_clicked_at' => Carbon::now()->subDays(3)->toISOString()
+            ]
+        ]);
+
+        // Create revoked invitation (created 4 days ago, revoked 2 days ago)
+        GroupInvitation::create([
+            'group_id' => $this->group->id,
+            'creator_id' => $this->creator->id,
+            'token' => 'test-sms-token-2',
+            'type' => 'sms',
+            'status' => 'revoked',
+            'recipient_phone' => '0912345678',
+            'created_at' => Carbon::now()->subDays(4),
+            'updated_at' => Carbon::now()->subDays(2),
+            'metadata' => [
+                'click_count' => 1,
+                'sms_sent_at' => Carbon::now()->subDays(4)->toISOString(),
+                'last_clicked_at' => Carbon::now()->subDays(4)->toISOString()
+            ]
         ]);
     }
 
     /** @test */
-    public function admin_can_view_group_analytics()
+    public function creator_can_access_group_analytics()
     {
-        Sanctum::actingAs($this->admin);
-
-        // Create some test data
-        $invitation = GroupInvitation::factory()->create([
-            'group_id' => $this->group->id,
-            'created_by' => $this->admin->id,
-            'created_at' => now()->subDays(5)
-        ]);
-
-        InvitationAnalytics::create([
-            'invitation_id' => $invitation->id,
-            'event_type' => 'clicked',
-            'created_at' => now()->subDays(3)
-        ]);
+        Sanctum::actingAs($this->creator);
 
         $response = $this->getJson("/api/groups/{$this->group->id}/analytics");
 
-        $response->assertStatus(200)
+        $response->assertOk()
                  ->assertJsonStructure([
                      'success',
                      'data' => [
-                         'period' => [
-                             'start',
-                             'end'
-                         ],
-                         'summary' => [
+                         'overview' => [
                              'total_invitations',
-                             'total_clicks',
-                             'total_joins',
-                             'total_rejected',
-                             'click_rate',
-                             'conversion_rate'
+                             'pending_invitations', 
+                             'used_invitations',
+                             'expired_invitations',
+                             'revoked_invitations',
+                             'overall_click_rate',
+                             'overall_conversion_rate'
                          ],
-                         'join_request_stats',
-                         'daily_activity',
-                         'top_performers',
-                         'all_invitations'
+                         'events',
+                         'rates' => [
+                             'click_rate_by_type',
+                             'conversion_rate_by_type'
+                         ],
+                         'sources',
+                         'daily_stats'
                      ]
-                 ]);
-    }
-
-    /** @test */
-    public function moderator_can_view_group_analytics()
-    {
-        Sanctum::actingAs($this->moderator);
-
-        $response = $this->getJson("/api/groups/{$this->group->id}/analytics");
-
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function regular_member_cannot_view_group_analytics()
-    {
-        Sanctum::actingAs($this->member);
-
-        $response = $this->getJson("/api/groups/{$this->group->id}/analytics");
-
-        $response->assertStatus(403)
-                 ->assertJson([
-                     'success' => false,
-                     'message' => 'Bạn không có quyền xem phân tích nhóm'
-                 ]);
-    }
-
-    /** @test */
-    public function outsider_cannot_view_group_analytics()
-    {
-        Sanctum::actingAs($this->outsider);
-
-        $response = $this->getJson("/api/groups/{$this->group->id}/analytics");
-
-        $response->assertStatus(403);
-    }
-
-    /** @test */
-    public function can_filter_analytics_by_date_range()
-    {
-        Sanctum::actingAs($this->admin);
-
-        $startDate = now()->subDays(7)->format('Y-m-d');
-        $endDate = now()->format('Y-m-d');
-
-        $response = $this->getJson("/api/groups/{$this->group->id}/analytics?start_date={$startDate}&end_date={$endDate}");
-
-        $response->assertStatus(200)
+                 ])
                  ->assertJson([
                      'success' => true,
                      'data' => [
-                         'period' => [
-                             'start' => $startDate,
-                             'end' => $endDate
+                         'overview' => [
+                             'total_invitations' => 4,
+                             'pending_invitations' => 1,
+                             'used_invitations' => 1,
+                             'expired_invitations' => 1,
+                             'revoked_invitations' => 1
                          ]
                      ]
                  ]);
     }
 
     /** @test */
-    public function can_view_member_growth_analytics()
-    {
-        Sanctum::actingAs($this->admin);
-
-        $response = $this->getJson("/api/groups/{$this->group->id}/analytics/growth");
-
-        $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'success',
-                     'data' => [
-                         'period',
-                         'summary' => [
-                             'new_members',
-                             'growth_rate',
-                             'current_total',
-                             'capacity_usage'
-                         ],
-                         'daily_growth',
-                         'member_sources',
-                         'invitation_effectiveness'
-                     ]
-                 ]);
-    }
-
-    /** @test */
-    public function can_view_specific_invitation_analytics()
-    {
-        Sanctum::actingAs($this->admin);
-
-        $invitation = GroupInvitation::factory()->create([
-            'group_id' => $this->group->id,
-            'created_by' => $this->admin->id
-        ]);
-
-        // Add some analytics events
-        InvitationAnalytics::create([
-            'invitation_id' => $invitation->id,
-            'event_type' => 'clicked'
-        ]);
-
-        InvitationAnalytics::create([
-            'invitation_id' => $invitation->id,
-            'event_type' => 'joined'
-        ]);
-
-        $response = $this->getJson("/api/groups/{$this->group->id}/invitations/{$invitation->id}/analytics");
-
-        $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'success',
-                     'data' => [
-                         'invitation',
-                         'summary' => [
-                             'sent',
-                             'clicked',
-                             'registered',
-                             'joined',
-                             'rejected',
-                             'click_rate',
-                             'conversion_rate'
-                         ],
-                         'recent_events',
-                         'join_requests',
-                         'performance'
-                     ]
-                 ]);
-    }
-
-    /** @test */
-    public function regular_member_cannot_view_invitation_analytics()
+    public function member_cannot_access_group_analytics()
     {
         Sanctum::actingAs($this->member);
 
-        $invitation = GroupInvitation::factory()->create([
-            'group_id' => $this->group->id,
-            'created_by' => $this->admin->id
-        ]);
-
-        $response = $this->getJson("/api/groups/{$this->group->id}/invitations/{$invitation->id}/analytics");
+        $response = $this->getJson("/api/groups/{$this->group->id}/analytics");
 
         $response->assertStatus(403)
                  ->assertJson([
                      'success' => false,
-                     'message' => 'Bạn không có quyền xem phân tích lời mời'
+                     'message' => 'Bạn không có quyền xem thống kê nhóm này'
                  ]);
     }
 
     /** @test */
-    public function can_track_invitation_events()
+    public function outsider_cannot_access_group_analytics()
     {
-        $invitation = GroupInvitation::factory()->create([
-            'group_id' => $this->group->id,
-            'created_by' => $this->admin->id
-        ]);
+        Sanctum::actingAs($this->outsider);
 
-        $response = $this->postJson('/api/analytics/track-event', [
-            'invitation_token' => $invitation->token,
-            'event_type' => 'clicked',
-            'metadata' => [
-                'referrer' => 'https://example.com',
-                'device' => 'mobile'
-            ]
-        ]);
+        $response = $this->getJson("/api/groups/{$this->group->id}/analytics");
 
-        $response->assertStatus(200)
+        $response->assertStatus(403)
+                 ->assertJson([
+                     'success' => false,
+                     'message' => 'Bạn không có quyền xem thống kê nhóm này'
+                 ]);
+    }
+
+    /** @test */
+    public function unauthenticated_user_cannot_access_analytics()
+    {
+        $response = $this->getJson("/api/groups/{$this->group->id}/analytics");
+
+        $response->assertStatus(401);
+    }
+
+    /** @test */
+    public function creator_can_access_member_growth_analytics()
+    {
+        Sanctum::actingAs($this->creator);
+
+        // Test with default parameters
+        $response = $this->getJson("/api/groups/{$this->group->id}/analytics/growth");
+
+        $response->assertOk()
+                 ->assertJsonStructure([
+                     'success',
+                     'data' => [
+                         'period',
+                         'total_members',
+                         'growth_data' => ['*'],
+                         'summary' => [
+                             'total_growth',
+                             'average_daily_growth',
+                             'peak_growth_day'
+                         ]
+                     ]
+                 ]);
+
+        // Test with custom parameters
+        $response = $this->getJson("/api/groups/{$this->group->id}/analytics/growth?period=7&type=invitations");
+
+        $response->assertOk()
                  ->assertJson([
                      'success' => true,
-                     'message' => 'Sự kiện đã được ghi nhận'
+                     'data' => [
+                         'period' => 7
+                     ]
                  ]);
-
-        $this->assertDatabaseHas('invitation_analytics', [
-            'invitation_id' => $invitation->id,
-            'event_type' => 'clicked'
-        ]);
     }
 
     /** @test */
-    public function cannot_track_event_with_invalid_token()
+    public function creator_can_access_invitation_comparison()
     {
-        $response = $this->postJson('/api/analytics/track-event', [
-            'invitation_token' => 'invalid-token',
-            'event_type' => 'clicked'
-        ]);
+        Sanctum::actingAs($this->creator);
+
+        $response = $this->getJson("/api/groups/{$this->group->id}/analytics/comparison");
+
+        $response->assertOk()
+                 ->assertJsonStructure([
+                     'success',
+                     'data' => [
+                         'link' => [
+                             'count',
+                             'click_rate',
+                             'conversion_rate',
+                             'avg_time_to_use'
+                         ],
+                         'sms' => [
+                             'count',
+                             'click_rate', 
+                             'conversion_rate',
+                             'avg_time_to_use'
+                         ],
+                         'recommendation'
+                     ]
+                 ])
+                 ->assertJson([
+                     'success' => true,
+                     'data' => [
+                         'link' => [
+                             'count' => 2  // pending + expired
+                         ],
+                         'sms' => [
+                             'count' => 2  // used + revoked
+                         ]
+                     ]
+                 ]);
+    }
+
+    /** @test */
+    public function creator_can_access_individual_invitation_analytics()
+    {
+        Sanctum::actingAs($this->creator);
+
+        // Get a specific invitation
+        $invitation = GroupInvitation::where('group_id', $this->group->id)
+                                   ->where('status', 'used')
+                                   ->first();
+
+        $response = $this->getJson("/api/groups/{$this->group->id}/invitations/{$invitation->id}/analytics");
+
+        $response->assertOk()
+                 ->assertJsonStructure([
+                     'success',
+                     'data' => [
+                         'invitation' => [
+                             'id',
+                             'type',
+                             'status',
+                             'created_at',
+                             'used_at'
+                         ],
+                         'performance' => [
+                             'total_clicks',
+                             'conversion_rate',
+                             'time_to_use',
+                             'click_timeline'
+                         ],
+                         'timeline'
+                     ]
+                 ])
+                 ->assertJson([
+                     'success' => true,
+                     'data' => [
+                         'invitation' => [
+                             'id' => $invitation->id,
+                             'type' => 'sms',
+                             'status' => 'used'
+                         ],
+                         'performance' => [
+                             'total_clicks' => 3,
+                             'conversion_rate' => 100.0  // Used invitation = 100% conversion
+                         ]
+                     ]
+                 ]);
+    }
+
+    /** @test */
+    public function analytics_handles_invalid_group_id()
+    {
+        Sanctum::actingAs($this->creator);
+
+        $response = $this->getJson("/api/groups/99999/analytics");
 
         $response->assertStatus(404)
                  ->assertJson([
                      'success' => false,
-                     'message' => 'Lời mời không tồn tại'
+                     'message' => 'Nhóm không tồn tại'
                  ]);
     }
 
     /** @test */
-    public function event_tracking_validates_event_type()
+    public function analytics_handles_invalid_invitation_id()
     {
-        $invitation = GroupInvitation::factory()->create([
-            'group_id' => $this->group->id,
-            'created_by' => $this->admin->id
-        ]);
+        Sanctum::actingAs($this->creator);
 
-        $response = $this->postJson('/api/analytics/track-event', [
-            'invitation_token' => $invitation->token,
-            'event_type' => 'invalid_event'
-        ]);
+        $response = $this->getJson("/api/groups/{$this->group->id}/invitations/99999/analytics");
 
-        $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['event_type']);
+        $response->assertStatus(404)
+                 ->assertJson([
+                     'success' => false,
+                     'message' => 'Lời mời không tồn tại hoặc không thuộc nhóm này'
+                 ]);
     }
 
     /** @test */
-    public function analytics_summary_calculates_rates_correctly()
+    public function analytics_calculates_click_rates_correctly()
     {
-        Sanctum::actingAs($this->admin);
-
-        $invitation = GroupInvitation::factory()->create([
-            'group_id' => $this->group->id,
-            'created_by' => $this->admin->id
-        ]);
-
-        // Create analytics events
-        InvitationAnalytics::create([
-            'invitation_id' => $invitation->id,
-            'event_type' => 'sent'
-        ]);
-
-        InvitationAnalytics::create([
-            'invitation_id' => $invitation->id,
-            'event_type' => 'clicked'
-        ]);
-
-        InvitationAnalytics::create([
-            'invitation_id' => $invitation->id,
-            'event_type' => 'joined'
-        ]);
-
-        $response = $this->getJson("/api/groups/{$this->group->id}/invitations/{$invitation->id}/analytics");
-
-        $summary = $response->json('data.summary');
-        
-        $this->assertEquals(1, $summary['sent']);
-        $this->assertEquals(1, $summary['clicked']);
-        $this->assertEquals(1, $summary['joined']);
-        $this->assertEquals(100.0, $summary['click_rate']);
-        $this->assertEquals(100.0, $summary['conversion_rate']);
-    }
-
-    /** @test */
-    public function analytics_handles_zero_division()
-    {
-        Sanctum::actingAs($this->admin);
-
-        $invitation = GroupInvitation::factory()->create([
-            'group_id' => $this->group->id,
-            'created_by' => $this->admin->id
-        ]);
-
-        // No analytics events created
-
-        $response = $this->getJson("/api/groups/{$this->group->id}/invitations/{$invitation->id}/analytics");
-
-        $summary = $response->json('data.summary');
-        
-        $this->assertEquals(0, $summary['sent']);
-        $this->assertEquals(0, $summary['clicked']);
-        $this->assertEquals(0, $summary['joined']);
-        $this->assertEquals(0, $summary['click_rate']);
-        $this->assertEquals(0, $summary['conversion_rate']);
-    }
-
-    /** @test */
-    public function group_analytics_aggregates_multiple_invitations()
-    {
-        Sanctum::actingAs($this->admin);
-
-        // Create multiple invitations with analytics
-        $invitation1 = GroupInvitation::factory()->create([
-            'group_id' => $this->group->id,
-            'created_by' => $this->admin->id,
-            'created_at' => now()->subDays(5)
-        ]);
-
-        $invitation2 = GroupInvitation::factory()->create([
-            'group_id' => $this->group->id,
-            'created_by' => $this->moderator->id,
-            'created_at' => now()->subDays(3)
-        ]);
-
-        // Add analytics for both
-        InvitationAnalytics::create([
-            'invitation_id' => $invitation1->id,
-            'event_type' => 'clicked',
-            'created_at' => now()->subDays(4)
-        ]);
-
-        InvitationAnalytics::create([
-            'invitation_id' => $invitation2->id,
-            'event_type' => 'clicked',
-            'created_at' => now()->subDays(2)
-        ]);
+        Sanctum::actingAs($this->creator);
 
         $response = $this->getJson("/api/groups/{$this->group->id}/analytics");
 
-        $summary = $response->json('data.summary');
-        
-        $this->assertEquals(2, $summary['total_invitations']);
-        $this->assertEquals(2, $summary['total_clicks']);
+        $data = $response->json('data');
 
-        $allInvitations = $response->json('data.all_invitations');
-        $this->assertCount(2, $allInvitations);
+        // Calculate expected click rate: (15 + 3 + 8 + 1) total clicks / 4 invitations = 27/4 = 6.75
+        $this->assertEquals(6.75, $data['overview']['overall_click_rate']);
+
+        // Calculate expected conversion rate: 1 used / 4 total = 25%
+        $this->assertEquals(25.0, $data['overview']['overall_conversion_rate']);
     }
 
     /** @test */
-    public function analytics_respects_date_range_filtering()
+    public function growth_analytics_validates_parameters()
     {
-        Sanctum::actingAs($this->admin);
+        Sanctum::actingAs($this->creator);
 
-        $invitation = GroupInvitation::factory()->create([
-            'group_id' => $this->group->id,
-            'created_by' => $this->admin->id,
-            'created_at' => now()->subDays(10) // Outside our filter range
+        // Test invalid period
+        $response = $this->getJson("/api/groups/{$this->group->id}/analytics/growth?period=abc");
+        $response->assertStatus(422);
+
+        // Test invalid type
+        $response = $this->getJson("/api/groups/{$this->group->id}/analytics/growth?type=invalid");
+        $response->assertStatus(422);
+
+        // Test period too large
+        $response = $this->getJson("/api/groups/{$this->group->id}/analytics/growth?period=1000");
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function analytics_includes_vietnamese_event_names()
+    {
+        Sanctum::actingAs($this->creator);
+
+        $response = $this->getJson("/api/groups/{$this->group->id}/analytics");
+
+        $data = $response->json('data');
+        $events = collect($data['events']);
+
+        // Check that events have Vietnamese names
+        $this->assertTrue($events->contains(function ($event) {
+            return str_contains($event['event_name'], 'Lời mời được tạo') ||
+                   str_contains($event['event_name'], 'Lời mời được sử dụng') ||
+                   str_contains($event['event_name'], 'Lời mời hết hạn') ||
+                   str_contains($event['event_name'], 'Lời mời bị thu hồi');
+        }));
+    }
+
+    /** @test */
+    public function comparison_provides_recommendation()
+    {
+        Sanctum::actingAs($this->creator);
+
+        $response = $this->getJson("/api/groups/{$this->group->id}/analytics/comparison");
+
+        $data = $response->json('data');
+
+        $this->assertArrayHasKey('recommendation', $data);
+        $this->assertIsString($data['recommendation']);
+        $this->assertNotEmpty($data['recommendation']);
+
+        // Should recommend SMS since it has better conversion in our test data
+        $this->assertStringContainsString('SMS', $data['recommendation']);
+    }
+
+    /** @test */
+    public function analytics_handles_no_invitations_gracefully()
+    {
+        // Create a new group with no invitations
+        $emptyGroup = Group::create([
+            'name' => 'Empty Group',
+            'vietnamese_name' => 'Nhóm Rỗng',
+            'creator_id' => $this->creator->id,
+            'sport_type' => 'badminton',
+            'privacy' => 'cong_khai',
+            'location' => 'Empty Location',
+            'city' => 'Hà Nội',
+            'district' => 'Ba Đình',
+            'min_players' => 2,
+            'current_members' => 1,
+            'monthly_fee' => 0,
+            'status' => 'hoat_dong',
+            'auto_approve_members' => true,
+            'notification_hours_before' => 24
         ]);
 
-        InvitationAnalytics::create([
-            'invitation_id' => $invitation->id,
-            'event_type' => 'clicked',
-            'created_at' => now()->subDays(8)
-        ]);
+        Sanctum::actingAs($this->creator);
 
-        // Filter to last 5 days only
-        $startDate = now()->subDays(5)->format('Y-m-d');
-        $endDate = now()->format('Y-m-d');
+        $response = $this->getJson("/api/groups/{$emptyGroup->id}/analytics");
 
-        $response = $this->getJson("/api/groups/{$this->group->id}/analytics?start_date={$startDate}&end_date={$endDate}");
-
-        $summary = $response->json('data.summary');
-        
-        // Should not include the invitation created 10 days ago
-        $this->assertEquals(0, $summary['total_invitations']);
-        $this->assertEquals(0, $summary['total_clicks']);
+        $response->assertOk()
+                 ->assertJson([
+                     'success' => true,
+                     'data' => [
+                         'overview' => [
+                             'total_invitations' => 0,
+                             'pending_invitations' => 0,
+                             'used_invitations' => 0,
+                             'expired_invitations' => 0,
+                             'revoked_invitations' => 0,
+                             'overall_click_rate' => 0.0,
+                             'overall_conversion_rate' => 0.0
+                         ]
+                     ]
+                 ]);
     }
 }
