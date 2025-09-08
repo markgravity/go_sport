@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GroupController;
+use App\Http\Controllers\Api\GroupInvitationController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\ImageUploadController;
 use App\Http\Controllers\Api\NotificationController;
@@ -39,6 +40,12 @@ Route::prefix('sports')->group(function () {
 // Image upload (public endpoint for default avatars)
 Route::prefix('images')->group(function () {
     Route::get('/default-avatars', [ImageUploadController::class, 'getDefaultAvatars']);
+});
+
+// Public invitation routes (no authentication required)
+Route::prefix('invitations')->group(function () {
+    Route::get('/validate/{token}', [GroupInvitationController::class, 'validateToken']);
+    Route::get('/preview/{token}', [GroupInvitationController::class, 'getGroupPreview']);
 });
 
 // Public routes (no authentication required)
@@ -82,6 +89,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
               ->middleware('group.permission:change_member_roles');
         Route::delete('/members/{user}', [GroupController::class, 'removeMember'])
               ->middleware('group.permission:remove_members');
+        
+        // Invitation management - requires group management permissions
+        Route::get('/invitations', [GroupInvitationController::class, 'index']);
+        Route::post('/invitations', [GroupInvitationController::class, 'store'])
+              ->middleware('throttle:10,60'); // 10 invitations per hour
+        Route::get('/invitations/{invitation}', [GroupInvitationController::class, 'show']);
+        Route::delete('/invitations/{invitation}', [GroupInvitationController::class, 'destroy']);
     });
 
     // Attendance management

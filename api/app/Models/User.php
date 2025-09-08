@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -152,5 +153,21 @@ class User extends Authenticatable
         $phoneHash = self::generatePhoneHash($formattedPhone);
         
         return self::where('phone_hash', $phoneHash)->first();
+    }
+
+    /**
+     * Get invitations created by this user
+     */
+    public function createdInvitations(): HasMany
+    {
+        return $this->hasMany(GroupInvitation::class, 'created_by');
+    }
+
+    /**
+     * Get invitations used by this user
+     */
+    public function usedInvitations(): HasMany
+    {
+        return $this->hasMany(GroupInvitation::class, 'used_by');
     }
 }

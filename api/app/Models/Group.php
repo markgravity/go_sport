@@ -81,6 +81,30 @@ class Group extends Model
         return $this->hasMany(GroupLevelRequirement::class);
     }
 
+    /**
+     * Get the invitations for this group
+     */
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(GroupInvitation::class);
+    }
+
+    /**
+     * Get active/pending invitations for this group
+     */
+    public function activeInvitations(): HasMany
+    {
+        return $this->invitations()->where('status', 'pending');
+    }
+
+    /**
+     * Get valid invitations (pending and not expired)
+     */
+    public function validInvitations(): HasMany
+    {
+        return $this->invitations()->valid();
+    }
+
     public function getSportNameAttribute(): string
     {
         return match($this->sport_type) {
