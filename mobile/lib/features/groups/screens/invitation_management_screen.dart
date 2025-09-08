@@ -83,8 +83,18 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
     final result = await showDialog<GroupInvitation>(
       context: context,
       builder: (context) => CreateInvitationDialog(
-        groupId: widget.groupId,
-        groupName: widget.groupName,
+        onCreateInvitation: (expirationDays) async {
+          try {
+            final invitation = await _invitationService.createInvitation(
+              widget.groupId,
+              expiresInDays: expirationDays,
+            );
+            Navigator.of(context).pop(invitation);
+          } catch (e) {
+            Navigator.of(context).pop();
+            // Handle error
+          }
+        },
       ),
     );
     
@@ -365,13 +375,13 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
             ),
             const SizedBox(height: 20),
             _buildDetailRow('Người tạo:', invitation.creator?.displayName ?? 'N/A'),
-            _buildDetailRow('Ngày tạo:', DateFormatter.format(invitation.createdAt)),
+            _buildDetailRow('Ngày tạo:', DateFormatter.formatDateTime(invitation.createdAt)),
             if (invitation.expiresAt != null)
-              _buildDetailRow('Hết hạn:', DateFormatter.format(invitation.expiresAt!)),
+              _buildDetailRow('Hết hạn:', DateFormatter.formatDateTime(invitation.expiresAt!)),
             if (invitation.usedAt != null)
-              _buildDetailRow('Đã dùng:', DateFormatter.format(invitation.usedAt!)),
-            if (invitation.usedBy != null)
-              _buildDetailRow('Người dùng:', invitation.usedBy!.displayName),
+              _buildDetailRow('Đã dùng:', DateFormatter.formatDateTime(invitation.usedAt!)),
+            if (invitation.usedByUser != null)
+              _buildDetailRow('Người dùng:', invitation.usedByUser!.displayName),
             if (invitation.recipientPhone != null)
               _buildDetailRow('Số điện thoại:', invitation.recipientPhone!),
             const SizedBox(height: 16),

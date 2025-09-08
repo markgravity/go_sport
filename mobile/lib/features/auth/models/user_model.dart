@@ -76,6 +76,10 @@ class UserModel {
     return preferences['language'] as String? ?? 'vi';
   }
 
+  String get displayName {
+    return name.isNotEmpty ? name : phone;
+  }
+
   UserModel copyWith({
     int? id,
     String? firebaseUid,

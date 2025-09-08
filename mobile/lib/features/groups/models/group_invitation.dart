@@ -7,6 +7,7 @@ class GroupInvitation {
   final String token;
   final String type;
   final String status;
+  final String? recipientPhone;
   final DateTime? expiresAt;
   final DateTime? usedAt;
   final int? usedBy;
@@ -24,6 +25,7 @@ class GroupInvitation {
     required this.token,
     required this.type,
     required this.status,
+    this.recipientPhone,
     this.expiresAt,
     this.usedAt,
     this.usedBy,
@@ -43,6 +45,7 @@ class GroupInvitation {
       token: json['token'] as String,
       type: json['type'] as String? ?? 'link',
       status: json['status'] as String? ?? 'pending',
+      recipientPhone: json['recipient_phone'] as String?,
       expiresAt: json['expires_at'] != null 
           ? DateTime.parse(json['expires_at'] as String)
           : null,
@@ -67,6 +70,7 @@ class GroupInvitation {
       'token': token,
       'type': type,
       'status': status,
+      'recipient_phone': recipientPhone,
       'expires_at': expiresAt?.toIso8601String(),
       'used_at': usedAt?.toIso8601String(),
       'used_by': usedBy,
@@ -117,6 +121,7 @@ class GroupInvitation {
     String? token,
     String? type,
     String? status,
+    String? recipientPhone,
     DateTime? expiresAt,
     DateTime? usedAt,
     int? usedBy,
@@ -134,6 +139,7 @@ class GroupInvitation {
       token: token ?? this.token,
       type: type ?? this.type,
       status: status ?? this.status,
+      recipientPhone: recipientPhone ?? this.recipientPhone,
       expiresAt: expiresAt ?? this.expiresAt,
       usedAt: usedAt ?? this.usedAt,
       usedBy: usedBy ?? this.usedBy,
@@ -240,4 +246,45 @@ class GroupJoinRequest {
   bool get isPending => status == 'pending';
   bool get isApproved => status == 'approved';
   bool get isRejected => status == 'rejected';
+
+  GroupJoinRequest copyWith({
+    int? id,
+    int? groupId,
+    int? userId,
+    int? invitationId,
+    String? status,
+    String? message,
+    String? rejectionReason,
+    String? adminMessage,
+    String? source,
+    int? processedBy,
+    DateTime? processedAt,
+    Map<String, dynamic>? metadata,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Group? group,
+    User? user,
+    GroupInvitation? invitation,
+    User? processedByUser,
+  }) {
+    return GroupJoinRequest(
+      id: id ?? this.id,
+      groupId: groupId ?? this.groupId,
+      userId: userId ?? this.userId,
+      invitationId: invitationId ?? this.invitationId,
+      status: status ?? this.status,
+      message: message ?? this.message,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
+      source: source ?? this.source,
+      processedBy: processedBy ?? this.processedBy,
+      processedAt: processedAt ?? this.processedAt,
+      metadata: metadata ?? this.metadata,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      group: group ?? this.group,
+      user: user ?? this.user,
+      invitation: invitation ?? this.invitation,
+      processedByUser: processedByUser ?? this.processedByUser,
+    );
+  }
 }

@@ -219,7 +219,7 @@ class InvitationListItem extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Đã dùng bởi ${invitation.usedBy!.displayName}',
+                      'Đã dùng bởi ${invitation.usedByUser?.displayName ?? 'N/A'}',
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey[600],

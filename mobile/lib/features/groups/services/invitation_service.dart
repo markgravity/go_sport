@@ -218,4 +218,30 @@ class InvitationService {
       throw Exception('Error rejecting join request: $e');
     }
   }
+
+  /// Revoke an invitation
+  Future<void> revokeInvitation(String token) async {
+    try {
+      final response = await _apiClient.delete('/invitations/$token');
+      
+      if (response.data['success'] != true) {
+        throw Exception('Failed to revoke invitation: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error revoking invitation: $e');
+    }
+  }
+
+  /// Resend SMS invitation
+  Future<void> resendSmsInvitation(int groupId, int invitationId) async {
+    try {
+      final response = await _apiClient.post('/groups/$groupId/invitations/$invitationId/resend-sms');
+      
+      if (response.data['success'] != true) {
+        throw Exception('Failed to resend SMS: ${response.data['message']}');
+      }
+    } catch (e) {
+      throw Exception('Error resending SMS invitation: $e');
+    }
+  }
 }

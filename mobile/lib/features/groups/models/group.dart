@@ -282,6 +282,24 @@ class User {
       avatar: json['avatar'] as String?,
     );
   }
+
+  String get displayName {
+    return name.isNotEmpty ? name : phone;
+  }
+
+  User copyWith({
+    int? id,
+    String? name,
+    String? phone,
+    String? avatar,
+  }) {
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      avatar: avatar ?? this.avatar,
+    );
+  }
 }
 
 class GroupMember {
