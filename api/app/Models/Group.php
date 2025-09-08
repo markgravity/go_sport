@@ -90,6 +90,14 @@ class Group extends Model
     }
 
     /**
+     * Get the join requests for this group
+     */
+    public function joinRequests(): HasMany
+    {
+        return $this->hasMany(GroupJoinRequest::class);
+    }
+
+    /**
      * Get active/pending invitations for this group
      */
     public function activeInvitations(): HasMany

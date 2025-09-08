@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\GroupInvitationController;
+use App\Http\Controllers\Api\GroupJoinRequestController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\ImageUploadController;
 use App\Http\Controllers\Api\NotificationController;
@@ -98,6 +99,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
               ->middleware('throttle:10,60'); // 10 invitations per hour
         Route::get('/invitations/{invitation}', [GroupInvitationController::class, 'show']);
         Route::delete('/invitations/{invitation}', [GroupInvitationController::class, 'destroy']);
+        
+        // Join request management - for group admins/moderators
+        Route::get('/join-requests', [GroupJoinRequestController::class, 'index']);
+        Route::post('/join-requests/{joinRequest}/approve', [GroupJoinRequestController::class, 'approve']);
+        Route::post('/join-requests/{joinRequest}/reject', [GroupJoinRequestController::class, 'reject']);
     });
 
     // Attendance management
@@ -130,6 +136,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/{notification}/read', [NotificationController::class, 'markAsRead']);
         Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead']);
         Route::delete('/{notification}', [NotificationController::class, 'delete']);
+    });
+
+    // Join request management - for users
+    Route::prefix('join-requests')->group(function () {
+        Route::get('/my-requests', [GroupJoinRequestController::class, 'myRequests']);
+        Route::post('/', [GroupJoinRequestController::class, 'store'])
+              ->middleware('throttle:5,60'); // 5 join requests per hour
+        Route::delete('/{joinRequest}', [GroupJoinRequestController::class, 'destroy']);
     });
 
     // Image upload management

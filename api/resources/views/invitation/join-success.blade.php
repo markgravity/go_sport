@@ -148,8 +148,8 @@
             <div class="group-name">{{ $group->name }}</div>
             
             <p class="message">
-                Chúc mừng! Bạn đã được thêm vào nhóm {{ $group->sport_name }} thành công. 
-                Hãy tải ứng dụng Go Sport để bắt đầu tương tác với nhóm.
+                Yêu cầu tham gia nhóm {{ $group->sport_name }} của bạn đã được gửi thành công! 
+                Hãy tải ứng dụng Go Sport để theo dõi trạng thái yêu cầu và tương tác với nhóm khi được duyệt.
             </p>
             
             <!-- Next Steps -->
@@ -168,6 +168,11 @@
                 
                 <div class="step">
                     <div class="step-number">3</div>
+                    <div class="step-text">Chờ quản trị viên nhóm duyệt yêu cầu tham gia của bạn</div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
                     <div class="step-text">Tham gia hoạt động nhóm và kết bạn với thành viên khác</div>
                 </div>
             </div>

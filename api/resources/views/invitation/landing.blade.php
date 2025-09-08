@@ -280,10 +280,23 @@
                 <!-- Action Buttons -->
                 <div class="action-buttons">
                     @if($isValid)
-                        <form action="{{ url("/invite/{$token}/join") }}" method="POST">
+                        <!-- Join Request Form -->
+                        <form action="{{ url("/invite/{$token}/join") }}" method="POST" style="margin-bottom: 1rem;">
                             @csrf
+                            <div style="margin-bottom: 1rem;">
+                                <label for="message" style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">
+                                    Tin nhắn giới thiệu (tuỳ chọn):
+                                </label>
+                                <textarea 
+                                    name="message" 
+                                    id="message" 
+                                    rows="3" 
+                                    placeholder="Giới thiệu bản thân và lý do muốn tham gia nhóm..."
+                                    style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem; resize: vertical;"
+                                ></textarea>
+                            </div>
                             <button type="submit" class="btn btn-primary">
-                                🚀 Tham gia nhóm ngay
+                                🚀 Gửi yêu cầu tham gia
                             </button>
                         </form>
                         <a href="#" class="btn btn-secondary" onclick="shareInvitation()">

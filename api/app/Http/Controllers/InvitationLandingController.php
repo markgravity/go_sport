@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\GroupInvitation;
+use App\Models\GroupJoinRequest;
 use App\Models\InvitationAnalytics;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -59,15 +60,36 @@ class InvitationLandingController extends Controller
                 return redirect()->back()->with('error', 'Lời mời không hợp lệ hoặc đã hết hạn');
             }
 
-            // For now, redirect to app download or show success message
-            // In a real implementation, this would integrate with user authentication
+            $validatedData = $request->validate([
+                'message' => ['nullable', 'string', 'max:500'],
+            ]);
+
+            // Store join request information in session for the mobile app
+            session([
+                'join_request_data' => [
+                    'group_id' => $invitation->group_id,
+                    'invitation_id' => $invitation->id,
+                    'message' => $validatedData['message'] ?? null,
+                    'source' => 'invitation',
+                ]
+            ]);
+
+            // Track join attempt analytics
+            InvitationAnalytics::track($invitation->id, 'join_attempted', [
+                'user_agent' => $request->userAgent(),
+                'ip_address' => $request->ip(),
+                'has_message' => !empty($validatedData['message']),
+            ]);
+
+            // Show success message and redirect to app
             return view('invitation.join-success', [
                 'invitation' => $invitation,
                 'group' => $invitation->group,
-                'appDownloadUrl' => 'https://example.com/download-app',
+                'appDownloadUrl' => 'https://play.google.com/store/apps', // Will be replaced with actual app store links
+                'joinRequestData' => session('join_request_data'),
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Có lỗi xảy ra khi tham gia nhóm');
+            return redirect()->back()->with('error', 'Có lỗi xảy ra khi xử lý yêu cầu tham gia nhóm');
         }
     }
 }
