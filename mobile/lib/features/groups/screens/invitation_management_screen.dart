@@ -174,6 +174,7 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
   }
   
   Future<void> _revokeInvitation(GroupInvitation invitation) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -196,7 +197,6 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
     );
     
     if (confirm == true) {
-      final scaffoldMessenger = ScaffoldMessenger.of(context);
       try {
         await _invitationService.revokeInvitation(invitation.token);
         _loadInvitations();
