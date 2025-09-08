@@ -415,4 +415,37 @@ class AuthService {
       rethrow;
     }
   }
+
+  /// Login with SMS verification code
+  Future<UserModel> loginWithSMS({
+    required String phoneNumber,
+    required String smsCode,
+    required String verificationId,
+  }) async {
+    try {
+      // Call backend SMS login API
+      final response = await _apiClient.post(
+        '/auth/login-sms',
+        data: {
+          'phone': phoneNumber,
+          'verification_id': verificationId,
+          'sms_code': smsCode,
+        },
+      );
+
+      final data = response.data as Map<String, dynamic>;
+      
+      if (response.statusCode == 200 && data['success'] == true) {
+        // Store authentication data
+        await _storeAuthData(data['token'], data['user']);
+        
+        return UserModel.fromJson(data['user']);
+      } else {
+        throw Exception(data['message'] ?? 'SMS login failed');
+      }
+    } catch (e) {
+      debugPrint('SMS login error: $e');
+      rethrow;
+    }
+  }
 }

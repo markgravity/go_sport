@@ -80,9 +80,15 @@ class SmsVerificationViewModel extends Cubit<SmsVerificationState> {
           isRegistration: true,
         ));
       } else {
-        // This is login flow - for now, show error as login SMS not implemented
-        emit(const SmsVerificationState.error(
-          message: 'Đăng nhập bằng SMS chưa được triển khai. Vui lòng sử dụng mật khẩu.',
+        // This is login flow - use SMS login
+        await _authService.loginWithSMS(
+          phoneNumber: phoneNumber,
+          smsCode: smsCode,
+          verificationId: verificationId,
+        );
+        emit(SmsVerificationState.success(
+          message: 'Đăng nhập thành công! Chào mừng bạn quay lại Go Sport.',
+          isRegistration: false,
         ));
       }
     } catch (error) {
