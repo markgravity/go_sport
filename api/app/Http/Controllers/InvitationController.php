@@ -106,17 +106,18 @@ class InvitationController extends Controller
             'group_id' => $groupId,
             'creator_id' => Auth::id(),
             'type' => $request->type,
+            'status' => 'pending',
             'recipient_phone' => $recipientPhone,
             'expires_at' => $expiresAt,
             'metadata' => $request->metadata ?? [],
         ]);
 
-        // Track creation event
-        InvitationAnalytics::track($invitation->id, 'created', [
-            'source' => $request->header('X-Source', 'api'),
-            'user_agent' => $request->header('User-Agent'),
-            'ip_address' => $request->ip(),
-        ]);
+        // Track creation event (analytics model not implemented yet)
+        // InvitationAnalytics::track($invitation->id, 'created', [
+        //     'source' => $request->header('X-Source', 'api'),
+        //     'user_agent' => $request->header('User-Agent'),
+        //     'ip_address' => $request->ip(),
+        // ]);
 
         // Send SMS if type is SMS
         $smsSuccess = true;
@@ -372,11 +373,17 @@ class InvitationController extends Controller
      */
     private function canCreateInvitation($user, Group $group): bool
     {
+        // Check if user is the group creator
+        if ($group->creator_id === $user->id) {
+            return true;
+        }
+
+        // Check if user is admin or moderator member
         $membership = $group->memberships()
             ->where('user_id', $user->id)
             ->first();
 
-        return $membership && in_array($membership->role, ['creator', 'admin', 'moderator']);
+        return $membership && in_array($membership->role, ['admin', 'moderator']);
     }
 
     /**
