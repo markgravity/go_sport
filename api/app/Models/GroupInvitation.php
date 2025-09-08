@@ -96,7 +96,7 @@ class GroupInvitation extends Model
      */
     public function getInvitationUrl(): string
     {
-        return url("/api/invitations/preview/{$this->token}");
+        return url("/invite/{$this->token}");
     }
 
     /**
