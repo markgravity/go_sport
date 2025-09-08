@@ -20,54 +20,49 @@ InvitationAnalytics _$InvitationAnalyticsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$InvitationAnalytics {
-  @JsonKey(name: 'invitation_id')
   int get invitationId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'event_type')
   String get eventType => throw _privateConstructorUsedError;
-  @JsonKey(name: 'user_agent')
   String? get userAgent => throw _privateConstructorUsedError;
-  @JsonKey(name: 'ip_address')
   String? get ipAddress => throw _privateConstructorUsedError;
   String? get referrer => throw _privateConstructorUsedError;
   Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
-  @JsonKey(name: 'created_at')
   DateTime get createdAt => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: 'invitation_id') int invitationId,
-            @JsonKey(name: 'event_type') String eventType,
-            @JsonKey(name: 'user_agent') String? userAgent,
-            @JsonKey(name: 'ip_address') String? ipAddress,
+            int invitationId,
+            String eventType,
+            String? userAgent,
+            String? ipAddress,
             String? referrer,
             Map<String, dynamic>? metadata,
-            @JsonKey(name: 'created_at') DateTime createdAt)
+            DateTime createdAt)
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            @JsonKey(name: 'invitation_id') int invitationId,
-            @JsonKey(name: 'event_type') String eventType,
-            @JsonKey(name: 'user_agent') String? userAgent,
-            @JsonKey(name: 'ip_address') String? ipAddress,
+            int invitationId,
+            String eventType,
+            String? userAgent,
+            String? ipAddress,
             String? referrer,
             Map<String, dynamic>? metadata,
-            @JsonKey(name: 'created_at') DateTime createdAt)?
+            DateTime createdAt)?
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: 'invitation_id') int invitationId,
-            @JsonKey(name: 'event_type') String eventType,
-            @JsonKey(name: 'user_agent') String? userAgent,
-            @JsonKey(name: 'ip_address') String? ipAddress,
+            int invitationId,
+            String eventType,
+            String? userAgent,
+            String? ipAddress,
             String? referrer,
             Map<String, dynamic>? metadata,
-            @JsonKey(name: 'created_at') DateTime createdAt)?
+            DateTime createdAt)?
         $default, {
     required TResult orElse(),
   }) =>
@@ -106,13 +101,13 @@ abstract class $InvitationAnalyticsCopyWith<$Res> {
       _$InvitationAnalyticsCopyWithImpl<$Res, InvitationAnalytics>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'invitation_id') int invitationId,
-      @JsonKey(name: 'event_type') String eventType,
-      @JsonKey(name: 'user_agent') String? userAgent,
-      @JsonKey(name: 'ip_address') String? ipAddress,
+      {int invitationId,
+      String eventType,
+      String? userAgent,
+      String? ipAddress,
       String? referrer,
       Map<String, dynamic>? metadata,
-      @JsonKey(name: 'created_at') DateTime createdAt});
+      DateTime createdAt});
 }
 
 /// @nodoc
@@ -180,13 +175,13 @@ abstract class _$$InvitationAnalyticsImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'invitation_id') int invitationId,
-      @JsonKey(name: 'event_type') String eventType,
-      @JsonKey(name: 'user_agent') String? userAgent,
-      @JsonKey(name: 'ip_address') String? ipAddress,
+      {int invitationId,
+      String eventType,
+      String? userAgent,
+      String? ipAddress,
       String? referrer,
       Map<String, dynamic>? metadata,
-      @JsonKey(name: 'created_at') DateTime createdAt});
+      DateTime createdAt});
 }
 
 /// @nodoc
@@ -247,29 +242,25 @@ class __$$InvitationAnalyticsImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$InvitationAnalyticsImpl implements _InvitationAnalytics {
   const _$InvitationAnalyticsImpl(
-      {@JsonKey(name: 'invitation_id') required this.invitationId,
-      @JsonKey(name: 'event_type') required this.eventType,
-      @JsonKey(name: 'user_agent') this.userAgent,
-      @JsonKey(name: 'ip_address') this.ipAddress,
+      {required this.invitationId,
+      required this.eventType,
+      this.userAgent,
+      this.ipAddress,
       this.referrer,
       final Map<String, dynamic>? metadata,
-      @JsonKey(name: 'created_at') required this.createdAt})
+      required this.createdAt})
       : _metadata = metadata;
 
   factory _$InvitationAnalyticsImpl.fromJson(Map<String, dynamic> json) =>
       _$$InvitationAnalyticsImplFromJson(json);
 
   @override
-  @JsonKey(name: 'invitation_id')
   final int invitationId;
   @override
-  @JsonKey(name: 'event_type')
   final String eventType;
   @override
-  @JsonKey(name: 'user_agent')
   final String? userAgent;
   @override
-  @JsonKey(name: 'ip_address')
   final String? ipAddress;
   @override
   final String? referrer;
@@ -284,7 +275,6 @@ class _$InvitationAnalyticsImpl implements _InvitationAnalytics {
   }
 
   @override
-  @JsonKey(name: 'created_at')
   final DateTime createdAt;
 
   @override
@@ -337,13 +327,13 @@ class _$InvitationAnalyticsImpl implements _InvitationAnalytics {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: 'invitation_id') int invitationId,
-            @JsonKey(name: 'event_type') String eventType,
-            @JsonKey(name: 'user_agent') String? userAgent,
-            @JsonKey(name: 'ip_address') String? ipAddress,
+            int invitationId,
+            String eventType,
+            String? userAgent,
+            String? ipAddress,
             String? referrer,
             Map<String, dynamic>? metadata,
-            @JsonKey(name: 'created_at') DateTime createdAt)
+            DateTime createdAt)
         $default,
   ) {
     return $default(invitationId, eventType, userAgent, ipAddress, referrer,
@@ -354,13 +344,13 @@ class _$InvitationAnalyticsImpl implements _InvitationAnalytics {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            @JsonKey(name: 'invitation_id') int invitationId,
-            @JsonKey(name: 'event_type') String eventType,
-            @JsonKey(name: 'user_agent') String? userAgent,
-            @JsonKey(name: 'ip_address') String? ipAddress,
+            int invitationId,
+            String eventType,
+            String? userAgent,
+            String? ipAddress,
             String? referrer,
             Map<String, dynamic>? metadata,
-            @JsonKey(name: 'created_at') DateTime createdAt)?
+            DateTime createdAt)?
         $default,
   ) {
     return $default?.call(invitationId, eventType, userAgent, ipAddress,
@@ -371,13 +361,13 @@ class _$InvitationAnalyticsImpl implements _InvitationAnalytics {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: 'invitation_id') int invitationId,
-            @JsonKey(name: 'event_type') String eventType,
-            @JsonKey(name: 'user_agent') String? userAgent,
-            @JsonKey(name: 'ip_address') String? ipAddress,
+            int invitationId,
+            String eventType,
+            String? userAgent,
+            String? ipAddress,
             String? referrer,
             Map<String, dynamic>? metadata,
-            @JsonKey(name: 'created_at') DateTime createdAt)?
+            DateTime createdAt)?
         $default, {
     required TResult orElse(),
   }) {
@@ -426,36 +416,30 @@ class _$InvitationAnalyticsImpl implements _InvitationAnalytics {
 
 abstract class _InvitationAnalytics implements InvitationAnalytics {
   const factory _InvitationAnalytics(
-          {@JsonKey(name: 'invitation_id') required final int invitationId,
-          @JsonKey(name: 'event_type') required final String eventType,
-          @JsonKey(name: 'user_agent') final String? userAgent,
-          @JsonKey(name: 'ip_address') final String? ipAddress,
-          final String? referrer,
-          final Map<String, dynamic>? metadata,
-          @JsonKey(name: 'created_at') required final DateTime createdAt}) =
-      _$InvitationAnalyticsImpl;
+      {required final int invitationId,
+      required final String eventType,
+      final String? userAgent,
+      final String? ipAddress,
+      final String? referrer,
+      final Map<String, dynamic>? metadata,
+      required final DateTime createdAt}) = _$InvitationAnalyticsImpl;
 
   factory _InvitationAnalytics.fromJson(Map<String, dynamic> json) =
       _$InvitationAnalyticsImpl.fromJson;
 
   @override
-  @JsonKey(name: 'invitation_id')
   int get invitationId;
   @override
-  @JsonKey(name: 'event_type')
   String get eventType;
   @override
-  @JsonKey(name: 'user_agent')
   String? get userAgent;
   @override
-  @JsonKey(name: 'ip_address')
   String? get ipAddress;
   @override
   String? get referrer;
   @override
   Map<String, dynamic>? get metadata;
   @override
-  @JsonKey(name: 'created_at')
   DateTime get createdAt;
 
   /// Create a copy of InvitationAnalytics
@@ -477,46 +461,26 @@ mixin _$AnalyticsSummary {
   int get registered => throw _privateConstructorUsedError;
   int get joined => throw _privateConstructorUsedError;
   int get rejected => throw _privateConstructorUsedError;
-  @JsonKey(name: 'click_rate')
   double get clickRate => throw _privateConstructorUsedError;
-  @JsonKey(name: 'conversion_rate')
   double get conversionRate => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            int sent,
-            int clicked,
-            int registered,
-            int joined,
-            int rejected,
-            @JsonKey(name: 'click_rate') double clickRate,
-            @JsonKey(name: 'conversion_rate') double conversionRate)
+    TResult Function(int sent, int clicked, int registered, int joined,
+            int rejected, double clickRate, double conversionRate)
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            int sent,
-            int clicked,
-            int registered,
-            int joined,
-            int rejected,
-            @JsonKey(name: 'click_rate') double clickRate,
-            @JsonKey(name: 'conversion_rate') double conversionRate)?
+    TResult? Function(int sent, int clicked, int registered, int joined,
+            int rejected, double clickRate, double conversionRate)?
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            int sent,
-            int clicked,
-            int registered,
-            int joined,
-            int rejected,
-            @JsonKey(name: 'click_rate') double clickRate,
-            @JsonKey(name: 'conversion_rate') double conversionRate)?
+    TResult Function(int sent, int clicked, int registered, int joined,
+            int rejected, double clickRate, double conversionRate)?
         $default, {
     required TResult orElse(),
   }) =>
@@ -560,8 +524,8 @@ abstract class $AnalyticsSummaryCopyWith<$Res> {
       int registered,
       int joined,
       int rejected,
-      @JsonKey(name: 'click_rate') double clickRate,
-      @JsonKey(name: 'conversion_rate') double conversionRate});
+      double clickRate,
+      double conversionRate});
 }
 
 /// @nodoc
@@ -634,8 +598,8 @@ abstract class _$$AnalyticsSummaryImplCopyWith<$Res>
       int registered,
       int joined,
       int rejected,
-      @JsonKey(name: 'click_rate') double clickRate,
-      @JsonKey(name: 'conversion_rate') double conversionRate});
+      double clickRate,
+      double conversionRate});
 }
 
 /// @nodoc
@@ -701,8 +665,8 @@ class _$AnalyticsSummaryImpl implements _AnalyticsSummary {
       required this.registered,
       required this.joined,
       required this.rejected,
-      @JsonKey(name: 'click_rate') required this.clickRate,
-      @JsonKey(name: 'conversion_rate') required this.conversionRate});
+      required this.clickRate,
+      required this.conversionRate});
 
   factory _$AnalyticsSummaryImpl.fromJson(Map<String, dynamic> json) =>
       _$$AnalyticsSummaryImplFromJson(json);
@@ -718,10 +682,8 @@ class _$AnalyticsSummaryImpl implements _AnalyticsSummary {
   @override
   final int rejected;
   @override
-  @JsonKey(name: 'click_rate')
   final double clickRate;
   @override
-  @JsonKey(name: 'conversion_rate')
   final double conversionRate;
 
   @override
@@ -764,14 +726,8 @@ class _$AnalyticsSummaryImpl implements _AnalyticsSummary {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            int sent,
-            int clicked,
-            int registered,
-            int joined,
-            int rejected,
-            @JsonKey(name: 'click_rate') double clickRate,
-            @JsonKey(name: 'conversion_rate') double conversionRate)
+    TResult Function(int sent, int clicked, int registered, int joined,
+            int rejected, double clickRate, double conversionRate)
         $default,
   ) {
     return $default(
@@ -781,14 +737,8 @@ class _$AnalyticsSummaryImpl implements _AnalyticsSummary {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            int sent,
-            int clicked,
-            int registered,
-            int joined,
-            int rejected,
-            @JsonKey(name: 'click_rate') double clickRate,
-            @JsonKey(name: 'conversion_rate') double conversionRate)?
+    TResult? Function(int sent, int clicked, int registered, int joined,
+            int rejected, double clickRate, double conversionRate)?
         $default,
   ) {
     return $default?.call(
@@ -798,14 +748,8 @@ class _$AnalyticsSummaryImpl implements _AnalyticsSummary {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            int sent,
-            int clicked,
-            int registered,
-            int joined,
-            int rejected,
-            @JsonKey(name: 'click_rate') double clickRate,
-            @JsonKey(name: 'conversion_rate') double conversionRate)?
+    TResult Function(int sent, int clicked, int registered, int joined,
+            int rejected, double clickRate, double conversionRate)?
         $default, {
     required TResult orElse(),
   }) {
@@ -859,8 +803,7 @@ abstract class _AnalyticsSummary implements AnalyticsSummary {
       required final int registered,
       required final int joined,
       required final int rejected,
-      @JsonKey(name: 'click_rate') required final double clickRate,
-      @JsonKey(name: 'conversion_rate')
+      required final double clickRate,
       required final double conversionRate}) = _$AnalyticsSummaryImpl;
 
   factory _AnalyticsSummary.fromJson(Map<String, dynamic> json) =
@@ -877,10 +820,8 @@ abstract class _AnalyticsSummary implements AnalyticsSummary {
   @override
   int get rejected;
   @override
-  @JsonKey(name: 'click_rate')
   double get clickRate;
   @override
-  @JsonKey(name: 'conversion_rate')
   double get conversionRate;
 
   /// Create a copy of AnalyticsSummary
@@ -898,58 +839,53 @@ InvitationPerformance _$InvitationPerformanceFromJson(
 
 /// @nodoc
 mixin _$InvitationPerformance {
-  @JsonKey(name: 'invitation_id')
   int get invitationId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'created_by')
   String get createdBy => throw _privateConstructorUsedError;
-  @JsonKey(name: 'created_at')
   DateTime get createdAt => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   int get clicks => throw _privateConstructorUsedError;
   int get joins => throw _privateConstructorUsedError;
-  @JsonKey(name: 'click_rate')
   double get clickRate => throw _privateConstructorUsedError;
-  @JsonKey(name: 'conversion_rate')
   double get conversionRate => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: 'invitation_id') int invitationId,
-            @JsonKey(name: 'created_by') String createdBy,
-            @JsonKey(name: 'created_at') DateTime createdAt,
+            int invitationId,
+            String createdBy,
+            DateTime createdAt,
             String status,
             int clicks,
             int joins,
-            @JsonKey(name: 'click_rate') double clickRate,
-            @JsonKey(name: 'conversion_rate') double conversionRate)
+            double clickRate,
+            double conversionRate)
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            @JsonKey(name: 'invitation_id') int invitationId,
-            @JsonKey(name: 'created_by') String createdBy,
-            @JsonKey(name: 'created_at') DateTime createdAt,
+            int invitationId,
+            String createdBy,
+            DateTime createdAt,
             String status,
             int clicks,
             int joins,
-            @JsonKey(name: 'click_rate') double clickRate,
-            @JsonKey(name: 'conversion_rate') double conversionRate)?
+            double clickRate,
+            double conversionRate)?
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: 'invitation_id') int invitationId,
-            @JsonKey(name: 'created_by') String createdBy,
-            @JsonKey(name: 'created_at') DateTime createdAt,
+            int invitationId,
+            String createdBy,
+            DateTime createdAt,
             String status,
             int clicks,
             int joins,
-            @JsonKey(name: 'click_rate') double clickRate,
-            @JsonKey(name: 'conversion_rate') double conversionRate)?
+            double clickRate,
+            double conversionRate)?
         $default, {
     required TResult orElse(),
   }) =>
@@ -988,14 +924,14 @@ abstract class $InvitationPerformanceCopyWith<$Res> {
       _$InvitationPerformanceCopyWithImpl<$Res, InvitationPerformance>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'invitation_id') int invitationId,
-      @JsonKey(name: 'created_by') String createdBy,
-      @JsonKey(name: 'created_at') DateTime createdAt,
+      {int invitationId,
+      String createdBy,
+      DateTime createdAt,
       String status,
       int clicks,
       int joins,
-      @JsonKey(name: 'click_rate') double clickRate,
-      @JsonKey(name: 'conversion_rate') double conversionRate});
+      double clickRate,
+      double conversionRate});
 }
 
 /// @nodoc
@@ -1070,14 +1006,14 @@ abstract class _$$InvitationPerformanceImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'invitation_id') int invitationId,
-      @JsonKey(name: 'created_by') String createdBy,
-      @JsonKey(name: 'created_at') DateTime createdAt,
+      {int invitationId,
+      String createdBy,
+      DateTime createdAt,
       String status,
       int clicks,
       int joins,
-      @JsonKey(name: 'click_rate') double clickRate,
-      @JsonKey(name: 'conversion_rate') double conversionRate});
+      double clickRate,
+      double conversionRate});
 }
 
 /// @nodoc
@@ -1144,26 +1080,23 @@ class __$$InvitationPerformanceImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$InvitationPerformanceImpl implements _InvitationPerformance {
   const _$InvitationPerformanceImpl(
-      {@JsonKey(name: 'invitation_id') required this.invitationId,
-      @JsonKey(name: 'created_by') required this.createdBy,
-      @JsonKey(name: 'created_at') required this.createdAt,
+      {required this.invitationId,
+      required this.createdBy,
+      required this.createdAt,
       required this.status,
       required this.clicks,
       required this.joins,
-      @JsonKey(name: 'click_rate') required this.clickRate,
-      @JsonKey(name: 'conversion_rate') required this.conversionRate});
+      required this.clickRate,
+      required this.conversionRate});
 
   factory _$InvitationPerformanceImpl.fromJson(Map<String, dynamic> json) =>
       _$$InvitationPerformanceImplFromJson(json);
 
   @override
-  @JsonKey(name: 'invitation_id')
   final int invitationId;
   @override
-  @JsonKey(name: 'created_by')
   final String createdBy;
   @override
-  @JsonKey(name: 'created_at')
   final DateTime createdAt;
   @override
   final String status;
@@ -1172,10 +1105,8 @@ class _$InvitationPerformanceImpl implements _InvitationPerformance {
   @override
   final int joins;
   @override
-  @JsonKey(name: 'click_rate')
   final double clickRate;
   @override
-  @JsonKey(name: 'conversion_rate')
   final double conversionRate;
 
   @override
@@ -1221,14 +1152,14 @@ class _$InvitationPerformanceImpl implements _InvitationPerformance {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: 'invitation_id') int invitationId,
-            @JsonKey(name: 'created_by') String createdBy,
-            @JsonKey(name: 'created_at') DateTime createdAt,
+            int invitationId,
+            String createdBy,
+            DateTime createdAt,
             String status,
             int clicks,
             int joins,
-            @JsonKey(name: 'click_rate') double clickRate,
-            @JsonKey(name: 'conversion_rate') double conversionRate)
+            double clickRate,
+            double conversionRate)
         $default,
   ) {
     return $default(invitationId, createdBy, createdAt, status, clicks, joins,
@@ -1239,14 +1170,14 @@ class _$InvitationPerformanceImpl implements _InvitationPerformance {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            @JsonKey(name: 'invitation_id') int invitationId,
-            @JsonKey(name: 'created_by') String createdBy,
-            @JsonKey(name: 'created_at') DateTime createdAt,
+            int invitationId,
+            String createdBy,
+            DateTime createdAt,
             String status,
             int clicks,
             int joins,
-            @JsonKey(name: 'click_rate') double clickRate,
-            @JsonKey(name: 'conversion_rate') double conversionRate)?
+            double clickRate,
+            double conversionRate)?
         $default,
   ) {
     return $default?.call(invitationId, createdBy, createdAt, status, clicks,
@@ -1257,14 +1188,14 @@ class _$InvitationPerformanceImpl implements _InvitationPerformance {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            @JsonKey(name: 'invitation_id') int invitationId,
-            @JsonKey(name: 'created_by') String createdBy,
-            @JsonKey(name: 'created_at') DateTime createdAt,
+            int invitationId,
+            String createdBy,
+            DateTime createdAt,
             String status,
             int clicks,
             int joins,
-            @JsonKey(name: 'click_rate') double clickRate,
-            @JsonKey(name: 'conversion_rate') double conversionRate)?
+            double clickRate,
+            double conversionRate)?
         $default, {
     required TResult orElse(),
   }) {
@@ -1313,27 +1244,23 @@ class _$InvitationPerformanceImpl implements _InvitationPerformance {
 
 abstract class _InvitationPerformance implements InvitationPerformance {
   const factory _InvitationPerformance(
-      {@JsonKey(name: 'invitation_id') required final int invitationId,
-      @JsonKey(name: 'created_by') required final String createdBy,
-      @JsonKey(name: 'created_at') required final DateTime createdAt,
+      {required final int invitationId,
+      required final String createdBy,
+      required final DateTime createdAt,
       required final String status,
       required final int clicks,
       required final int joins,
-      @JsonKey(name: 'click_rate') required final double clickRate,
-      @JsonKey(name: 'conversion_rate')
+      required final double clickRate,
       required final double conversionRate}) = _$InvitationPerformanceImpl;
 
   factory _InvitationPerformance.fromJson(Map<String, dynamic> json) =
       _$InvitationPerformanceImpl.fromJson;
 
   @override
-  @JsonKey(name: 'invitation_id')
   int get invitationId;
   @override
-  @JsonKey(name: 'created_by')
   String get createdBy;
   @override
-  @JsonKey(name: 'created_at')
   DateTime get createdAt;
   @override
   String get status;
@@ -1342,10 +1269,8 @@ abstract class _InvitationPerformance implements InvitationPerformance {
   @override
   int get joins;
   @override
-  @JsonKey(name: 'click_rate')
   double get clickRate;
   @override
-  @JsonKey(name: 'conversion_rate')
   double get conversionRate;
 
   /// Create a copy of InvitationPerformance
@@ -1364,16 +1289,12 @@ GroupAnalytics _$GroupAnalyticsFromJson(Map<String, dynamic> json) {
 mixin _$GroupAnalytics {
   AnalyticsPeriod get period => throw _privateConstructorUsedError;
   GroupAnalyticsSummary get summary => throw _privateConstructorUsedError;
-  @JsonKey(name: 'join_request_stats')
   List<JoinRequestStat> get joinRequestStats =>
       throw _privateConstructorUsedError;
-  @JsonKey(name: 'daily_activity')
   Map<String, List<DailyActivity>> get dailyActivity =>
       throw _privateConstructorUsedError;
-  @JsonKey(name: 'top_performers')
   List<InvitationPerformance> get topPerformers =>
       throw _privateConstructorUsedError;
-  @JsonKey(name: 'all_invitations')
   List<InvitationPerformance> get allInvitations =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1381,13 +1302,9 @@ mixin _$GroupAnalytics {
     TResult Function(
             AnalyticsPeriod period,
             GroupAnalyticsSummary summary,
-            @JsonKey(name: 'join_request_stats')
             List<JoinRequestStat> joinRequestStats,
-            @JsonKey(name: 'daily_activity')
             Map<String, List<DailyActivity>> dailyActivity,
-            @JsonKey(name: 'top_performers')
             List<InvitationPerformance> topPerformers,
-            @JsonKey(name: 'all_invitations')
             List<InvitationPerformance> allInvitations)
         $default,
   ) =>
@@ -1397,13 +1314,9 @@ mixin _$GroupAnalytics {
     TResult? Function(
             AnalyticsPeriod period,
             GroupAnalyticsSummary summary,
-            @JsonKey(name: 'join_request_stats')
             List<JoinRequestStat> joinRequestStats,
-            @JsonKey(name: 'daily_activity')
             Map<String, List<DailyActivity>> dailyActivity,
-            @JsonKey(name: 'top_performers')
             List<InvitationPerformance> topPerformers,
-            @JsonKey(name: 'all_invitations')
             List<InvitationPerformance> allInvitations)?
         $default,
   ) =>
@@ -1413,13 +1326,9 @@ mixin _$GroupAnalytics {
     TResult Function(
             AnalyticsPeriod period,
             GroupAnalyticsSummary summary,
-            @JsonKey(name: 'join_request_stats')
             List<JoinRequestStat> joinRequestStats,
-            @JsonKey(name: 'daily_activity')
             Map<String, List<DailyActivity>> dailyActivity,
-            @JsonKey(name: 'top_performers')
             List<InvitationPerformance> topPerformers,
-            @JsonKey(name: 'all_invitations')
             List<InvitationPerformance> allInvitations)?
         $default, {
     required TResult orElse(),
@@ -1461,13 +1370,9 @@ abstract class $GroupAnalyticsCopyWith<$Res> {
   $Res call(
       {AnalyticsPeriod period,
       GroupAnalyticsSummary summary,
-      @JsonKey(name: 'join_request_stats')
       List<JoinRequestStat> joinRequestStats,
-      @JsonKey(name: 'daily_activity')
       Map<String, List<DailyActivity>> dailyActivity,
-      @JsonKey(name: 'top_performers')
       List<InvitationPerformance> topPerformers,
-      @JsonKey(name: 'all_invitations')
       List<InvitationPerformance> allInvitations});
 
   $AnalyticsPeriodCopyWith<$Res> get period;
@@ -1556,13 +1461,9 @@ abstract class _$$GroupAnalyticsImplCopyWith<$Res>
   $Res call(
       {AnalyticsPeriod period,
       GroupAnalyticsSummary summary,
-      @JsonKey(name: 'join_request_stats')
       List<JoinRequestStat> joinRequestStats,
-      @JsonKey(name: 'daily_activity')
       Map<String, List<DailyActivity>> dailyActivity,
-      @JsonKey(name: 'top_performers')
       List<InvitationPerformance> topPerformers,
-      @JsonKey(name: 'all_invitations')
       List<InvitationPerformance> allInvitations});
 
   @override
@@ -1626,13 +1527,9 @@ class _$GroupAnalyticsImpl implements _GroupAnalytics {
   const _$GroupAnalyticsImpl(
       {required this.period,
       required this.summary,
-      @JsonKey(name: 'join_request_stats')
       required final List<JoinRequestStat> joinRequestStats,
-      @JsonKey(name: 'daily_activity')
       required final Map<String, List<DailyActivity>> dailyActivity,
-      @JsonKey(name: 'top_performers')
       required final List<InvitationPerformance> topPerformers,
-      @JsonKey(name: 'all_invitations')
       required final List<InvitationPerformance> allInvitations})
       : _joinRequestStats = joinRequestStats,
         _dailyActivity = dailyActivity,
@@ -1648,7 +1545,6 @@ class _$GroupAnalyticsImpl implements _GroupAnalytics {
   final GroupAnalyticsSummary summary;
   final List<JoinRequestStat> _joinRequestStats;
   @override
-  @JsonKey(name: 'join_request_stats')
   List<JoinRequestStat> get joinRequestStats {
     if (_joinRequestStats is EqualUnmodifiableListView)
       return _joinRequestStats;
@@ -1658,7 +1554,6 @@ class _$GroupAnalyticsImpl implements _GroupAnalytics {
 
   final Map<String, List<DailyActivity>> _dailyActivity;
   @override
-  @JsonKey(name: 'daily_activity')
   Map<String, List<DailyActivity>> get dailyActivity {
     if (_dailyActivity is EqualUnmodifiableMapView) return _dailyActivity;
     // ignore: implicit_dynamic_type
@@ -1667,7 +1562,6 @@ class _$GroupAnalyticsImpl implements _GroupAnalytics {
 
   final List<InvitationPerformance> _topPerformers;
   @override
-  @JsonKey(name: 'top_performers')
   List<InvitationPerformance> get topPerformers {
     if (_topPerformers is EqualUnmodifiableListView) return _topPerformers;
     // ignore: implicit_dynamic_type
@@ -1676,7 +1570,6 @@ class _$GroupAnalyticsImpl implements _GroupAnalytics {
 
   final List<InvitationPerformance> _allInvitations;
   @override
-  @JsonKey(name: 'all_invitations')
   List<InvitationPerformance> get allInvitations {
     if (_allInvitations is EqualUnmodifiableListView) return _allInvitations;
     // ignore: implicit_dynamic_type
@@ -1731,13 +1624,9 @@ class _$GroupAnalyticsImpl implements _GroupAnalytics {
     TResult Function(
             AnalyticsPeriod period,
             GroupAnalyticsSummary summary,
-            @JsonKey(name: 'join_request_stats')
             List<JoinRequestStat> joinRequestStats,
-            @JsonKey(name: 'daily_activity')
             Map<String, List<DailyActivity>> dailyActivity,
-            @JsonKey(name: 'top_performers')
             List<InvitationPerformance> topPerformers,
-            @JsonKey(name: 'all_invitations')
             List<InvitationPerformance> allInvitations)
         $default,
   ) {
@@ -1751,13 +1640,9 @@ class _$GroupAnalyticsImpl implements _GroupAnalytics {
     TResult? Function(
             AnalyticsPeriod period,
             GroupAnalyticsSummary summary,
-            @JsonKey(name: 'join_request_stats')
             List<JoinRequestStat> joinRequestStats,
-            @JsonKey(name: 'daily_activity')
             Map<String, List<DailyActivity>> dailyActivity,
-            @JsonKey(name: 'top_performers')
             List<InvitationPerformance> topPerformers,
-            @JsonKey(name: 'all_invitations')
             List<InvitationPerformance> allInvitations)?
         $default,
   ) {
@@ -1771,13 +1656,9 @@ class _$GroupAnalyticsImpl implements _GroupAnalytics {
     TResult Function(
             AnalyticsPeriod period,
             GroupAnalyticsSummary summary,
-            @JsonKey(name: 'join_request_stats')
             List<JoinRequestStat> joinRequestStats,
-            @JsonKey(name: 'daily_activity')
             Map<String, List<DailyActivity>> dailyActivity,
-            @JsonKey(name: 'top_performers')
             List<InvitationPerformance> topPerformers,
-            @JsonKey(name: 'all_invitations')
             List<InvitationPerformance> allInvitations)?
         $default, {
     required TResult orElse(),
@@ -1829,13 +1710,9 @@ abstract class _GroupAnalytics implements GroupAnalytics {
   const factory _GroupAnalytics(
           {required final AnalyticsPeriod period,
           required final GroupAnalyticsSummary summary,
-          @JsonKey(name: 'join_request_stats')
           required final List<JoinRequestStat> joinRequestStats,
-          @JsonKey(name: 'daily_activity')
           required final Map<String, List<DailyActivity>> dailyActivity,
-          @JsonKey(name: 'top_performers')
           required final List<InvitationPerformance> topPerformers,
-          @JsonKey(name: 'all_invitations')
           required final List<InvitationPerformance> allInvitations}) =
       _$GroupAnalyticsImpl;
 
@@ -1847,16 +1724,12 @@ abstract class _GroupAnalytics implements GroupAnalytics {
   @override
   GroupAnalyticsSummary get summary;
   @override
-  @JsonKey(name: 'join_request_stats')
   List<JoinRequestStat> get joinRequestStats;
   @override
-  @JsonKey(name: 'daily_activity')
   Map<String, List<DailyActivity>> get dailyActivity;
   @override
-  @JsonKey(name: 'top_performers')
   List<InvitationPerformance> get topPerformers;
   @override
-  @JsonKey(name: 'all_invitations')
   List<InvitationPerformance> get allInvitations;
 
   /// Create a copy of GroupAnalytics
@@ -2130,51 +2003,30 @@ GroupAnalyticsSummary _$GroupAnalyticsSummaryFromJson(
 
 /// @nodoc
 mixin _$GroupAnalyticsSummary {
-  @JsonKey(name: 'total_invitations')
   int get totalInvitations => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total_clicks')
   int get totalClicks => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total_joins')
   int get totalJoins => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total_rejected')
   int get totalRejected => throw _privateConstructorUsedError;
-  @JsonKey(name: 'click_rate')
   String get clickRate => throw _privateConstructorUsedError;
-  @JsonKey(name: 'conversion_rate')
   String get conversionRate => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'total_invitations') int totalInvitations,
-            @JsonKey(name: 'total_clicks') int totalClicks,
-            @JsonKey(name: 'total_joins') int totalJoins,
-            @JsonKey(name: 'total_rejected') int totalRejected,
-            @JsonKey(name: 'click_rate') String clickRate,
-            @JsonKey(name: 'conversion_rate') String conversionRate)
+    TResult Function(int totalInvitations, int totalClicks, int totalJoins,
+            int totalRejected, String clickRate, String conversionRate)
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            @JsonKey(name: 'total_invitations') int totalInvitations,
-            @JsonKey(name: 'total_clicks') int totalClicks,
-            @JsonKey(name: 'total_joins') int totalJoins,
-            @JsonKey(name: 'total_rejected') int totalRejected,
-            @JsonKey(name: 'click_rate') String clickRate,
-            @JsonKey(name: 'conversion_rate') String conversionRate)?
+    TResult? Function(int totalInvitations, int totalClicks, int totalJoins,
+            int totalRejected, String clickRate, String conversionRate)?
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'total_invitations') int totalInvitations,
-            @JsonKey(name: 'total_clicks') int totalClicks,
-            @JsonKey(name: 'total_joins') int totalJoins,
-            @JsonKey(name: 'total_rejected') int totalRejected,
-            @JsonKey(name: 'click_rate') String clickRate,
-            @JsonKey(name: 'conversion_rate') String conversionRate)?
+    TResult Function(int totalInvitations, int totalClicks, int totalJoins,
+            int totalRejected, String clickRate, String conversionRate)?
         $default, {
     required TResult orElse(),
   }) =>
@@ -2213,12 +2065,12 @@ abstract class $GroupAnalyticsSummaryCopyWith<$Res> {
       _$GroupAnalyticsSummaryCopyWithImpl<$Res, GroupAnalyticsSummary>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'total_invitations') int totalInvitations,
-      @JsonKey(name: 'total_clicks') int totalClicks,
-      @JsonKey(name: 'total_joins') int totalJoins,
-      @JsonKey(name: 'total_rejected') int totalRejected,
-      @JsonKey(name: 'click_rate') String clickRate,
-      @JsonKey(name: 'conversion_rate') String conversionRate});
+      {int totalInvitations,
+      int totalClicks,
+      int totalJoins,
+      int totalRejected,
+      String clickRate,
+      String conversionRate});
 }
 
 /// @nodoc
@@ -2283,12 +2135,12 @@ abstract class _$$GroupAnalyticsSummaryImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'total_invitations') int totalInvitations,
-      @JsonKey(name: 'total_clicks') int totalClicks,
-      @JsonKey(name: 'total_joins') int totalJoins,
-      @JsonKey(name: 'total_rejected') int totalRejected,
-      @JsonKey(name: 'click_rate') String clickRate,
-      @JsonKey(name: 'conversion_rate') String conversionRate});
+      {int totalInvitations,
+      int totalClicks,
+      int totalJoins,
+      int totalRejected,
+      String clickRate,
+      String conversionRate});
 }
 
 /// @nodoc
@@ -2345,33 +2197,27 @@ class __$$GroupAnalyticsSummaryImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$GroupAnalyticsSummaryImpl implements _GroupAnalyticsSummary {
   const _$GroupAnalyticsSummaryImpl(
-      {@JsonKey(name: 'total_invitations') required this.totalInvitations,
-      @JsonKey(name: 'total_clicks') required this.totalClicks,
-      @JsonKey(name: 'total_joins') required this.totalJoins,
-      @JsonKey(name: 'total_rejected') required this.totalRejected,
-      @JsonKey(name: 'click_rate') required this.clickRate,
-      @JsonKey(name: 'conversion_rate') required this.conversionRate});
+      {required this.totalInvitations,
+      required this.totalClicks,
+      required this.totalJoins,
+      required this.totalRejected,
+      required this.clickRate,
+      required this.conversionRate});
 
   factory _$GroupAnalyticsSummaryImpl.fromJson(Map<String, dynamic> json) =>
       _$$GroupAnalyticsSummaryImplFromJson(json);
 
   @override
-  @JsonKey(name: 'total_invitations')
   final int totalInvitations;
   @override
-  @JsonKey(name: 'total_clicks')
   final int totalClicks;
   @override
-  @JsonKey(name: 'total_joins')
   final int totalJoins;
   @override
-  @JsonKey(name: 'total_rejected')
   final int totalRejected;
   @override
-  @JsonKey(name: 'click_rate')
   final String clickRate;
   @override
-  @JsonKey(name: 'conversion_rate')
   final String conversionRate;
 
   @override
@@ -2415,13 +2261,8 @@ class _$GroupAnalyticsSummaryImpl implements _GroupAnalyticsSummary {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'total_invitations') int totalInvitations,
-            @JsonKey(name: 'total_clicks') int totalClicks,
-            @JsonKey(name: 'total_joins') int totalJoins,
-            @JsonKey(name: 'total_rejected') int totalRejected,
-            @JsonKey(name: 'click_rate') String clickRate,
-            @JsonKey(name: 'conversion_rate') String conversionRate)
+    TResult Function(int totalInvitations, int totalClicks, int totalJoins,
+            int totalRejected, String clickRate, String conversionRate)
         $default,
   ) {
     return $default(totalInvitations, totalClicks, totalJoins, totalRejected,
@@ -2431,13 +2272,8 @@ class _$GroupAnalyticsSummaryImpl implements _GroupAnalyticsSummary {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            @JsonKey(name: 'total_invitations') int totalInvitations,
-            @JsonKey(name: 'total_clicks') int totalClicks,
-            @JsonKey(name: 'total_joins') int totalJoins,
-            @JsonKey(name: 'total_rejected') int totalRejected,
-            @JsonKey(name: 'click_rate') String clickRate,
-            @JsonKey(name: 'conversion_rate') String conversionRate)?
+    TResult? Function(int totalInvitations, int totalClicks, int totalJoins,
+            int totalRejected, String clickRate, String conversionRate)?
         $default,
   ) {
     return $default?.call(totalInvitations, totalClicks, totalJoins,
@@ -2447,13 +2283,8 @@ class _$GroupAnalyticsSummaryImpl implements _GroupAnalyticsSummary {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'total_invitations') int totalInvitations,
-            @JsonKey(name: 'total_clicks') int totalClicks,
-            @JsonKey(name: 'total_joins') int totalJoins,
-            @JsonKey(name: 'total_rejected') int totalRejected,
-            @JsonKey(name: 'click_rate') String clickRate,
-            @JsonKey(name: 'conversion_rate') String conversionRate)?
+    TResult Function(int totalInvitations, int totalClicks, int totalJoins,
+            int totalRejected, String clickRate, String conversionRate)?
         $default, {
     required TResult orElse(),
   }) {
@@ -2502,34 +2333,27 @@ class _$GroupAnalyticsSummaryImpl implements _GroupAnalyticsSummary {
 
 abstract class _GroupAnalyticsSummary implements GroupAnalyticsSummary {
   const factory _GroupAnalyticsSummary(
-      {@JsonKey(name: 'total_invitations') required final int totalInvitations,
-      @JsonKey(name: 'total_clicks') required final int totalClicks,
-      @JsonKey(name: 'total_joins') required final int totalJoins,
-      @JsonKey(name: 'total_rejected') required final int totalRejected,
-      @JsonKey(name: 'click_rate') required final String clickRate,
-      @JsonKey(name: 'conversion_rate')
+      {required final int totalInvitations,
+      required final int totalClicks,
+      required final int totalJoins,
+      required final int totalRejected,
+      required final String clickRate,
       required final String conversionRate}) = _$GroupAnalyticsSummaryImpl;
 
   factory _GroupAnalyticsSummary.fromJson(Map<String, dynamic> json) =
       _$GroupAnalyticsSummaryImpl.fromJson;
 
   @override
-  @JsonKey(name: 'total_invitations')
   int get totalInvitations;
   @override
-  @JsonKey(name: 'total_clicks')
   int get totalClicks;
   @override
-  @JsonKey(name: 'total_joins')
   int get totalJoins;
   @override
-  @JsonKey(name: 'total_rejected')
   int get totalRejected;
   @override
-  @JsonKey(name: 'click_rate')
   String get clickRate;
   @override
-  @JsonKey(name: 'conversion_rate')
   String get conversionRate;
 
   /// Create a copy of GroupAnalyticsSummary
@@ -2821,28 +2645,21 @@ DailyActivity _$DailyActivityFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$DailyActivity {
   String get date => throw _privateConstructorUsedError;
-  @JsonKey(name: 'event_type')
   String get eventType => throw _privateConstructorUsedError;
   int get count => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(String date, @JsonKey(name: 'event_type') String eventType,
-            int count)
-        $default,
+    TResult Function(String date, String eventType, int count) $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String date,
-            @JsonKey(name: 'event_type') String eventType, int count)?
-        $default,
+    TResult? Function(String date, String eventType, int count)? $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String date, @JsonKey(name: 'event_type') String eventType,
-            int count)?
-        $default, {
+    TResult Function(String date, String eventType, int count)? $default, {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -2879,8 +2696,7 @@ abstract class $DailyActivityCopyWith<$Res> {
           DailyActivity value, $Res Function(DailyActivity) then) =
       _$DailyActivityCopyWithImpl<$Res, DailyActivity>;
   @useResult
-  $Res call(
-      {String date, @JsonKey(name: 'event_type') String eventType, int count});
+  $Res call({String date, String eventType, int count});
 }
 
 /// @nodoc
@@ -2927,8 +2743,7 @@ abstract class _$$DailyActivityImplCopyWith<$Res>
       __$$DailyActivityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String date, @JsonKey(name: 'event_type') String eventType, int count});
+  $Res call({String date, String eventType, int count});
 }
 
 /// @nodoc
@@ -2969,9 +2784,7 @@ class __$$DailyActivityImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$DailyActivityImpl implements _DailyActivity {
   const _$DailyActivityImpl(
-      {required this.date,
-      @JsonKey(name: 'event_type') required this.eventType,
-      required this.count});
+      {required this.date, required this.eventType, required this.count});
 
   factory _$DailyActivityImpl.fromJson(Map<String, dynamic> json) =>
       _$$DailyActivityImplFromJson(json);
@@ -2979,7 +2792,6 @@ class _$DailyActivityImpl implements _DailyActivity {
   @override
   final String date;
   @override
-  @JsonKey(name: 'event_type')
   final String eventType;
   @override
   final int count;
@@ -3015,9 +2827,7 @@ class _$DailyActivityImpl implements _DailyActivity {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(String date, @JsonKey(name: 'event_type') String eventType,
-            int count)
-        $default,
+    TResult Function(String date, String eventType, int count) $default,
   ) {
     return $default(date, eventType, count);
   }
@@ -3025,9 +2835,7 @@ class _$DailyActivityImpl implements _DailyActivity {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String date,
-            @JsonKey(name: 'event_type') String eventType, int count)?
-        $default,
+    TResult? Function(String date, String eventType, int count)? $default,
   ) {
     return $default?.call(date, eventType, count);
   }
@@ -3035,9 +2843,7 @@ class _$DailyActivityImpl implements _DailyActivity {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String date, @JsonKey(name: 'event_type') String eventType,
-            int count)?
-        $default, {
+    TResult Function(String date, String eventType, int count)? $default, {
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -3085,7 +2891,7 @@ class _$DailyActivityImpl implements _DailyActivity {
 abstract class _DailyActivity implements DailyActivity {
   const factory _DailyActivity(
       {required final String date,
-      @JsonKey(name: 'event_type') required final String eventType,
+      required final String eventType,
       required final int count}) = _$DailyActivityImpl;
 
   factory _DailyActivity.fromJson(Map<String, dynamic> json) =
@@ -3094,7 +2900,6 @@ abstract class _DailyActivity implements DailyActivity {
   @override
   String get date;
   @override
-  @JsonKey(name: 'event_type')
   String get eventType;
   @override
   int get count;
@@ -3116,11 +2921,8 @@ MemberGrowthAnalytics _$MemberGrowthAnalyticsFromJson(
 mixin _$MemberGrowthAnalytics {
   AnalyticsPeriod get period => throw _privateConstructorUsedError;
   MemberGrowthSummary get summary => throw _privateConstructorUsedError;
-  @JsonKey(name: 'daily_growth')
   List<DailyGrowth> get dailyGrowth => throw _privateConstructorUsedError;
-  @JsonKey(name: 'member_sources')
   List<MemberSource> get memberSources => throw _privateConstructorUsedError;
-  @JsonKey(name: 'invitation_effectiveness')
   Map<String, List<InvitationEffectiveness>> get invitationEffectiveness =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -3128,9 +2930,8 @@ mixin _$MemberGrowthAnalytics {
     TResult Function(
             AnalyticsPeriod period,
             MemberGrowthSummary summary,
-            @JsonKey(name: 'daily_growth') List<DailyGrowth> dailyGrowth,
-            @JsonKey(name: 'member_sources') List<MemberSource> memberSources,
-            @JsonKey(name: 'invitation_effectiveness')
+            List<DailyGrowth> dailyGrowth,
+            List<MemberSource> memberSources,
             Map<String, List<InvitationEffectiveness>> invitationEffectiveness)
         $default,
   ) =>
@@ -3140,9 +2941,8 @@ mixin _$MemberGrowthAnalytics {
     TResult? Function(
             AnalyticsPeriod period,
             MemberGrowthSummary summary,
-            @JsonKey(name: 'daily_growth') List<DailyGrowth> dailyGrowth,
-            @JsonKey(name: 'member_sources') List<MemberSource> memberSources,
-            @JsonKey(name: 'invitation_effectiveness')
+            List<DailyGrowth> dailyGrowth,
+            List<MemberSource> memberSources,
             Map<String, List<InvitationEffectiveness>> invitationEffectiveness)?
         $default,
   ) =>
@@ -3152,9 +2952,8 @@ mixin _$MemberGrowthAnalytics {
     TResult Function(
             AnalyticsPeriod period,
             MemberGrowthSummary summary,
-            @JsonKey(name: 'daily_growth') List<DailyGrowth> dailyGrowth,
-            @JsonKey(name: 'member_sources') List<MemberSource> memberSources,
-            @JsonKey(name: 'invitation_effectiveness')
+            List<DailyGrowth> dailyGrowth,
+            List<MemberSource> memberSources,
             Map<String, List<InvitationEffectiveness>> invitationEffectiveness)?
         $default, {
     required TResult orElse(),
@@ -3196,9 +2995,8 @@ abstract class $MemberGrowthAnalyticsCopyWith<$Res> {
   $Res call(
       {AnalyticsPeriod period,
       MemberGrowthSummary summary,
-      @JsonKey(name: 'daily_growth') List<DailyGrowth> dailyGrowth,
-      @JsonKey(name: 'member_sources') List<MemberSource> memberSources,
-      @JsonKey(name: 'invitation_effectiveness')
+      List<DailyGrowth> dailyGrowth,
+      List<MemberSource> memberSources,
       Map<String, List<InvitationEffectiveness>> invitationEffectiveness});
 
   $AnalyticsPeriodCopyWith<$Res> get period;
@@ -3284,9 +3082,8 @@ abstract class _$$MemberGrowthAnalyticsImplCopyWith<$Res>
   $Res call(
       {AnalyticsPeriod period,
       MemberGrowthSummary summary,
-      @JsonKey(name: 'daily_growth') List<DailyGrowth> dailyGrowth,
-      @JsonKey(name: 'member_sources') List<MemberSource> memberSources,
-      @JsonKey(name: 'invitation_effectiveness')
+      List<DailyGrowth> dailyGrowth,
+      List<MemberSource> memberSources,
       Map<String, List<InvitationEffectiveness>> invitationEffectiveness});
 
   @override
@@ -3346,11 +3143,8 @@ class _$MemberGrowthAnalyticsImpl implements _MemberGrowthAnalytics {
   const _$MemberGrowthAnalyticsImpl(
       {required this.period,
       required this.summary,
-      @JsonKey(name: 'daily_growth')
       required final List<DailyGrowth> dailyGrowth,
-      @JsonKey(name: 'member_sources')
       required final List<MemberSource> memberSources,
-      @JsonKey(name: 'invitation_effectiveness')
       required final Map<String, List<InvitationEffectiveness>>
           invitationEffectiveness})
       : _dailyGrowth = dailyGrowth,
@@ -3366,7 +3160,6 @@ class _$MemberGrowthAnalyticsImpl implements _MemberGrowthAnalytics {
   final MemberGrowthSummary summary;
   final List<DailyGrowth> _dailyGrowth;
   @override
-  @JsonKey(name: 'daily_growth')
   List<DailyGrowth> get dailyGrowth {
     if (_dailyGrowth is EqualUnmodifiableListView) return _dailyGrowth;
     // ignore: implicit_dynamic_type
@@ -3375,7 +3168,6 @@ class _$MemberGrowthAnalyticsImpl implements _MemberGrowthAnalytics {
 
   final List<MemberSource> _memberSources;
   @override
-  @JsonKey(name: 'member_sources')
   List<MemberSource> get memberSources {
     if (_memberSources is EqualUnmodifiableListView) return _memberSources;
     // ignore: implicit_dynamic_type
@@ -3384,7 +3176,6 @@ class _$MemberGrowthAnalyticsImpl implements _MemberGrowthAnalytics {
 
   final Map<String, List<InvitationEffectiveness>> _invitationEffectiveness;
   @override
-  @JsonKey(name: 'invitation_effectiveness')
   Map<String, List<InvitationEffectiveness>> get invitationEffectiveness {
     if (_invitationEffectiveness is EqualUnmodifiableMapView)
       return _invitationEffectiveness;
@@ -3437,9 +3228,8 @@ class _$MemberGrowthAnalyticsImpl implements _MemberGrowthAnalytics {
     TResult Function(
             AnalyticsPeriod period,
             MemberGrowthSummary summary,
-            @JsonKey(name: 'daily_growth') List<DailyGrowth> dailyGrowth,
-            @JsonKey(name: 'member_sources') List<MemberSource> memberSources,
-            @JsonKey(name: 'invitation_effectiveness')
+            List<DailyGrowth> dailyGrowth,
+            List<MemberSource> memberSources,
             Map<String, List<InvitationEffectiveness>> invitationEffectiveness)
         $default,
   ) {
@@ -3453,9 +3243,8 @@ class _$MemberGrowthAnalyticsImpl implements _MemberGrowthAnalytics {
     TResult? Function(
             AnalyticsPeriod period,
             MemberGrowthSummary summary,
-            @JsonKey(name: 'daily_growth') List<DailyGrowth> dailyGrowth,
-            @JsonKey(name: 'member_sources') List<MemberSource> memberSources,
-            @JsonKey(name: 'invitation_effectiveness')
+            List<DailyGrowth> dailyGrowth,
+            List<MemberSource> memberSources,
             Map<String, List<InvitationEffectiveness>> invitationEffectiveness)?
         $default,
   ) {
@@ -3469,9 +3258,8 @@ class _$MemberGrowthAnalyticsImpl implements _MemberGrowthAnalytics {
     TResult Function(
             AnalyticsPeriod period,
             MemberGrowthSummary summary,
-            @JsonKey(name: 'daily_growth') List<DailyGrowth> dailyGrowth,
-            @JsonKey(name: 'member_sources') List<MemberSource> memberSources,
-            @JsonKey(name: 'invitation_effectiveness')
+            List<DailyGrowth> dailyGrowth,
+            List<MemberSource> memberSources,
             Map<String, List<InvitationEffectiveness>> invitationEffectiveness)?
         $default, {
     required TResult orElse(),
@@ -3523,11 +3311,8 @@ abstract class _MemberGrowthAnalytics implements MemberGrowthAnalytics {
   const factory _MemberGrowthAnalytics(
       {required final AnalyticsPeriod period,
       required final MemberGrowthSummary summary,
-      @JsonKey(name: 'daily_growth')
       required final List<DailyGrowth> dailyGrowth,
-      @JsonKey(name: 'member_sources')
       required final List<MemberSource> memberSources,
-      @JsonKey(name: 'invitation_effectiveness')
       required final Map<String, List<InvitationEffectiveness>>
           invitationEffectiveness}) = _$MemberGrowthAnalyticsImpl;
 
@@ -3539,13 +3324,10 @@ abstract class _MemberGrowthAnalytics implements MemberGrowthAnalytics {
   @override
   MemberGrowthSummary get summary;
   @override
-  @JsonKey(name: 'daily_growth')
   List<DailyGrowth> get dailyGrowth;
   @override
-  @JsonKey(name: 'member_sources')
   List<MemberSource> get memberSources;
   @override
-  @JsonKey(name: 'invitation_effectiveness')
   Map<String, List<InvitationEffectiveness>> get invitationEffectiveness;
 
   /// Create a copy of MemberGrowthAnalytics
@@ -3562,41 +3344,28 @@ MemberGrowthSummary _$MemberGrowthSummaryFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MemberGrowthSummary {
-  @JsonKey(name: 'new_members')
   int get newMembers => throw _privateConstructorUsedError;
-  @JsonKey(name: 'growth_rate')
   String get growthRate => throw _privateConstructorUsedError;
-  @JsonKey(name: 'current_total')
   int get currentTotal => throw _privateConstructorUsedError;
-  @JsonKey(name: 'capacity_usage')
   String get capacityUsage => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'new_members') int newMembers,
-            @JsonKey(name: 'growth_rate') String growthRate,
-            @JsonKey(name: 'current_total') int currentTotal,
-            @JsonKey(name: 'capacity_usage') String capacityUsage)
+    TResult Function(int newMembers, String growthRate, int currentTotal,
+            String capacityUsage)
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            @JsonKey(name: 'new_members') int newMembers,
-            @JsonKey(name: 'growth_rate') String growthRate,
-            @JsonKey(name: 'current_total') int currentTotal,
-            @JsonKey(name: 'capacity_usage') String capacityUsage)?
+    TResult? Function(int newMembers, String growthRate, int currentTotal,
+            String capacityUsage)?
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'new_members') int newMembers,
-            @JsonKey(name: 'growth_rate') String growthRate,
-            @JsonKey(name: 'current_total') int currentTotal,
-            @JsonKey(name: 'capacity_usage') String capacityUsage)?
+    TResult Function(int newMembers, String growthRate, int currentTotal,
+            String capacityUsage)?
         $default, {
     required TResult orElse(),
   }) =>
@@ -3635,10 +3404,10 @@ abstract class $MemberGrowthSummaryCopyWith<$Res> {
       _$MemberGrowthSummaryCopyWithImpl<$Res, MemberGrowthSummary>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'new_members') int newMembers,
-      @JsonKey(name: 'growth_rate') String growthRate,
-      @JsonKey(name: 'current_total') int currentTotal,
-      @JsonKey(name: 'capacity_usage') String capacityUsage});
+      {int newMembers,
+      String growthRate,
+      int currentTotal,
+      String capacityUsage});
 }
 
 /// @nodoc
@@ -3691,10 +3460,10 @@ abstract class _$$MemberGrowthSummaryImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'new_members') int newMembers,
-      @JsonKey(name: 'growth_rate') String growthRate,
-      @JsonKey(name: 'current_total') int currentTotal,
-      @JsonKey(name: 'capacity_usage') String capacityUsage});
+      {int newMembers,
+      String growthRate,
+      int currentTotal,
+      String capacityUsage});
 }
 
 /// @nodoc
@@ -3740,25 +3509,21 @@ class __$$MemberGrowthSummaryImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MemberGrowthSummaryImpl implements _MemberGrowthSummary {
   const _$MemberGrowthSummaryImpl(
-      {@JsonKey(name: 'new_members') required this.newMembers,
-      @JsonKey(name: 'growth_rate') required this.growthRate,
-      @JsonKey(name: 'current_total') required this.currentTotal,
-      @JsonKey(name: 'capacity_usage') required this.capacityUsage});
+      {required this.newMembers,
+      required this.growthRate,
+      required this.currentTotal,
+      required this.capacityUsage});
 
   factory _$MemberGrowthSummaryImpl.fromJson(Map<String, dynamic> json) =>
       _$$MemberGrowthSummaryImplFromJson(json);
 
   @override
-  @JsonKey(name: 'new_members')
   final int newMembers;
   @override
-  @JsonKey(name: 'growth_rate')
   final String growthRate;
   @override
-  @JsonKey(name: 'current_total')
   final int currentTotal;
   @override
-  @JsonKey(name: 'capacity_usage')
   final String capacityUsage;
 
   @override
@@ -3798,11 +3563,8 @@ class _$MemberGrowthSummaryImpl implements _MemberGrowthSummary {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'new_members') int newMembers,
-            @JsonKey(name: 'growth_rate') String growthRate,
-            @JsonKey(name: 'current_total') int currentTotal,
-            @JsonKey(name: 'capacity_usage') String capacityUsage)
+    TResult Function(int newMembers, String growthRate, int currentTotal,
+            String capacityUsage)
         $default,
   ) {
     return $default(newMembers, growthRate, currentTotal, capacityUsage);
@@ -3811,11 +3573,8 @@ class _$MemberGrowthSummaryImpl implements _MemberGrowthSummary {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            @JsonKey(name: 'new_members') int newMembers,
-            @JsonKey(name: 'growth_rate') String growthRate,
-            @JsonKey(name: 'current_total') int currentTotal,
-            @JsonKey(name: 'capacity_usage') String capacityUsage)?
+    TResult? Function(int newMembers, String growthRate, int currentTotal,
+            String capacityUsage)?
         $default,
   ) {
     return $default?.call(newMembers, growthRate, currentTotal, capacityUsage);
@@ -3824,11 +3583,8 @@ class _$MemberGrowthSummaryImpl implements _MemberGrowthSummary {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'new_members') int newMembers,
-            @JsonKey(name: 'growth_rate') String growthRate,
-            @JsonKey(name: 'current_total') int currentTotal,
-            @JsonKey(name: 'capacity_usage') String capacityUsage)?
+    TResult Function(int newMembers, String growthRate, int currentTotal,
+            String capacityUsage)?
         $default, {
     required TResult orElse(),
   }) {
@@ -3876,26 +3632,21 @@ class _$MemberGrowthSummaryImpl implements _MemberGrowthSummary {
 
 abstract class _MemberGrowthSummary implements MemberGrowthSummary {
   const factory _MemberGrowthSummary(
-      {@JsonKey(name: 'new_members') required final int newMembers,
-      @JsonKey(name: 'growth_rate') required final String growthRate,
-      @JsonKey(name: 'current_total') required final int currentTotal,
-      @JsonKey(name: 'capacity_usage')
+      {required final int newMembers,
+      required final String growthRate,
+      required final int currentTotal,
       required final String capacityUsage}) = _$MemberGrowthSummaryImpl;
 
   factory _MemberGrowthSummary.fromJson(Map<String, dynamic> json) =
       _$MemberGrowthSummaryImpl.fromJson;
 
   @override
-  @JsonKey(name: 'new_members')
   int get newMembers;
   @override
-  @JsonKey(name: 'growth_rate')
   String get growthRate;
   @override
-  @JsonKey(name: 'current_total')
   int get currentTotal;
   @override
-  @JsonKey(name: 'capacity_usage')
   String get capacityUsage;
 
   /// Create a copy of MemberGrowthSummary
@@ -3913,25 +3664,20 @@ DailyGrowth _$DailyGrowthFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$DailyGrowth {
   String get date => throw _privateConstructorUsedError;
-  @JsonKey(name: 'new_members')
   int get newMembers => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(String date, @JsonKey(name: 'new_members') int newMembers)
-        $default,
+    TResult Function(String date, int newMembers) $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            String date, @JsonKey(name: 'new_members') int newMembers)?
-        $default,
+    TResult? Function(String date, int newMembers)? $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String date, @JsonKey(name: 'new_members') int newMembers)?
-        $default, {
+    TResult Function(String date, int newMembers)? $default, {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -3968,7 +3714,7 @@ abstract class $DailyGrowthCopyWith<$Res> {
           DailyGrowth value, $Res Function(DailyGrowth) then) =
       _$DailyGrowthCopyWithImpl<$Res, DailyGrowth>;
   @useResult
-  $Res call({String date, @JsonKey(name: 'new_members') int newMembers});
+  $Res call({String date, int newMembers});
 }
 
 /// @nodoc
@@ -4010,7 +3756,7 @@ abstract class _$$DailyGrowthImplCopyWith<$Res>
       __$$DailyGrowthImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String date, @JsonKey(name: 'new_members') int newMembers});
+  $Res call({String date, int newMembers});
 }
 
 /// @nodoc
@@ -4045,9 +3791,7 @@ class __$$DailyGrowthImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$DailyGrowthImpl implements _DailyGrowth {
-  const _$DailyGrowthImpl(
-      {required this.date,
-      @JsonKey(name: 'new_members') required this.newMembers});
+  const _$DailyGrowthImpl({required this.date, required this.newMembers});
 
   factory _$DailyGrowthImpl.fromJson(Map<String, dynamic> json) =>
       _$$DailyGrowthImplFromJson(json);
@@ -4055,7 +3799,6 @@ class _$DailyGrowthImpl implements _DailyGrowth {
   @override
   final String date;
   @override
-  @JsonKey(name: 'new_members')
   final int newMembers;
 
   @override
@@ -4088,8 +3831,7 @@ class _$DailyGrowthImpl implements _DailyGrowth {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(String date, @JsonKey(name: 'new_members') int newMembers)
-        $default,
+    TResult Function(String date, int newMembers) $default,
   ) {
     return $default(date, newMembers);
   }
@@ -4097,9 +3839,7 @@ class _$DailyGrowthImpl implements _DailyGrowth {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            String date, @JsonKey(name: 'new_members') int newMembers)?
-        $default,
+    TResult? Function(String date, int newMembers)? $default,
   ) {
     return $default?.call(date, newMembers);
   }
@@ -4107,8 +3847,7 @@ class _$DailyGrowthImpl implements _DailyGrowth {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String date, @JsonKey(name: 'new_members') int newMembers)?
-        $default, {
+    TResult Function(String date, int newMembers)? $default, {
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -4155,9 +3894,8 @@ class _$DailyGrowthImpl implements _DailyGrowth {
 
 abstract class _DailyGrowth implements DailyGrowth {
   const factory _DailyGrowth(
-          {required final String date,
-          @JsonKey(name: 'new_members') required final int newMembers}) =
-      _$DailyGrowthImpl;
+      {required final String date,
+      required final int newMembers}) = _$DailyGrowthImpl;
 
   factory _DailyGrowth.fromJson(Map<String, dynamic> json) =
       _$DailyGrowthImpl.fromJson;
@@ -4165,7 +3903,6 @@ abstract class _DailyGrowth implements DailyGrowth {
   @override
   String get date;
   @override
-  @JsonKey(name: 'new_members')
   int get newMembers;
 
   /// Create a copy of DailyGrowth
@@ -4182,27 +3919,21 @@ MemberSource _$MemberSourceFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MemberSource {
-  @JsonKey(name: 'join_reason')
   String get joinReason => throw _privateConstructorUsedError;
   int get count => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(@JsonKey(name: 'join_reason') String joinReason, int count)
-        $default,
+    TResult Function(String joinReason, int count) $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            @JsonKey(name: 'join_reason') String joinReason, int count)?
-        $default,
+    TResult? Function(String joinReason, int count)? $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'join_reason') String joinReason, int count)?
-        $default, {
+    TResult Function(String joinReason, int count)? $default, {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -4239,7 +3970,7 @@ abstract class $MemberSourceCopyWith<$Res> {
           MemberSource value, $Res Function(MemberSource) then) =
       _$MemberSourceCopyWithImpl<$Res, MemberSource>;
   @useResult
-  $Res call({@JsonKey(name: 'join_reason') String joinReason, int count});
+  $Res call({String joinReason, int count});
 }
 
 /// @nodoc
@@ -4281,7 +4012,7 @@ abstract class _$$MemberSourceImplCopyWith<$Res>
       __$$MemberSourceImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({@JsonKey(name: 'join_reason') String joinReason, int count});
+  $Res call({String joinReason, int count});
 }
 
 /// @nodoc
@@ -4316,15 +4047,12 @@ class __$$MemberSourceImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$MemberSourceImpl implements _MemberSource {
-  const _$MemberSourceImpl(
-      {@JsonKey(name: 'join_reason') required this.joinReason,
-      required this.count});
+  const _$MemberSourceImpl({required this.joinReason, required this.count});
 
   factory _$MemberSourceImpl.fromJson(Map<String, dynamic> json) =>
       _$$MemberSourceImplFromJson(json);
 
   @override
-  @JsonKey(name: 'join_reason')
   final String joinReason;
   @override
   final int count;
@@ -4359,8 +4087,7 @@ class _$MemberSourceImpl implements _MemberSource {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(@JsonKey(name: 'join_reason') String joinReason, int count)
-        $default,
+    TResult Function(String joinReason, int count) $default,
   ) {
     return $default(joinReason, count);
   }
@@ -4368,9 +4095,7 @@ class _$MemberSourceImpl implements _MemberSource {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            @JsonKey(name: 'join_reason') String joinReason, int count)?
-        $default,
+    TResult? Function(String joinReason, int count)? $default,
   ) {
     return $default?.call(joinReason, count);
   }
@@ -4378,9 +4103,7 @@ class _$MemberSourceImpl implements _MemberSource {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'join_reason') String joinReason, int count)?
-        $default, {
+    TResult Function(String joinReason, int count)? $default, {
     required TResult orElse(),
   }) {
     if ($default != null) {
@@ -4427,14 +4150,13 @@ class _$MemberSourceImpl implements _MemberSource {
 
 abstract class _MemberSource implements MemberSource {
   const factory _MemberSource(
-      {@JsonKey(name: 'join_reason') required final String joinReason,
+      {required final String joinReason,
       required final int count}) = _$MemberSourceImpl;
 
   factory _MemberSource.fromJson(Map<String, dynamic> json) =
       _$MemberSourceImpl.fromJson;
 
   @override
-  @JsonKey(name: 'join_reason')
   String get joinReason;
   @override
   int get count;
@@ -4735,10 +4457,8 @@ InvitationDetailedAnalytics _$InvitationDetailedAnalyticsFromJson(
 mixin _$InvitationDetailedAnalytics {
   InvitationAnalyticsData get invitation => throw _privateConstructorUsedError;
   AnalyticsSummary get summary => throw _privateConstructorUsedError;
-  @JsonKey(name: 'recent_events')
   List<InvitationAnalytics> get recentEvents =>
       throw _privateConstructorUsedError;
-  @JsonKey(name: 'join_requests')
   List<Map<String, dynamic>> get joinRequests =>
       throw _privateConstructorUsedError;
   InvitationPerformanceMetrics get performance =>
@@ -4748,9 +4468,7 @@ mixin _$InvitationDetailedAnalytics {
     TResult Function(
             InvitationAnalyticsData invitation,
             AnalyticsSummary summary,
-            @JsonKey(name: 'recent_events')
             List<InvitationAnalytics> recentEvents,
-            @JsonKey(name: 'join_requests')
             List<Map<String, dynamic>> joinRequests,
             InvitationPerformanceMetrics performance)
         $default,
@@ -4761,9 +4479,7 @@ mixin _$InvitationDetailedAnalytics {
     TResult? Function(
             InvitationAnalyticsData invitation,
             AnalyticsSummary summary,
-            @JsonKey(name: 'recent_events')
             List<InvitationAnalytics> recentEvents,
-            @JsonKey(name: 'join_requests')
             List<Map<String, dynamic>> joinRequests,
             InvitationPerformanceMetrics performance)?
         $default,
@@ -4774,9 +4490,7 @@ mixin _$InvitationDetailedAnalytics {
     TResult Function(
             InvitationAnalyticsData invitation,
             AnalyticsSummary summary,
-            @JsonKey(name: 'recent_events')
             List<InvitationAnalytics> recentEvents,
-            @JsonKey(name: 'join_requests')
             List<Map<String, dynamic>> joinRequests,
             InvitationPerformanceMetrics performance)?
         $default, {
@@ -4821,8 +4535,8 @@ abstract class $InvitationDetailedAnalyticsCopyWith<$Res> {
   $Res call(
       {InvitationAnalyticsData invitation,
       AnalyticsSummary summary,
-      @JsonKey(name: 'recent_events') List<InvitationAnalytics> recentEvents,
-      @JsonKey(name: 'join_requests') List<Map<String, dynamic>> joinRequests,
+      List<InvitationAnalytics> recentEvents,
+      List<Map<String, dynamic>> joinRequests,
       InvitationPerformanceMetrics performance});
 
   $InvitationAnalyticsDataCopyWith<$Res> get invitation;
@@ -4920,8 +4634,8 @@ abstract class _$$InvitationDetailedAnalyticsImplCopyWith<$Res>
   $Res call(
       {InvitationAnalyticsData invitation,
       AnalyticsSummary summary,
-      @JsonKey(name: 'recent_events') List<InvitationAnalytics> recentEvents,
-      @JsonKey(name: 'join_requests') List<Map<String, dynamic>> joinRequests,
+      List<InvitationAnalytics> recentEvents,
+      List<Map<String, dynamic>> joinRequests,
       InvitationPerformanceMetrics performance});
 
   @override
@@ -4985,9 +4699,7 @@ class _$InvitationDetailedAnalyticsImpl
   const _$InvitationDetailedAnalyticsImpl(
       {required this.invitation,
       required this.summary,
-      @JsonKey(name: 'recent_events')
       required final List<InvitationAnalytics> recentEvents,
-      @JsonKey(name: 'join_requests')
       required final List<Map<String, dynamic>> joinRequests,
       required this.performance})
       : _recentEvents = recentEvents,
@@ -5003,7 +4715,6 @@ class _$InvitationDetailedAnalyticsImpl
   final AnalyticsSummary summary;
   final List<InvitationAnalytics> _recentEvents;
   @override
-  @JsonKey(name: 'recent_events')
   List<InvitationAnalytics> get recentEvents {
     if (_recentEvents is EqualUnmodifiableListView) return _recentEvents;
     // ignore: implicit_dynamic_type
@@ -5012,7 +4723,6 @@ class _$InvitationDetailedAnalyticsImpl
 
   final List<Map<String, dynamic>> _joinRequests;
   @override
-  @JsonKey(name: 'join_requests')
   List<Map<String, dynamic>> get joinRequests {
     if (_joinRequests is EqualUnmodifiableListView) return _joinRequests;
     // ignore: implicit_dynamic_type
@@ -5068,9 +4778,7 @@ class _$InvitationDetailedAnalyticsImpl
     TResult Function(
             InvitationAnalyticsData invitation,
             AnalyticsSummary summary,
-            @JsonKey(name: 'recent_events')
             List<InvitationAnalytics> recentEvents,
-            @JsonKey(name: 'join_requests')
             List<Map<String, dynamic>> joinRequests,
             InvitationPerformanceMetrics performance)
         $default,
@@ -5085,9 +4793,7 @@ class _$InvitationDetailedAnalyticsImpl
     TResult? Function(
             InvitationAnalyticsData invitation,
             AnalyticsSummary summary,
-            @JsonKey(name: 'recent_events')
             List<InvitationAnalytics> recentEvents,
-            @JsonKey(name: 'join_requests')
             List<Map<String, dynamic>> joinRequests,
             InvitationPerformanceMetrics performance)?
         $default,
@@ -5102,9 +4808,7 @@ class _$InvitationDetailedAnalyticsImpl
     TResult Function(
             InvitationAnalyticsData invitation,
             AnalyticsSummary summary,
-            @JsonKey(name: 'recent_events')
             List<InvitationAnalytics> recentEvents,
-            @JsonKey(name: 'join_requests')
             List<Map<String, dynamic>> joinRequests,
             InvitationPerformanceMetrics performance)?
         $default, {
@@ -5158,9 +4862,7 @@ abstract class _InvitationDetailedAnalytics
   const factory _InvitationDetailedAnalytics(
           {required final InvitationAnalyticsData invitation,
           required final AnalyticsSummary summary,
-          @JsonKey(name: 'recent_events')
           required final List<InvitationAnalytics> recentEvents,
-          @JsonKey(name: 'join_requests')
           required final List<Map<String, dynamic>> joinRequests,
           required final InvitationPerformanceMetrics performance}) =
       _$InvitationDetailedAnalyticsImpl;
@@ -5173,10 +4875,8 @@ abstract class _InvitationDetailedAnalytics
   @override
   AnalyticsSummary get summary;
   @override
-  @JsonKey(name: 'recent_events')
   List<InvitationAnalytics> get recentEvents;
   @override
-  @JsonKey(name: 'join_requests')
   List<Map<String, dynamic>> get joinRequests;
   @override
   InvitationPerformanceMetrics get performance;
@@ -5197,51 +4897,30 @@ InvitationAnalyticsData _$InvitationAnalyticsDataFromJson(
 /// @nodoc
 mixin _$InvitationAnalyticsData {
   int get id => throw _privateConstructorUsedError;
-  @JsonKey(name: 'group_id')
   int get groupId => throw _privateConstructorUsedError;
   String get token => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
-  @JsonKey(name: 'expires_at')
   DateTime? get expiresAt => throw _privateConstructorUsedError;
-  @JsonKey(name: 'created_at')
   DateTime get createdAt => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            int id,
-            @JsonKey(name: 'group_id') int groupId,
-            String token,
-            String type,
-            String status,
-            @JsonKey(name: 'expires_at') DateTime? expiresAt,
-            @JsonKey(name: 'created_at') DateTime createdAt)
+    TResult Function(int id, int groupId, String token, String type,
+            String status, DateTime? expiresAt, DateTime createdAt)
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            int id,
-            @JsonKey(name: 'group_id') int groupId,
-            String token,
-            String type,
-            String status,
-            @JsonKey(name: 'expires_at') DateTime? expiresAt,
-            @JsonKey(name: 'created_at') DateTime createdAt)?
+    TResult? Function(int id, int groupId, String token, String type,
+            String status, DateTime? expiresAt, DateTime createdAt)?
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            int id,
-            @JsonKey(name: 'group_id') int groupId,
-            String token,
-            String type,
-            String status,
-            @JsonKey(name: 'expires_at') DateTime? expiresAt,
-            @JsonKey(name: 'created_at') DateTime createdAt)?
+    TResult Function(int id, int groupId, String token, String type,
+            String status, DateTime? expiresAt, DateTime createdAt)?
         $default, {
     required TResult orElse(),
   }) =>
@@ -5281,12 +4960,12 @@ abstract class $InvitationAnalyticsDataCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
-      @JsonKey(name: 'group_id') int groupId,
+      int groupId,
       String token,
       String type,
       String status,
-      @JsonKey(name: 'expires_at') DateTime? expiresAt,
-      @JsonKey(name: 'created_at') DateTime createdAt});
+      DateTime? expiresAt,
+      DateTime createdAt});
 }
 
 /// @nodoc
@@ -5357,12 +5036,12 @@ abstract class _$$InvitationAnalyticsDataImplCopyWith<$Res>
   @useResult
   $Res call(
       {int id,
-      @JsonKey(name: 'group_id') int groupId,
+      int groupId,
       String token,
       String type,
       String status,
-      @JsonKey(name: 'expires_at') DateTime? expiresAt,
-      @JsonKey(name: 'created_at') DateTime createdAt});
+      DateTime? expiresAt,
+      DateTime createdAt});
 }
 
 /// @nodoc
@@ -5426,12 +5105,12 @@ class __$$InvitationAnalyticsDataImplCopyWithImpl<$Res>
 class _$InvitationAnalyticsDataImpl implements _InvitationAnalyticsData {
   const _$InvitationAnalyticsDataImpl(
       {required this.id,
-      @JsonKey(name: 'group_id') required this.groupId,
+      required this.groupId,
       required this.token,
       required this.type,
       required this.status,
-      @JsonKey(name: 'expires_at') this.expiresAt,
-      @JsonKey(name: 'created_at') required this.createdAt});
+      this.expiresAt,
+      required this.createdAt});
 
   factory _$InvitationAnalyticsDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$InvitationAnalyticsDataImplFromJson(json);
@@ -5439,7 +5118,6 @@ class _$InvitationAnalyticsDataImpl implements _InvitationAnalyticsData {
   @override
   final int id;
   @override
-  @JsonKey(name: 'group_id')
   final int groupId;
   @override
   final String token;
@@ -5448,10 +5126,8 @@ class _$InvitationAnalyticsDataImpl implements _InvitationAnalyticsData {
   @override
   final String status;
   @override
-  @JsonKey(name: 'expires_at')
   final DateTime? expiresAt;
   @override
-  @JsonKey(name: 'created_at')
   final DateTime createdAt;
 
   @override
@@ -5492,14 +5168,8 @@ class _$InvitationAnalyticsDataImpl implements _InvitationAnalyticsData {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            int id,
-            @JsonKey(name: 'group_id') int groupId,
-            String token,
-            String type,
-            String status,
-            @JsonKey(name: 'expires_at') DateTime? expiresAt,
-            @JsonKey(name: 'created_at') DateTime createdAt)
+    TResult Function(int id, int groupId, String token, String type,
+            String status, DateTime? expiresAt, DateTime createdAt)
         $default,
   ) {
     return $default(id, groupId, token, type, status, expiresAt, createdAt);
@@ -5508,14 +5178,8 @@ class _$InvitationAnalyticsDataImpl implements _InvitationAnalyticsData {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            int id,
-            @JsonKey(name: 'group_id') int groupId,
-            String token,
-            String type,
-            String status,
-            @JsonKey(name: 'expires_at') DateTime? expiresAt,
-            @JsonKey(name: 'created_at') DateTime createdAt)?
+    TResult? Function(int id, int groupId, String token, String type,
+            String status, DateTime? expiresAt, DateTime createdAt)?
         $default,
   ) {
     return $default?.call(
@@ -5525,14 +5189,8 @@ class _$InvitationAnalyticsDataImpl implements _InvitationAnalyticsData {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            int id,
-            @JsonKey(name: 'group_id') int groupId,
-            String token,
-            String type,
-            String status,
-            @JsonKey(name: 'expires_at') DateTime? expiresAt,
-            @JsonKey(name: 'created_at') DateTime createdAt)?
+    TResult Function(int id, int groupId, String token, String type,
+            String status, DateTime? expiresAt, DateTime createdAt)?
         $default, {
     required TResult orElse(),
   }) {
@@ -5580,14 +5238,13 @@ class _$InvitationAnalyticsDataImpl implements _InvitationAnalyticsData {
 
 abstract class _InvitationAnalyticsData implements InvitationAnalyticsData {
   const factory _InvitationAnalyticsData(
-          {required final int id,
-          @JsonKey(name: 'group_id') required final int groupId,
-          required final String token,
-          required final String type,
-          required final String status,
-          @JsonKey(name: 'expires_at') final DateTime? expiresAt,
-          @JsonKey(name: 'created_at') required final DateTime createdAt}) =
-      _$InvitationAnalyticsDataImpl;
+      {required final int id,
+      required final int groupId,
+      required final String token,
+      required final String type,
+      required final String status,
+      final DateTime? expiresAt,
+      required final DateTime createdAt}) = _$InvitationAnalyticsDataImpl;
 
   factory _InvitationAnalyticsData.fromJson(Map<String, dynamic> json) =
       _$InvitationAnalyticsDataImpl.fromJson;
@@ -5595,7 +5252,6 @@ abstract class _InvitationAnalyticsData implements InvitationAnalyticsData {
   @override
   int get id;
   @override
-  @JsonKey(name: 'group_id')
   int get groupId;
   @override
   String get token;
@@ -5604,10 +5260,8 @@ abstract class _InvitationAnalyticsData implements InvitationAnalyticsData {
   @override
   String get status;
   @override
-  @JsonKey(name: 'expires_at')
   DateTime? get expiresAt;
   @override
-  @JsonKey(name: 'created_at')
   DateTime get createdAt;
 
   /// Create a copy of InvitationAnalyticsData
@@ -5625,41 +5279,28 @@ InvitationPerformanceMetrics _$InvitationPerformanceMetricsFromJson(
 
 /// @nodoc
 mixin _$InvitationPerformanceMetrics {
-  @JsonKey(name: 'click_rate')
   String get clickRate => throw _privateConstructorUsedError;
-  @JsonKey(name: 'conversion_rate')
   String get conversionRate => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total_clicks')
   int get totalClicks => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total_joins')
   int get totalJoins => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'click_rate') String clickRate,
-            @JsonKey(name: 'conversion_rate') String conversionRate,
-            @JsonKey(name: 'total_clicks') int totalClicks,
-            @JsonKey(name: 'total_joins') int totalJoins)
+    TResult Function(String clickRate, String conversionRate, int totalClicks,
+            int totalJoins)
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            @JsonKey(name: 'click_rate') String clickRate,
-            @JsonKey(name: 'conversion_rate') String conversionRate,
-            @JsonKey(name: 'total_clicks') int totalClicks,
-            @JsonKey(name: 'total_joins') int totalJoins)?
+    TResult? Function(String clickRate, String conversionRate, int totalClicks,
+            int totalJoins)?
         $default,
   ) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'click_rate') String clickRate,
-            @JsonKey(name: 'conversion_rate') String conversionRate,
-            @JsonKey(name: 'total_clicks') int totalClicks,
-            @JsonKey(name: 'total_joins') int totalJoins)?
+    TResult Function(String clickRate, String conversionRate, int totalClicks,
+            int totalJoins)?
         $default, {
     required TResult orElse(),
   }) =>
@@ -5700,10 +5341,10 @@ abstract class $InvitationPerformanceMetricsCopyWith<$Res> {
           InvitationPerformanceMetrics>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'click_rate') String clickRate,
-      @JsonKey(name: 'conversion_rate') String conversionRate,
-      @JsonKey(name: 'total_clicks') int totalClicks,
-      @JsonKey(name: 'total_joins') int totalJoins});
+      {String clickRate,
+      String conversionRate,
+      int totalClicks,
+      int totalJoins});
 }
 
 /// @nodoc
@@ -5758,10 +5399,10 @@ abstract class _$$InvitationPerformanceMetricsImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'click_rate') String clickRate,
-      @JsonKey(name: 'conversion_rate') String conversionRate,
-      @JsonKey(name: 'total_clicks') int totalClicks,
-      @JsonKey(name: 'total_joins') int totalJoins});
+      {String clickRate,
+      String conversionRate,
+      int totalClicks,
+      int totalJoins});
 }
 
 /// @nodoc
@@ -5810,26 +5451,22 @@ class __$$InvitationPerformanceMetricsImplCopyWithImpl<$Res>
 class _$InvitationPerformanceMetricsImpl
     implements _InvitationPerformanceMetrics {
   const _$InvitationPerformanceMetricsImpl(
-      {@JsonKey(name: 'click_rate') required this.clickRate,
-      @JsonKey(name: 'conversion_rate') required this.conversionRate,
-      @JsonKey(name: 'total_clicks') required this.totalClicks,
-      @JsonKey(name: 'total_joins') required this.totalJoins});
+      {required this.clickRate,
+      required this.conversionRate,
+      required this.totalClicks,
+      required this.totalJoins});
 
   factory _$InvitationPerformanceMetricsImpl.fromJson(
           Map<String, dynamic> json) =>
       _$$InvitationPerformanceMetricsImplFromJson(json);
 
   @override
-  @JsonKey(name: 'click_rate')
   final String clickRate;
   @override
-  @JsonKey(name: 'conversion_rate')
   final String conversionRate;
   @override
-  @JsonKey(name: 'total_clicks')
   final int totalClicks;
   @override
-  @JsonKey(name: 'total_joins')
   final int totalJoins;
 
   @override
@@ -5870,11 +5507,8 @@ class _$InvitationPerformanceMetricsImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'click_rate') String clickRate,
-            @JsonKey(name: 'conversion_rate') String conversionRate,
-            @JsonKey(name: 'total_clicks') int totalClicks,
-            @JsonKey(name: 'total_joins') int totalJoins)
+    TResult Function(String clickRate, String conversionRate, int totalClicks,
+            int totalJoins)
         $default,
   ) {
     return $default(clickRate, conversionRate, totalClicks, totalJoins);
@@ -5883,11 +5517,8 @@ class _$InvitationPerformanceMetricsImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            @JsonKey(name: 'click_rate') String clickRate,
-            @JsonKey(name: 'conversion_rate') String conversionRate,
-            @JsonKey(name: 'total_clicks') int totalClicks,
-            @JsonKey(name: 'total_joins') int totalJoins)?
+    TResult? Function(String clickRate, String conversionRate, int totalClicks,
+            int totalJoins)?
         $default,
   ) {
     return $default?.call(clickRate, conversionRate, totalClicks, totalJoins);
@@ -5896,11 +5527,8 @@ class _$InvitationPerformanceMetricsImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            @JsonKey(name: 'click_rate') String clickRate,
-            @JsonKey(name: 'conversion_rate') String conversionRate,
-            @JsonKey(name: 'total_clicks') int totalClicks,
-            @JsonKey(name: 'total_joins') int totalJoins)?
+    TResult Function(String clickRate, String conversionRate, int totalClicks,
+            int totalJoins)?
         $default, {
     required TResult orElse(),
   }) {
@@ -5949,26 +5577,21 @@ class _$InvitationPerformanceMetricsImpl
 abstract class _InvitationPerformanceMetrics
     implements InvitationPerformanceMetrics {
   const factory _InvitationPerformanceMetrics(
-      {@JsonKey(name: 'click_rate') required final String clickRate,
-      @JsonKey(name: 'conversion_rate') required final String conversionRate,
-      @JsonKey(name: 'total_clicks') required final int totalClicks,
-      @JsonKey(name: 'total_joins')
+      {required final String clickRate,
+      required final String conversionRate,
+      required final int totalClicks,
       required final int totalJoins}) = _$InvitationPerformanceMetricsImpl;
 
   factory _InvitationPerformanceMetrics.fromJson(Map<String, dynamic> json) =
       _$InvitationPerformanceMetricsImpl.fromJson;
 
   @override
-  @JsonKey(name: 'click_rate')
   String get clickRate;
   @override
-  @JsonKey(name: 'conversion_rate')
   String get conversionRate;
   @override
-  @JsonKey(name: 'total_clicks')
   int get totalClicks;
   @override
-  @JsonKey(name: 'total_joins')
   int get totalJoins;
 
   /// Create a copy of InvitationPerformanceMetrics
