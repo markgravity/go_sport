@@ -11,13 +11,13 @@ class InvitationListItem extends StatelessWidget {
   final VoidCallback? onShare;
 
   const InvitationListItem({
-    Key? key,
+    super.key,
     required this.invitation,
     this.onTap,
     this.onRevoke,
     this.onResendSms,
     this.onShare,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class InvitationListItem extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: _getTypeColor(invitation.type).withOpacity(0.1),
+                      color: _getTypeColor(invitation.type).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
@@ -70,7 +70,7 @@ class InvitationListItem extends StatelessWidget {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: _getStatusColor(invitation.status).withOpacity(0.1),
+                                color: _getStatusColor(invitation.status).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
@@ -114,7 +114,7 @@ class InvitationListItem extends StatelessWidget {
                         switch (value) {
                           case 'copy':
                             Clipboard.setData(ClipboardData(
-                              text: invitation.invitationUrl ?? '',
+                              text: invitation.invitationUrl,
                             ));
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Đã sao chép link')),
@@ -132,7 +132,7 @@ class InvitationListItem extends StatelessWidget {
                         }
                       },
                       itemBuilder: (context) => [
-                        if (invitation.invitationUrl != null) ...[
+                        if (invitation.invitationUrl.isNotEmpty) ...[
                           const PopupMenuItem(
                             value: 'copy',
                             child: ListTile(
@@ -180,7 +180,7 @@ class InvitationListItem extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: _getExpiryColor(invitation).withOpacity(0.1),
+                    color: _getExpiryColor(invitation).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(

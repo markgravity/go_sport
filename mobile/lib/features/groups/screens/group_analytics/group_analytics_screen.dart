@@ -5,9 +5,9 @@ class GroupAnalyticsScreen extends StatelessWidget {
   final Group group;
 
   const GroupAnalyticsScreen({
-    Key? key,
+    super.key,
     required this.group,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:get_it/get_it.dart';
 import '../models/group_invitation.dart';
 import '../services/invitation_service.dart';
 import '../widgets/invitation_list_item.dart';
@@ -15,10 +15,10 @@ class InvitationManagementScreen extends StatefulWidget {
   final String groupName;
 
   const InvitationManagementScreen({
-    Key? key,
+    super.key,
     required this.groupId,
     required this.groupName,
-  }) : super(key: key);
+  });
 
   @override
   State<InvitationManagementScreen> createState() => _InvitationManagementScreenState();
@@ -40,7 +40,7 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _invitationService = context.read<InvitationService>();
+    _invitationService = GetIt.instance.get<InvitationService>();
     _loadInvitations();
   }
   
@@ -84,14 +84,15 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
       context: context,
       builder: (context) => CreateInvitationDialog(
         onCreateInvitation: (expirationDays) async {
+          final navigator = Navigator.of(context);
           try {
             final invitation = await _invitationService.createInvitation(
               widget.groupId,
               expiresInDays: expirationDays,
             );
-            Navigator.of(context).pop(invitation);
+            navigator.pop(invitation);
           } catch (e) {
-            Navigator.of(context).pop();
+            navigator.pop();
             // Handle error
           }
         },
@@ -133,7 +134,7 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
               )
             else
               SelectableText(
-                invitation.invitationUrl ?? '',
+                invitation.invitationUrl,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             const SizedBox(height: 20),
@@ -143,7 +144,7 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
                 OutlinedButton.icon(
                   onPressed: () {
                     Clipboard.setData(ClipboardData(
-                      text: invitation.invitationUrl ?? '',
+                      text: invitation.invitationUrl,
                     ));
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -156,10 +157,10 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
                 ElevatedButton.icon(
                   onPressed: () {
                     Navigator.pop(context);
-                    Share.share(
-                      'Mời bạn tham gia nhóm ${widget.groupName} trên GoSport!\n\n'
+                    SharePlus.instance.share(ShareParams(
+                      text: 'Mời bạn tham gia nhóm ${widget.groupName} trên GoSport!\n\n'
                       '${invitation.invitationUrl}',
-                    );
+                    ));
                   },
                   icon: const Icon(Icons.share),
                   label: const Text('Chia sẻ'),
@@ -195,14 +196,15 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
     );
     
     if (confirm == true) {
+      final scaffoldMessenger = ScaffoldMessenger.of(context);
       try {
         await _invitationService.revokeInvitation(invitation.token);
         _loadInvitations();
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text('Đã thu hồi lời mời')),
         );
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessenger.showSnackBar(
           const SnackBar(content: Text('Không thể thu hồi lời mời')),
         );
       }
@@ -210,16 +212,17 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
   }
   
   Future<void> _resendSmsInvitation(GroupInvitation invitation) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
       await _invitationService.resendSmsInvitation(
         widget.groupId,
         invitation.id,
       );
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessenger.showSnackBar(
         const SnackBar(content: Text('Đã gửi lại SMS')),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessenger.showSnackBar(
         const SnackBar(content: Text('Không thể gửi lại SMS')),
       );
     }
@@ -319,10 +322,10 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
                 ? () => _resendSmsInvitation(invitation)
                 : null,
             onShare: () {
-              Share.share(
-                'Mời bạn tham gia nhóm ${widget.groupName} trên GoSport!\n\n'
+              SharePlus.instance.share(ShareParams(
+                text: 'Mời bạn tham gia nhóm ${widget.groupName} trên GoSport!\n\n'
                 '${invitation.invitationUrl}',
-              );
+              ));
             },
           );
         },
@@ -347,7 +350,7 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: _getStatusColor(invitation.status).withOpacity(0.1),
+                    color: _getStatusColor(invitation.status).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -385,7 +388,7 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
             if (invitation.recipientPhone != null)
               _buildDetailRow('Số điện thoại:', invitation.recipientPhone!),
             const SizedBox(height: 16),
-            if (invitation.invitationUrl != null) ...[
+            if (invitation.invitationUrl.isNotEmpty) ...[
               const Text(
                 'Link lời mời:',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -398,7 +401,7 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: SelectableText(
-                  invitation.invitationUrl!,
+                  invitation.invitationUrl,
                   style: const TextStyle(fontSize: 12),
                 ),
               ),

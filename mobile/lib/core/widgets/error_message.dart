@@ -6,11 +6,11 @@ class ErrorMessage extends StatelessWidget {
   final IconData? icon;
   
   const ErrorMessage({
-    Key? key,
+    super.key,
     required this.message,
     this.onRetry,
     this.icon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -8,13 +8,13 @@ class AnalyticsCard extends StatelessWidget {
   final VoidCallback? onTap;
 
   const AnalyticsCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.value,
     required this.icon,
     required this.color,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,7 @@ class AnalyticsMetricCard extends StatelessWidget {
   final double? trendValue;
 
   const AnalyticsMetricCard({
-    Key? key,
+    super.key,
     required this.label,
     required this.value,
     this.subtitle,
@@ -91,7 +91,7 @@ class AnalyticsMetricCard extends StatelessWidget {
     this.color,
     this.showTrend = false,
     this.trendValue,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -101,10 +101,10 @@ class AnalyticsMetricCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: cardColor.withOpacity(0.1),
+        color: cardColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: cardColor.withOpacity(0.3),
+          color: cardColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -190,13 +190,13 @@ class AnalyticsProgressCard extends StatelessWidget {
   final String? subtitle;
 
   const AnalyticsProgressCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.value,
     required this.progress,
     this.color,
     this.subtitle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +243,7 @@ class AnalyticsProgressCard extends StatelessWidget {
             SizedBox(height: 12),
             LinearProgressIndicator(
               value: progress.clamp(0.0, 1.0),
-              backgroundColor: progressColor.withOpacity(0.2),
+              backgroundColor: progressColor.withValues(alpha: 0.2),
               valueColor: AlwaysStoppedAnimation<Color>(progressColor),
             ),
           ],

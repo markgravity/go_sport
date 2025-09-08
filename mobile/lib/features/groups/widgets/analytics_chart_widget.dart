@@ -7,11 +7,11 @@ class AnalyticsChart extends StatelessWidget {
   final double height;
 
   const AnalyticsChart({
-    Key? key,
+    super.key,
     required this.title,
     required this.data,
     this.height = 200,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class AnalyticsChart extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             SizedBox(height: 16),
-            Container(
+            SizedBox(
               height: height,
               child: _buildBarChart(context),
             ),
@@ -159,7 +159,7 @@ class AnalyticsChart extends StatelessWidget {
   }
 
   Color _getBarColor(List<DailyActivity> activities, Color defaultColor) {
-    if (activities.isEmpty) return defaultColor.withOpacity(0.3);
+    if (activities.isEmpty) return defaultColor.withValues(alpha: 0.3);
     
     // Color based on event type mix
     final hasClicks = activities.any((a) => a.eventType == 'clicked');
@@ -188,13 +188,13 @@ class SimpleLineChart extends StatelessWidget {
   final double height;
 
   const SimpleLineChart({
-    Key? key,
+    super.key,
     required this.values,
     required this.labels,
     required this.title,
     this.color,
     this.height = 150,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +239,7 @@ class SimpleLineChart extends StatelessWidget {
               style: theme.textTheme.titleMedium,
             ),
             SizedBox(height: 16),
-            Container(
+            SizedBox(
               height: height,
               child: CustomPaint(
                 size: Size.infinite,
@@ -278,7 +278,7 @@ class _LineChartPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     final fillPaint = Paint()
-      ..color = color.withOpacity(0.2)
+      ..color = color.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill;
 
     final pointPaint = Paint()

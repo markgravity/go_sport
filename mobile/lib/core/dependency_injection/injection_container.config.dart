@@ -60,9 +60,9 @@ extension GetItInjectableX on _i174.GetIt {
       environment,
       environmentFilter,
     );
+    gh.factory<_i775.AuthInterceptor>(() => _i775.AuthInterceptor());
     gh.factory<_i70.SportsLocalizationService>(
         () => _i70.SportsLocalizationService());
-    gh.factory<_i775.AuthInterceptor>(() => _i775.AuthInterceptor());
     gh.factory<_i637.GroupAnalyticsViewModel>(
         () => _i637.GroupAnalyticsViewModel());
     gh.lazySingleton<_i283.NavigationService>(() => _i283.NavigationService());
@@ -76,14 +76,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i882.AuthService(gh<_i951.ApiClient>()));
     gh.factory<_i578.GroupsService>(
         () => _i578.GroupsService(gh<_i951.ApiClient>()));
+    gh.factory<_i744.AnalyticsService>(
+        () => _i744.AnalyticsService(gh<_i951.ApiClient>()));
+    gh.factory<_i474.InvitationService>(
+        () => _i474.InvitationService(gh<_i951.ApiClient>()));
     gh.factory<_i39.GroupRoleService>(
         () => _i39.GroupRoleService(gh<_i951.ApiClient>()));
     gh.factory<_i88.ImageUploadService>(
         () => _i88.ImageUploadService(gh<_i951.ApiClient>()));
-    gh.factory<_i474.InvitationService>(
-        () => _i474.InvitationService(gh<_i951.ApiClient>()));
-    gh.factory<_i744.AnalyticsService>(
-        () => _i744.AnalyticsService(gh<_i951.ApiClient>()));
     gh.factoryParam<_i846.InvitationManagementViewModel, _i496.Group, dynamic>((
       _group,
       _,
@@ -102,10 +102,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i210.PhoneRegistrationViewModel(gh<_i882.AuthService>()));
     gh.factory<_i428.LoginViewModel>(
         () => _i428.LoginViewModel(gh<_i882.AuthService>()));
-    gh.factory<_i898.GroupsCubit>(
-        () => _i898.GroupsCubit(gh<_i578.GroupsService>()));
     gh.factory<_i811.CreateGroupViewModel>(
         () => _i811.CreateGroupViewModel(gh<_i578.GroupsService>()));
+    gh.factory<_i898.GroupsCubit>(
+        () => _i898.GroupsCubit(gh<_i578.GroupsService>()));
     gh.factory<_i503.GroupDetailsViewModel>(() => _i503.GroupDetailsViewModel(
           gh<_i578.GroupsService>(),
           gh<_i39.GroupRoleService>(),

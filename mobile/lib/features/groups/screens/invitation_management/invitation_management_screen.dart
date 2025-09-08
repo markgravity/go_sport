@@ -665,14 +665,14 @@ class _AnalyticsTabState extends State<_AnalyticsTab> {
                   margin: EdgeInsets.only(bottom: 8),
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: Colors.green.withOpacity(0.1),
+                      backgroundColor: Colors.green.withValues(alpha: 0.1),
                       child: Icon(Icons.trending_up, color: Colors.green),
                     ),
                     title: Text('Tạo bởi: ${invitation.createdBy}'),
                     subtitle: Text('${invitation.clicks} lượt nhấn • ${invitation.joins} tham gia'),
                     trailing: Chip(
                       label: Text('${invitation.conversionRate.toStringAsFixed(1)}%'),
-                      backgroundColor: _getConversionColor(invitation.conversionRate).withOpacity(0.1),
+                      backgroundColor: _getConversionColor(invitation.conversionRate).withValues(alpha: 0.1),
                       labelStyle: TextStyle(
                         color: _getConversionColor(invitation.conversionRate),
                         fontWeight: FontWeight.bold,
