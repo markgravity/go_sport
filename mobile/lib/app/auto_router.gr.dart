@@ -46,6 +46,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const GroupsListPage(),
       );
     },
+    InvitationManagementRoute.name: (routeData) {
+      final args = routeData.argsAs<InvitationManagementRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: InvitationManagementScreen(
+          key: args.key,
+          groupId: args.groupId,
+        ),
+      );
+    },
     LoginRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -165,6 +175,45 @@ class GroupsListRoute extends PageRouteInfo<void> {
   static const String name = 'GroupsListRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [InvitationManagementScreen]
+class InvitationManagementRoute
+    extends PageRouteInfo<InvitationManagementRouteArgs> {
+  InvitationManagementRoute({
+    Key? key,
+    required String groupId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          InvitationManagementRoute.name,
+          args: InvitationManagementRouteArgs(
+            key: key,
+            groupId: groupId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'InvitationManagementRoute';
+
+  static const PageInfo<InvitationManagementRouteArgs> page =
+      PageInfo<InvitationManagementRouteArgs>(name);
+}
+
+class InvitationManagementRouteArgs {
+  const InvitationManagementRouteArgs({
+    this.key,
+    required this.groupId,
+  });
+
+  final Key? key;
+
+  final String groupId;
+
+  @override
+  String toString() {
+    return 'InvitationManagementRouteArgs{key: $key, groupId: $groupId}';
+  }
 }
 
 /// generated route for

@@ -8,6 +8,7 @@ import '../features/auth/screens/forgot_password_screen.dart';
 import '../features/groups/screens/create_group/create_group_screen.dart';
 import '../features/groups/screens/groups_list/groups_list_screen.dart';
 import '../features/groups/screens/group_details/group_details_screen.dart';
+import '../features/groups/screens/invitation_management/invitation_management_screen.dart';
 
 part 'auto_router.gr.dart';
 
@@ -46,6 +47,10 @@ class AppRouter extends _$AppRouter {
     AutoRoute(
       page: CreateGroupRoute.page,
       path: '/groups/create',
+    ),
+    AutoRoute(
+      page: InvitationManagementRoute.page,
+      path: '/groups/:groupId/invitations',
     ),
     
     // Default route - start with login screen
@@ -144,5 +149,18 @@ class CreateGroupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => const CreateGroupScreen();
+}
+
+@RoutePage()
+class InvitationManagementPage extends StatelessWidget {
+  final String groupId;
+  
+  const InvitationManagementPage({
+    super.key,
+    @pathParam required this.groupId,
+  });
+
+  @override
+  Widget build(BuildContext context) => InvitationManagementScreen(groupId: groupId);
 }
 

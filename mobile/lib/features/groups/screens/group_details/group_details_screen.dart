@@ -143,6 +143,10 @@ class _GroupDetailsView extends StatelessWidget {
                     case 'invite':
                       viewModel.generateInvitationLink(state.group?.id.toString() ?? '');
                       break;
+                    case 'manage_invitations':
+                      // TODO: Navigate to invitation management screen
+                      // context.router.push(InvitationManagementRoute(groupId: state.group?.id.toString() ?? ''));
+                      break;
                     case 'settings':
                       _showGroupSettings(context, state, viewModel);
                       break;
@@ -171,6 +175,16 @@ class _GroupDetailsView extends StatelessWidget {
                         Icon(Icons.share),
                         SizedBox(width: 8),
                         Text('Mời thành viên'),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'manage_invitations',
+                    child: Row(
+                      children: [
+                        Icon(Icons.link),
+                        SizedBox(width: 8),
+                        Text('Quản lý lời mời'),
                       ],
                     ),
                   ),

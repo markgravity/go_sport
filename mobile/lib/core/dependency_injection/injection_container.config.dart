@@ -24,6 +24,7 @@ import 'package:go_sport_app/features/auth/screens/phone_registration/phone_regi
 import 'package:go_sport_app/features/auth/screens/sms_verification/sms_verification_view_model.dart'
     as _i1031;
 import 'package:go_sport_app/features/auth/services/auth_service.dart' as _i882;
+import 'package:go_sport_app/features/groups/models/group.dart' as _i496;
 import 'package:go_sport_app/features/groups/presentation/viewmodels/groups_cubit.dart'
     as _i898;
 import 'package:go_sport_app/features/groups/screens/create_group/create_group_view_model.dart'
@@ -32,12 +33,16 @@ import 'package:go_sport_app/features/groups/screens/group_details/group_details
     as _i503;
 import 'package:go_sport_app/features/groups/screens/groups_list/groups_list_view_model.dart'
     as _i132;
+import 'package:go_sport_app/features/groups/screens/invitation_management/invitation_management_view_model.dart'
+    as _i846;
 import 'package:go_sport_app/features/groups/services/group_role_service.dart'
     as _i39;
 import 'package:go_sport_app/features/groups/services/groups_service.dart'
     as _i578;
 import 'package:go_sport_app/features/groups/services/image_upload_service.dart'
     as _i88;
+import 'package:go_sport_app/features/groups/services/invitation_service.dart'
+    as _i474;
 import 'package:injectable/injectable.dart' as _i526;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -69,6 +74,16 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i39.GroupRoleService(gh<_i951.ApiClient>()));
     gh.factory<_i88.ImageUploadService>(
         () => _i88.ImageUploadService(gh<_i951.ApiClient>()));
+    gh.factory<_i474.InvitationService>(
+        () => _i474.InvitationService(gh<_i951.ApiClient>()));
+    gh.factoryParam<_i846.InvitationManagementViewModel, _i496.Group, dynamic>((
+      _group,
+      _,
+    ) =>
+        _i846.InvitationManagementViewModel(
+          gh<_i474.InvitationService>(),
+          _group,
+        ));
     gh.factory<_i132.GroupsListViewModel>(() => _i132.GroupsListViewModel(
           gh<_i578.GroupsService>(),
           gh<_i882.AuthService>(),

@@ -380,14 +380,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     );
   }
 
-
-  List<String> _convertRulesToList(Map<String, dynamic> rulesMap) {
-    if (rulesMap.containsKey('rules') && rulesMap['rules'] is List) {
-      return List<String>.from(rulesMap['rules']);
-    }
-    return [];
-  }
-
   Map<String, dynamic> _convertRulesFromList(List<String> rulesList) {
     return rulesList.isNotEmpty ? {'rules': rulesList} : {};
   }
