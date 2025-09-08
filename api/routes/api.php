@@ -89,6 +89,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
               ->middleware('group.permission:change_member_roles');
         Route::delete('/members/{user}', [GroupController::class, 'removeMember'])
               ->middleware('group.permission:remove_members');
+        Route::post('/members/add-by-phone', [GroupController::class, 'addMemberByPhone'])
+              ->middleware('throttle:20,60'); // 20 additions per hour
         
         // Invitation management - requires group management permissions
         Route::get('/invitations', [GroupInvitationController::class, 'index']);

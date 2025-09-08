@@ -82,17 +82,15 @@ class GroupInvitationController extends Controller
             }
 
             $validatedData = $request->validate([
-                'type' => ['required', Rule::in(['link', 'phone'])],
-                'phone' => ['required_if:type,phone', 'nullable', 'string', 'max:20'],
+                'type' => ['nullable', Rule::in(['link'])], // Only link invitations supported
                 'expires_in_days' => ['nullable', 'integer', 'min:1', 'max:365'],
                 'metadata' => ['nullable', 'array'],
             ]);
 
-            // Create invitation
+            // Create invitation (always link type)
             $invitation = $group->invitations()->create([
                 'created_by' => $user->id,
-                'type' => $validatedData['type'],
-                'phone' => $validatedData['phone'] ?? null,
+                'type' => 'link',
                 'expires_at' => $validatedData['expires_in_days'] ? 
                     now()->addDays($validatedData['expires_in_days']) : null,
                 'metadata' => $validatedData['metadata'] ?? null,

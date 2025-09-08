@@ -15,7 +15,6 @@ class GroupInvitation extends Model
         'created_by',
         'token',
         'type',
-        'phone',
         'status',
         'expires_at',
         'used_at',
@@ -174,7 +173,6 @@ class GroupInvitation extends Model
     {
         return match($this->type) {
             'link' => 'Liên kết',
-            'phone' => 'Điện thoại',
             default => $this->type,
         };
     }

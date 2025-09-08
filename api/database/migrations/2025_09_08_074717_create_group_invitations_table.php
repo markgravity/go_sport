@@ -16,8 +16,7 @@ return new class extends Migration
             $table->foreignId('group_id')->constrained('groups')->onDelete('cascade');
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->string('token', 64)->unique(); // Secure invitation token
-            $table->enum('type', ['link', 'phone'])->default('link'); // Invitation type
-            $table->string('phone', 20)->nullable(); // For phone invitations
+            $table->enum('type', ['link'])->default('link'); // Always link type
             $table->enum('status', ['pending', 'used', 'expired', 'revoked'])->default('pending');
             $table->timestamp('expires_at')->nullable(); // null = permanent
             $table->timestamp('used_at')->nullable();
@@ -29,7 +28,6 @@ return new class extends Migration
             $table->index(['token']);
             $table->index(['group_id', 'status']);
             $table->index(['created_by']);
-            $table->index(['phone']);
             $table->index(['expires_at']);
         });
     }

@@ -682,6 +682,116 @@ class GroupController extends Controller
     }
 
     /**
+     * Add member directly by phone number (for moderators)
+     */
+    public function addMemberByPhone(Request $request, string $groupId): JsonResponse
+    {
+        try {
+            $group = Group::findOrFail($groupId);
+            $currentUser = Auth::user();
+
+            // Check if user can manage this group
+            if (!$group->canManage($currentUser)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bạn không có quyền thêm thành viên vào nhóm này',
+                ], 403);
+            }
+
+            // Validate request
+            $validatedData = $request->validate([
+                'phone' => ['required', 'string', 'max:20'],
+                'role' => ['nullable', Rule::in(['member', 'moderator'])],
+            ]);
+
+            $phone = $validatedData['phone'];
+            $role = $validatedData['role'] ?? 'member';
+
+            // Find user by phone number
+            $targetUser = User::findByPhone($phone);
+            
+            if (!$targetUser) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không tìm thấy người dùng với số điện thoại này',
+                ], 404);
+            }
+
+            // Check if user is already a member
+            if ($group->isMember($targetUser)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Người dùng đã là thành viên của nhóm',
+                ], 400);
+            }
+
+            // Check group capacity
+            if ($group->current_members >= ($group->max_members ?? 50)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Nhóm đã đạt số lượng thành viên tối đa',
+                ], 400);
+            }
+
+            DB::beginTransaction();
+
+            // Add user to group
+            $group->memberships()->attach($targetUser->id, [
+                'role' => $role,
+                'status' => 'hoat_dong',
+                'joined_at' => now(),
+                'join_reason' => 'Được thêm bởi ' . $currentUser->name,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // Increment member count
+            $group->increment('current_members');
+
+            DB::commit();
+
+            // Load the user data for response
+            $targetUser->pivot = (object)[
+                'role' => $role,
+                'status' => 'hoat_dong',
+                'joined_at' => now(),
+            ];
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'user' => [
+                        'id' => $targetUser->id,
+                        'name' => $targetUser->name,
+                        'phone' => $targetUser->phone,
+                        'role' => $role,
+                    ],
+                    'group' => [
+                        'id' => $group->id,
+                        'name' => $group->name,
+                        'current_members' => $group->current_members,
+                    ]
+                ],
+                'message' => "Đã thêm {$targetUser->name} vào nhóm với vai trò " . 
+                            ($role === 'member' ? 'Thành viên' : 'Điều hành viên'),
+            ], 201);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu không hợp lệ',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể thêm thành viên: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
      * Get user permissions in group
      */
     public function getUserPermissions(Request $request, string $groupId): JsonResponse
