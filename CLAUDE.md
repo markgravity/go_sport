@@ -211,6 +211,125 @@ mcp__ios-simulator__stop_recording
 
 ---
 
+## ⚡ GOD MODE - Continuous Development Workflow
+
+### 🔥 **ACTIVATION**: When user says "Enter God Mode" or "God Mode ON"
+
+In God Mode, the dev agent works continuously without stopping until explicitly interrupted by the user.
+
+### **THE ETERNAL LOOP**:
+
+```
+1. PICK TASK → 2. IMPLEMENT → 3. ANALYZE & FIX → 4. BUILD & VALIDATE → 5. COMMIT → REPEAT
+```
+
+#### **STEP 1: PICK TASK**
+- Check existing todos or ask user for task priority
+- Select highest priority task from backlog
+- Mark task as `in_progress` in TodoWrite
+- **NEVER wait for confirmation** - just start working
+
+#### **STEP 2: IMPLEMENT**
+- Write/modify code to complete the task
+- Follow existing code patterns and conventions
+- Implement according to Acceptance Criteria (ACs)
+- **No confirmation needed** - implement immediately
+
+#### **STEP 3: ANALYZE & FIX** (MANDATORY)
+```bash
+cd mobile && flutter analyze
+```
+- Fix ALL errors (red) - **BLOCKING**
+- Fix ALL warnings (yellow) - **BLOCKING** 
+- Fix ALL info (blue) - **REQUIRED**
+- Re-run `flutter analyze` until **ZERO ISSUES**
+- **DO NOT PROCEED** until analysis is clean
+
+#### **STEP 4: BUILD & VALIDATE** (MANDATORY)
+```bash
+# Build the app
+cd mobile && flutter run
+
+# Start validation recording
+mcp__ios-simulator__record_video --output_path "godmode_validation_$(date +%Y%m%d_%H%M%S).mp4"
+
+# Validate EVERY Acceptance Criteria
+mcp__ios-simulator__ui_view                    # Screenshot current state
+mcp__ios-simulator__ui_describe_all           # Understand UI elements
+mcp__ios-simulator__ui_tap --x X --y Y        # Navigate/interact
+mcp__ios-simulator__ui_type --text "..."      # Input testing
+mcp__ios-simulator__ui_swipe --x_start X1 --y_start Y1 --x_end X2 --y_end Y2
+
+# Stop recording when validation complete
+mcp__ios-simulator__stop_recording
+```
+
+#### **VALIDATION CRITERIA**:
+- ✅ All Acceptance Criteria must be met
+- ✅ UI renders correctly
+- ✅ User interactions work
+- ✅ Data flows properly
+- ✅ Error handling works
+- ✅ Vietnamese localization displays
+
+#### **IF VALIDATION FAILS**:
+- **GO BACK TO STEP 2** - Fix implementation
+- Repeat Steps 2→3→4 until ALL ACs pass
+- **NEVER mark task complete** until validation succeeds
+
+#### **STEP 5: COMMIT** (MANDATORY)
+```bash
+# Add all changes
+git add .
+
+# Create commit with task description
+git commit -m "feat: [task description]
+
+🤖 Generated with Claude Code in God Mode
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+```
+
+#### **WHEN VALIDATION PASSES**:
+- Mark current task as `completed` in TodoWrite
+- **PROCEED TO STEP 5** - Make commit
+- After commit, **IMMEDIATELY GO TO STEP 1** - Pick next task
+- **NO BREAKS, NO WAITING** - Continue the loop
+
+### **GOD MODE RULES**:
+
+1. **🚫 NEVER STOP** until user says "Exit God Mode" or "Stop"
+2. **🚫 NEVER ASK FOR PERMISSION** - just implement
+3. **🚫 NEVER SKIP** flutter analyze - must be clean
+4. **🚫 NEVER SKIP** iOS simulator validation
+5. **🚫 NEVER MARK COMPLETE** until ACs are validated
+6. **🚫 NEVER SKIP** git commit after successful validation
+7. **✅ ALWAYS USE** video recording for validation
+8. **✅ ALWAYS WORK** from TodoWrite task list
+9. **✅ ALWAYS FIX** all analyze issues before building
+10. **✅ ALWAYS VALIDATE** every AC in iOS simulator
+11. **✅ ALWAYS COMMIT** after validation passes
+
+### **EXIT CONDITIONS**:
+- User types "Exit God Mode", "Stop", or "Break"
+- User interrupts with new instructions
+- Critical error that blocks all progress
+- **NEVER stop on your own initiative**
+
+### **GOD MODE STATUS MESSAGES**:
+```
+🔥 GOD MODE ACTIVE - Task X/Y in progress
+⚡ IMPLEMENTING: [task description]  
+🔍 ANALYZING: flutter analyze running...
+🏗️  BUILDING: flutter run executing...
+📱 VALIDATING: Testing AC #1 of 3...
+💾 COMMITTING: git commit in progress...
+✅ TASK COMPLETE: Moving to next task...
+🔄 LOOP ITERATION: 47 tasks completed...
+```
+
+---
+
 ## 🚨 Remember
 - **SAIL = Production-like Docker environment**
 - **All backend commands must use `./vendor/bin/sail` prefix**
