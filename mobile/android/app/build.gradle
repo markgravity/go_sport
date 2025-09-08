@@ -8,6 +8,12 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace = "vn.gosport.go_sport_app"
     compileSdk = flutter.compileSdkVersion
@@ -23,7 +29,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "dev.markg.go_sport.dev"
+        applicationId = "dev.markg.go_sport"
         minSdk = 23  // Required for Firebase messaging
         targetSdk = 34  // Latest stable API level
         versionCode = flutter.versionCode
@@ -40,9 +46,18 @@ android {
         buildConfig = true  // Enable BuildConfig fields
     }
 
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     buildTypes {
         debug {
-            applicationId = "dev.markg.go_sport.dev"
+            applicationIdSuffix ".dev"
             debuggable = true
             minifyEnabled = false
             shrinkResources = false
@@ -54,7 +69,7 @@ android {
         }
         
         profile {
-            applicationId = "dev.markg.go_sport.dev"
+            applicationIdSuffix ".profile"
             debuggable = false
             minifyEnabled = true
             shrinkResources = true
@@ -66,10 +81,7 @@ android {
         }
         
         release {
-            applicationId = "dev.markg.go_sport"
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            signingConfig = signingConfigs.release
             minifyEnabled = true
             shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
