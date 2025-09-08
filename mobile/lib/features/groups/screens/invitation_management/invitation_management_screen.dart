@@ -5,6 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import '../../../../core/dependency_injection/injection_container.dart';
 import '../../models/group.dart';
 import '../../models/group_invitation.dart';
+import '../../services/groups_service.dart';
 import 'invitation_management_view_model.dart';
 import 'invitation_management_state.dart';
 import '../../widgets/invitation_item_widget.dart';
@@ -24,28 +25,79 @@ class InvitationManagementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // For now, create a mock group object with the groupId
-    // In a real implementation, you would load the group data from the API
-    final group = Group(
-      id: int.parse(groupId),
-      name: 'Loading...', // This will be updated once loaded
-      sportType: 'unknown',
-      skillLevel: 'unknown',
-      location: 'unknown',
-      city: 'unknown',
-      maxMembers: 20,
-      currentMembers: 0,
-      membershipFee: 0,
-      privacy: 'cong_khai',
-      status: 'hoat_dong',
-      creatorId: 0,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
-    
-    return BlocProvider(
-      create: (context) => getIt<InvitationManagementViewModel>(param1: group)..init(),
-      child: _InvitationManagementView(),
+    return FutureBuilder<Group>(
+      future: getIt<GroupsService>().getGroup(int.parse(groupId)),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Quản lý lời mời'),
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
+            ),
+            body: const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Đang tải thông tin nhóm...'),
+                ],
+              ),
+            ),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Quản lý lời mời'),
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
+            ),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Colors.red[300],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Không thể tải thông tin nhóm',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Vui lòng kiểm tra kết nối mạng và thử lại',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Force rebuild to retry
+                      Navigator.of(context).pushReplacementNamed(
+                        '/groups/invitation-management/$groupId',
+                      );
+                    },
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Thử lại'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final group = snapshot.data!;
+        return BlocProvider(
+          create: (context) => getIt<InvitationManagementViewModel>(param1: group)..init(),
+          child: _InvitationManagementView(),
+        );
+      },
     );
   }
 }
