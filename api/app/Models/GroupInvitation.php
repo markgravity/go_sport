@@ -12,9 +12,10 @@ class GroupInvitation extends Model
 {
     protected $fillable = [
         'group_id',
-        'created_by',
+        'creator_id',
         'token',
         'type',
+        'recipient_phone',
         'status',
         'expires_at',
         'used_at',
@@ -112,7 +113,7 @@ class GroupInvitation extends Model
      */
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
     /**
@@ -173,6 +174,7 @@ class GroupInvitation extends Model
     {
         return match($this->type) {
             'link' => 'Liên kết',
+            'sms' => 'Tin nhắn',
             default => $this->type,
         };
     }

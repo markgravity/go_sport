@@ -14,17 +14,18 @@ return new class extends Migration
         Schema::create('invitation_analytics', function (Blueprint $table) {
             $table->id();
             $table->foreignId('invitation_id')->constrained('group_invitations')->onDelete('cascade');
-            $table->enum('event_type', ['sent', 'clicked', 'registered', 'joined', 'rejected']);
+            $table->enum('event', ['created', 'sent', 'clicked', 'used', 'expired', 'revoked']);
+            $table->string('source', 50)->nullable(); // app, web, share
             $table->string('user_agent')->nullable(); // Browser/device info
             $table->string('ip_address', 45)->nullable(); // IPv4/IPv6 support
-            $table->string('referrer')->nullable(); // Where the click came from
-            $table->json('metadata')->nullable(); // Additional tracking data
+            $table->json('metadata')->nullable(); // Additional event data
+            $table->timestamp('occurred_at');
             $table->timestamps();
             
             // Indexes for analytics queries
-            $table->index(['invitation_id', 'event_type']);
-            $table->index(['event_type', 'created_at']);
-            $table->index(['created_at']); // For time-based queries
+            $table->index(['invitation_id', 'event']);
+            $table->index(['event', 'occurred_at']);
+            $table->index(['occurred_at']); // For time-based queries
         });
     }
 

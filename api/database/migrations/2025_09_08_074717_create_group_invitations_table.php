@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('group_invitations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('group_id')->constrained('groups')->onDelete('cascade');
-            $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
+            $table->foreignId('creator_id')->constrained('users')->onDelete('cascade');
             $table->string('token', 64)->unique(); // Secure invitation token
-            $table->enum('type', ['link'])->default('link'); // Always link type
+            $table->enum('type', ['link', 'sms'])->default('link'); // Link or SMS type
+            $table->string('recipient_phone', 20)->nullable(); // For SMS invitations
             $table->enum('status', ['pending', 'used', 'expired', 'revoked'])->default('pending');
             $table->timestamp('expires_at')->nullable(); // null = permanent
             $table->timestamp('used_at')->nullable();
@@ -27,7 +28,7 @@ return new class extends Migration
             // Indexes for performance
             $table->index(['token']);
             $table->index(['group_id', 'status']);
-            $table->index(['created_by']);
+            $table->index(['creator_id']);
             $table->index(['expires_at']);
         });
     }
