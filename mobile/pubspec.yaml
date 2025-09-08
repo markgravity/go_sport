@@ -80,6 +80,7 @@ dev_dependencies:
   
   # Testing
   mockito: ^5.4.4
+  bloc_test: ^9.1.7
   
   # App icons and splash screen
   flutter_launcher_icons: ^0.14.1
