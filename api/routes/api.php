@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\SportsController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\InvitationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,8 +47,8 @@ Route::prefix('images')->group(function () {
 
 // Public invitation routes (no authentication required)
 Route::prefix('invitations')->group(function () {
-    Route::get('/validate/{token}', [GroupInvitationController::class, 'validateToken']);
-    Route::get('/preview/{token}', [GroupInvitationController::class, 'getGroupPreview']);
+    Route::get('/{token}/validate', [InvitationController::class, 'validateInvitation']);
+    Route::get('/{token}/preview', [InvitationController::class, 'getGroupPreview']);
 });
 
 // Public routes (no authentication required)
@@ -95,11 +96,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
               ->middleware('throttle:20,60'); // 20 additions per hour
         
         // Invitation management - requires group management permissions
-        Route::get('/invitations', [GroupInvitationController::class, 'index']);
-        Route::post('/invitations', [GroupInvitationController::class, 'store'])
+        Route::get('/invitations', [InvitationController::class, 'getGroupInvitations']);
+        Route::post('/invitations', [InvitationController::class, 'createInvitation'])
               ->middleware('throttle:10,60'); // 10 invitations per hour
-        Route::get('/invitations/{invitation}', [GroupInvitationController::class, 'show']);
-        Route::delete('/invitations/{invitation}', [GroupInvitationController::class, 'destroy']);
         
         // Join request management - for group admins/moderators
         Route::get('/join-requests', [GroupJoinRequestController::class, 'index']);
@@ -150,6 +149,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/', [GroupJoinRequestController::class, 'store'])
               ->middleware('throttle:5,60'); // 5 join requests per hour
         Route::delete('/{joinRequest}', [GroupJoinRequestController::class, 'destroy']);
+    });
+
+    // Global invitation management (for revoking invitations)
+    Route::prefix('invitations')->group(function () {
+        Route::delete('/{token}', [InvitationController::class, 'revokeInvitation']);
     });
 
     // Image upload management
