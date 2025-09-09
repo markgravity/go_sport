@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Group;
 use App\Models\User;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,7 @@ use Illuminate\Validation\Rule;
 
 class GroupMemberController extends Controller
 {
+    use ApiResponseTrait;
     /**
      * Get group members
      */
@@ -23,27 +25,17 @@ class GroupMemberController extends Controller
             $user = Auth::user();
 
             if (!$group->isMember($user) && $group->privacy === 'rieng_tu') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Bạn không có quyền xem danh sách thành viên'
-                ], 403);
+                return $this->forbiddenResponse('Bạn không có quyền xem danh sách thành viên');
             }
 
             $members = $group->activeMembers()
                            ->withPivot(['role', 'joined_at', 'total_paid', 'attendance_count'])
                            ->get();
 
-            return response()->json([
-                'success' => true,
-                'data' => $members
-            ]);
+            return $this->successResponse($members);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Không thể lấy danh sách thành viên',
-                'error' => $e->getMessage()
-            ], 500);
+            return $this->serverErrorResponse('Không thể lấy danh sách thành viên', $e);
         }
     }
 
@@ -65,54 +57,36 @@ class GroupMemberController extends Controller
 
             // Check if target user is a member
             if (!$group->isMember($targetUser)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Người dùng không phải là thành viên của nhóm'
-                ], 400);
+                return $this->errorResponse('Người dùng không phải là thành viên của nhóm');
             }
 
             // Can't change creator's role
             if ($targetUser->id === $group->creator_id && $validated['role'] !== 'admin') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Không thể thay đổi vai trò của người tạo nhóm'
-                ], 400);
+                return $this->errorResponse('Không thể thay đổi vai trò của người tạo nhóm');
             }
 
             $newRole = \App\Enums\GroupRole::from($validated['role']);
             
             if ($group->changeUserRole($targetUser, $newRole, $currentUser)) {
-                return response()->json([
-                    'success' => true,
-                    'message' => sprintf(
-                        'Đã thay đổi vai trò của %s thành %s',
-                        $targetUser->name,
-                        $newRole->vietnamese()
-                    ),
-                    'data' => [
-                        'user_id' => $targetUser->id,
-                        'new_role' => $validated['role'],
-                        'new_role_name' => $newRole->vietnamese()
-                    ]
-                ]);
+                $message = sprintf(
+                    'Đã thay đổi vai trò của %s thành %s',
+                    $targetUser->name,
+                    $newRole->vietnamese()
+                );
+                $data = [
+                    'user_id' => $targetUser->id,
+                    'new_role' => $validated['role'],
+                    'new_role_name' => $newRole->vietnamese()
+                ];
+                return $this->successResponse($data, $message);
             } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Không thể thay đổi vai trò thành viên'
-                ], 400);
+                return $this->errorResponse('Không thể thay đổi vai trò thành viên');
             }
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Không tìm thấy thông tin người dùng'
-            ], 404);
+            return $this->notFoundResponse('Không tìm thấy thông tin người dùng');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Không thể thay đổi vai trò thành viên',
-                'error' => $e->getMessage()
-            ], 500);
+            return $this->serverErrorResponse('Không thể thay đổi vai trò thành viên', $e);
         }
     }
 

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 
 class HealthController extends Controller
 {
+    use ApiResponseTrait;
     public function check(): JsonResponse
     {
         $health = [
@@ -60,8 +62,13 @@ class HealthController extends Controller
         ];
 
         $statusCode = $health['status'] === 'OK' ? 200 : 503;
+        $message = $health['status'] === 'OK' ? 'Hệ thống hoạt động bình thường' : 'Hệ thống gặp sự cố';
 
-        return response()->json($health, $statusCode);
+        if ($health['status'] === 'OK') {
+            return $this->successResponse($health, $message, $statusCode);
+        } else {
+            return $this->errorResponse($message, $health, $statusCode);
+        }
     }
 
     private function formatBytes(int $bytes, int $precision = 2): string
