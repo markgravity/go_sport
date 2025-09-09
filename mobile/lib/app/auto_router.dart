@@ -63,12 +63,11 @@ class AppRouter extends _$AppRouter {
       guards: [authGuard],
     ),
     
-    // Default route - check auth and redirect accordingly
+    // Default route - login screen (no guard needed on initial route)
     AutoRoute(
-      page: GroupsListRoute.page,
+      page: LoginRoute.page,
       path: '/',
       initial: true,
-      guards: [authGuard],
     ),
   ];
 }
