@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\GroupController;
+use App\Http\Controllers\Api\GroupMemberController;
 use App\Http\Controllers\Api\GroupInvitationController;
 use App\Http\Controllers\Api\GroupJoinRequestController;
 use App\Http\Controllers\Api\InvitationAnalyticsController;
@@ -86,15 +87,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('groups/{group}')->group(function () {
         Route::post('/join', [GroupController::class, 'join']);
         Route::post('/leave', [GroupController::class, 'leave']);
-        Route::get('/members', [GroupController::class, 'members']);
-        Route::get('/permissions', [GroupController::class, 'getUserPermissions']);
+        Route::get('/members', [GroupMemberController::class, 'index']);
+        Route::get('/permissions', [GroupMemberController::class, 'permissions']);
         
         // Role management - requires specific permissions
-        Route::post('/members/{user}/role', [GroupController::class, 'updateMemberRole'])
+        Route::post('/members/{user}/role', [GroupMemberController::class, 'updateRole'])
               ->middleware('group.permission:change_member_roles');
-        Route::delete('/members/{user}', [GroupController::class, 'removeMember'])
+        Route::delete('/members/{user}', [GroupMemberController::class, 'destroy'])
               ->middleware('group.permission:remove_members');
-        Route::post('/members/add-by-phone', [GroupController::class, 'addMemberByPhone'])
+        Route::post('/members/add-by-phone', [GroupMemberController::class, 'addByPhone'])
               ->middleware('throttle:20,60'); // 20 additions per hour
         
         // Invitation management - requires group management permissions
