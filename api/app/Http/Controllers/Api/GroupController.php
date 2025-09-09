@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreGroupRequest;
+use App\Http\Requests\UpdateGroupRequest;
 use App\Models\Group;
 use App\Models\GroupLevelRequirement;
 use App\Services\SportsConfigurationService;
@@ -11,7 +13,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 
 class GroupController extends Controller
 {
@@ -121,36 +122,10 @@ class GroupController extends Controller
         }
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreGroupRequest $request): JsonResponse
     {
         try {
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'nullable|string|max:1000',
-                'sport_type' => [
-                    'required',
-                    Rule::in(['football', 'badminton', 'tennis', 'pickleball'])
-                ],
-                'location' => 'required|string|max:500',
-                'city' => 'required|string|max:100',
-                'district' => 'nullable|string|max:100',
-                'latitude' => 'nullable|numeric|between:-90,90',
-                'longitude' => 'nullable|numeric|between:-180,180',
-                'schedule' => 'nullable|array',
-                'monthly_fee' => 'nullable|numeric|min:0|max:10000000',
-                'privacy' => [
-                    'required',
-                    Rule::in(['cong_khai', 'rieng_tu'])
-                ],
-                'avatar' => 'nullable|string|max:255',
-                'rules' => 'nullable|array',
-                'level_requirements' => 'nullable|array',
-                'level_requirements.*.level_key' => [
-                    'required_with:level_requirements',
-                    Rule::in(['moi_bat_dau', 'so_cap', 'trung_cap', 'cao_cap', 'chuyen_nghiep'])
-                ],
-                'level_requirements.*.level_name' => 'required_with:level_requirements|string|max:255'
-            ]);
+            $validated = $request->validated();
 
             DB::beginTransaction();
 
@@ -295,7 +270,7 @@ class GroupController extends Controller
         }
     }
 
-    public function update(Request $request, string $id): JsonResponse
+    public function update(UpdateGroupRequest $request, string $id): JsonResponse
     {
         try {
             $group = Group::findOrFail($id);
@@ -308,32 +283,7 @@ class GroupController extends Controller
                 ], 403);
             }
 
-            $validated = $request->validate([
-                'name' => 'sometimes|string|max:255',
-                'description' => 'sometimes|nullable|string|max:1000',
-                'skill_level' => [
-                    'sometimes',
-                    Rule::in(['moi_bat_dau', 'trung_binh', 'gioi', 'chuyen_nghiep'])
-                ],
-                'location' => 'sometimes|string|max:500',
-                'city' => 'sometimes|string|max:100',
-                'district' => 'sometimes|nullable|string|max:100',
-                'latitude' => 'sometimes|nullable|numeric|between:-90,90',
-                'longitude' => 'sometimes|nullable|numeric|between:-180,180',
-                'schedule' => 'sometimes|nullable|array',
-                'max_members' => 'sometimes|integer|min:1|max:100',
-                'membership_fee' => 'sometimes|numeric|min:0|max:10000000',
-                'privacy' => [
-                    'sometimes',
-                    Rule::in(['cong_khai', 'rieng_tu'])
-                ],
-                'status' => [
-                    'sometimes',
-                    Rule::in(['hoat_dong', 'tam_dung', 'dong_cua'])
-                ],
-                'avatar' => 'sometimes|nullable|string|max:255',
-                'rules' => 'sometimes|nullable|array'
-            ]);
+            $validated = $request->validated();
 
             $group->update($validated);
 
