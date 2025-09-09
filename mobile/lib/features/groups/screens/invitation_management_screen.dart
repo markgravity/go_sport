@@ -88,7 +88,7 @@ class _InvitationManagementScreenState extends State<InvitationManagementScreen>
           try {
             final invitation = await _invitationService.createInvitation(
               widget.groupId,
-              expiresInDays: expirationDays,
+              expiresIn: expirationDays != null ? '${expirationDays}d' : '1w',
             );
             navigator.pop(invitation);
           } catch (e) {

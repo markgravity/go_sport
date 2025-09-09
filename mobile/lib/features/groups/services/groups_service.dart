@@ -341,12 +341,16 @@ class GroupsService {
   Future<String> generateInvitationLink(String groupId) async {
     try {
       final response = await _apiClient.post(
-        '$_baseUrl/${int.parse(groupId)}/invite'
+        '$_baseUrl/${int.parse(groupId)}/invitations',
+        data: {
+          'type': 'link',
+          'expires_in': '1w',
+        },
       );
-      if (response.data['success'] == true) {
-        return response.data['data']['invitation_link'] as String;
+      if (response.data['invitation'] != null) {
+        return response.data['invitation']['invitation_url'] as String;
       } else {
-        throw Exception('Failed to generate invitation link: ${response.data['message']}');
+        throw Exception('Failed to generate invitation link: ${response.data['message'] ?? 'Unknown error'}');
       }
     } catch (e) {
       throw Exception('Error generating invitation link: $e');

@@ -40,8 +40,8 @@ class GroupInvitation {
   factory GroupInvitation.fromJson(Map<String, dynamic> json) {
     return GroupInvitation(
       id: json['id'] as int,
-      groupId: json['group_id'] as int,
-      createdBy: json['created_by'] as int,
+      groupId: json['group_id'] as int? ?? 0, // Handle missing group_id
+      createdBy: json['created_by'] as int? ?? (json['creator']?['id'] as int? ?? 0), // Use creator.id if created_by missing
       token: json['token'] as String,
       type: json['type'] as String? ?? 'link',
       status: json['status'] as String? ?? 'pending',
@@ -55,7 +55,9 @@ class GroupInvitation {
       usedBy: json['used_by'] as int?,
       metadata: json['metadata'] as Map<String, dynamic>?,
       createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      updatedAt: json['updated_at'] != null 
+          ? DateTime.parse(json['updated_at'] as String)
+          : DateTime.parse(json['created_at'] as String), // Fallback to created_at if updated_at missing
       group: json['group'] != null ? Group.fromJson(json['group']) : null,
       creator: json['creator'] != null ? User.fromJson(json['creator']) : null,
       usedByUser: json['used_by_user'] != null ? User.fromJson(json['used_by_user']) : null,

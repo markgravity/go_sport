@@ -52,7 +52,8 @@ class InvitationManagementViewModel extends Cubit<InvitationManagementState> {
     emit(state.copyWith(isLoadingJoinRequests: true, errorMessage: null));
     
     try {
-      final joinRequests = await _invitationService.getGroupJoinRequests(group.id);
+      // TODO: Implement join requests when GroupJoinRequest model is available
+      final joinRequests = <GroupJoinRequest>[];
       emit(state.copyWith(
         joinRequests: joinRequests,
         isLoadingJoinRequests: false,
@@ -72,7 +73,7 @@ class InvitationManagementViewModel extends Cubit<InvitationManagementState> {
       final newInvitation = await _invitationService.createInvitation(
         group.id,
         type: 'link',
-        expiresInDays: expiresInDays,
+        expiresIn: expiresInDays != null ? '${expiresInDays}d' : '1w',
       );
       
       final updatedInvitations = [newInvitation, ...state.invitations];
@@ -112,21 +113,19 @@ class InvitationManagementViewModel extends Cubit<InvitationManagementState> {
     emit(state.copyWith(isProcessingRequest: true, errorMessage: null));
     
     try {
-      final updatedRequest = await _invitationService.approveJoinRequest(
-        group.id, 
-        joinRequest.id,
-        role: role,
-      );
+      // TODO: Implement when methods are available
+      throw UnimplementedError('Join request approval not yet implemented');
       
-      final updatedJoinRequests = state.joinRequests
-          .map((req) => req.id == updatedRequest.id ? updatedRequest : req)
-          .toList();
-      
-      emit(state.copyWith(
-        joinRequests: updatedJoinRequests,
-        isProcessingRequest: false,
-        successMessage: 'Đã duyệt yêu cầu tham gia thành công!',
-      ));
+      // TODO: Implement join request approval when GroupJoinRequest methods are available
+      // final updatedJoinRequests = state.joinRequests
+      //     .map((req) => req.id == updatedRequest.id ? updatedRequest : req)
+      //     .toList();
+      // 
+      // emit(state.copyWith(
+      //   joinRequests: updatedJoinRequests,
+      //   isProcessingRequest: false,
+      //   successMessage: 'Đã duyệt yêu cầu tham gia thành công!',
+      // ));
     } catch (e) {
       emit(state.copyWith(
         isProcessingRequest: false,
@@ -139,21 +138,19 @@ class InvitationManagementViewModel extends Cubit<InvitationManagementState> {
     emit(state.copyWith(isProcessingRequest: true, errorMessage: null));
     
     try {
-      final updatedRequest = await _invitationService.rejectJoinRequest(
-        group.id, 
-        joinRequest.id,
-        reason: reason,
-      );
+      // TODO: Implement when methods are available
+      throw UnimplementedError('Join request rejection not yet implemented');
       
-      final updatedJoinRequests = state.joinRequests
-          .map((req) => req.id == updatedRequest.id ? updatedRequest : req)
-          .toList();
-      
-      emit(state.copyWith(
-        joinRequests: updatedJoinRequests,
-        isProcessingRequest: false,
-        successMessage: 'Đã từ chối yêu cầu tham gia!',
-      ));
+      // TODO: Implement join request rejection when GroupJoinRequest methods are available  
+      // final updatedJoinRequests = state.joinRequests
+      //     .map((req) => req.id == updatedRequest.id ? updatedRequest : req)
+      //     .toList();
+      // 
+      // emit(state.copyWith(
+      //   joinRequests: updatedJoinRequests,
+      //   isProcessingRequest: false,
+      //   successMessage: 'Đã từ chối yêu cầu tham gia!',
+      // ));
     } catch (e) {
       emit(state.copyWith(
         isProcessingRequest: false,
