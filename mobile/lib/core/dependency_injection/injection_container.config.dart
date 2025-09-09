@@ -9,6 +9,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:get_it/get_it.dart' as _i174;
+import 'package:go_sport_app/app/auto_router.dart' as _i174;
 import 'package:go_sport_app/core/network/api_client.dart' as _i951;
 import 'package:go_sport_app/core/network/health_service.dart' as _i517;
 import 'package:go_sport_app/core/network/interceptors/auth_interceptor.dart'
@@ -63,6 +64,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i775.AuthInterceptor>(() => _i775.AuthInterceptor());
     gh.factory<_i70.SportsLocalizationService>(
         () => _i70.SportsLocalizationService());
+    gh.factory<_i174.AuthGuard>(() => _i174.AuthGuard());
     gh.factory<_i637.GroupAnalyticsViewModel>(
         () => _i637.GroupAnalyticsViewModel());
     gh.lazySingleton<_i283.NavigationService>(() => _i283.NavigationService());

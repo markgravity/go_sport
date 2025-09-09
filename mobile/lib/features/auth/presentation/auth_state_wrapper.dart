@@ -37,13 +37,13 @@ class _AuthStateWrapperState extends State<AuthStateWrapper> {
           context.router.push(const GroupsListRoute());
         } else {
           // User is not logged in, navigate to login screen
-          context.router.push(const LoginRoute());
+          context.router.push(LoginRoute());
         }
       }
     } catch (e) {
       // On error, default to login screen
       if (mounted) {
-        context.router.push(const LoginRoute());
+        context.router.push(LoginRoute());
       }
     }
     

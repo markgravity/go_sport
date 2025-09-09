@@ -12,7 +12,12 @@ import 'login_state.dart';
 
 @RoutePage()
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final String? redirectRoute;
+  
+  const LoginScreen({
+    super.key,
+    this.redirectRoute,
+  });
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -33,8 +38,12 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final isLoggedIn = await _authService.isLoggedIn();
       if (mounted && isLoggedIn) {
-        // User is already logged in, navigate to groups list
-        context.router.push(const GroupsListRoute());
+        // User is already logged in, navigate to redirect route or groups list
+        if (widget.redirectRoute != null) {
+          context.router.pushNamed(widget.redirectRoute!);
+        } else {
+          context.router.push(const GroupsListRoute());
+        }
         return;
       }
     } catch (e) {
@@ -157,8 +166,13 @@ class _LoginViewState extends State<_LoginView> {
           },
           success: (message) {
             _showSuccess(message ?? 'Đăng nhập thành công');
-            // Navigate to groups list or home screen
-            context.router.replaceAll([const GroupsListRoute()]);
+            // Navigate to redirect route or groups list
+            final parentContext = context.findAncestorStateOfType<_LoginScreenState>();
+            if (parentContext != null && parentContext.widget.redirectRoute != null) {
+              context.router.pushNamed(parentContext.widget.redirectRoute!);
+            } else {
+              context.router.replaceAll([const GroupsListRoute()]);
+            }
           },
           error: (message, errorCode) {
             _showError(message);

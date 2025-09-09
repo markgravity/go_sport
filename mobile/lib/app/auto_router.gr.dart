@@ -57,9 +57,14 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     LoginRoute.name: (routeData) {
+      final args = routeData.argsAs<LoginRouteArgs>(
+          orElse: () => const LoginRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const LoginScreen(),
+        child: LoginScreen(
+          key: args.key,
+          redirectRoute: args.redirectRoute,
+        ),
       );
     },
     PhoneRegistrationRoute.name: (routeData) {
@@ -218,16 +223,39 @@ class InvitationManagementRouteArgs {
 
 /// generated route for
 /// [LoginScreen]
-class LoginRoute extends PageRouteInfo<void> {
-  const LoginRoute({List<PageRouteInfo>? children})
-      : super(
+class LoginRoute extends PageRouteInfo<LoginRouteArgs> {
+  LoginRoute({
+    Key? key,
+    String? redirectRoute,
+    List<PageRouteInfo>? children,
+  }) : super(
           LoginRoute.name,
+          args: LoginRouteArgs(
+            key: key,
+            redirectRoute: redirectRoute,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'LoginRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<LoginRouteArgs> page = PageInfo<LoginRouteArgs>(name);
+}
+
+class LoginRouteArgs {
+  const LoginRouteArgs({
+    this.key,
+    this.redirectRoute,
+  });
+
+  final Key? key;
+
+  final String? redirectRoute;
+
+  @override
+  String toString() {
+    return 'LoginRouteArgs{key: $key, redirectRoute: $redirectRoute}';
+  }
 }
 
 /// generated route for

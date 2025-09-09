@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
+import '../core/dependency_injection/injection_container.dart';
+import '../features/auth/services/auth_service.dart';
 import '../features/auth/screens/login/login_screen.dart';
 import '../features/auth/screens/phone_registration/phone_registration_screen.dart';
 import '../features/auth/screens/sms_verification/sms_verification_screen.dart';
@@ -15,9 +18,12 @@ part 'auto_router.gr.dart';
 /// AutoRoute configuration for Vietnamese sports app
 @AutoRouterConfig()
 class AppRouter extends _$AppRouter {
+  // Singleton instance of AuthGuard
+  final AuthGuard authGuard = AuthGuard();
+  
   @override
   List<AutoRoute> get routes => [
-    // Authentication routes
+    // Authentication routes (public - no guard needed)
     AutoRoute(
       page: LoginRoute.page,
       path: '/login',
@@ -35,51 +41,86 @@ class AppRouter extends _$AppRouter {
       path: '/forgot-password',
     ),
     
-    // Groups routes - protected by auth guard
+    // Groups routes - PROTECTED by auth guard
     AutoRoute(
       page: GroupsListRoute.page,
       path: '/groups',
+      guards: [authGuard],
     ),
     AutoRoute(
       page: GroupDetailsRoute.page,
       path: '/groups/:groupId',
+      guards: [authGuard],
     ),
     AutoRoute(
       page: CreateGroupRoute.page,
       path: '/groups/create',
+      guards: [authGuard],
     ),
     AutoRoute(
       page: InvitationManagementRoute.page,
       path: '/groups/:groupId/invitations',
+      guards: [authGuard],
     ),
     
-    // Default route - start with login screen
+    // Default route - check auth and redirect accordingly
     AutoRoute(
-      page: LoginRoute.page,
+      page: GroupsListRoute.page,
       path: '/',
       initial: true,
+      guards: [authGuard],
     ),
   ];
 }
 
 /// Authentication guard for protected routes
-/// TODO: Implement proper authentication checking
+/// Verifies user authentication before allowing access to protected routes
+@injectable
 class AuthGuard extends AutoRouteGuard {
+  final AuthService _authService;
+  
+  AuthGuard() : _authService = getIt<AuthService>();
+  
   @override
-  void onNavigation(NavigationResolver resolver, StackRouter router) {
-    // For now, allow all navigation
-    // TODO: Add proper authentication checking
-    resolver.next();
+  Future<void> onNavigation(NavigationResolver resolver, StackRouter router) async {
+    // Check if user is authenticated
+    final isAuthenticated = await _authService.isLoggedIn();
+    
+    if (isAuthenticated) {
+      // User is authenticated, allow navigation
+      resolver.next(true);
+    } else {
+      // User is not authenticated, redirect to login
+      // Save the original route for redirect after login
+      final redirectRoute = resolver.route;
+      
+      // Navigate to login screen
+      router.push(
+        LoginRoute(
+          redirectRoute: redirectRoute.path,
+        ),
+      );
+      
+      // Resolve navigation as handled (we redirected)
+      resolver.next(false);
+    }
   }
 }
 
 /// Page definitions for AutoRoute code generation
 @RoutePage()
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  final String? redirectRoute;
+  
+  const LoginPage({
+    super.key,
+    @queryParam this.redirectRoute,
+  });
 
   @override
-  Widget build(BuildContext context) => const LoginScreen();
+  Widget build(BuildContext context) => LoginScreen(
+    redirectRoute: redirectRoute,
+  );
 }
 
 @RoutePage()
