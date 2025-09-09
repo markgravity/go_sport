@@ -213,30 +213,77 @@ class Group extends Model
         return $this->activeMembers()->wherePivot('role', 'moderator');
     }
 
+    /**
+     * Cache user membership data to prevent N+1 queries
+     */
+    protected array $membershipCache = [];
+
+    /**
+     * Clear membership cache for a specific user or all users
+     */
+    public function clearMembershipCache(?int $userId = null): void
+    {
+        if ($userId === null) {
+            $this->membershipCache = [];
+        } else {
+            unset($this->membershipCache[$userId]);
+        }
+    }
+
+    /**
+     * Preload memberships for multiple users to prevent N+1 queries
+     */
+    public function preloadMemberships(array $userIds): void
+    {
+        $memberships = $this->memberships()
+            ->whereIn('user_id', $userIds)
+            ->wherePivot('status', 'hoat_dong')
+            ->get();
+
+        foreach ($memberships as $membership) {
+            $this->membershipCache[$membership->id] = $membership->pivot;
+        }
+
+        // Mark non-members as null in cache
+        foreach ($userIds as $userId) {
+            if (!isset($this->membershipCache[$userId])) {
+                $this->membershipCache[$userId] = null;
+            }
+        }
+    }
+
+    /**
+     * Get user membership with caching to prevent N+1 queries
+     */
+    private function getUserMembership(User $user): ?object
+    {
+        if (!isset($this->membershipCache[$user->id])) {
+            $membership = $this->memberships()
+                ->where('user_id', $user->id)
+                ->wherePivot('status', 'hoat_dong')
+                ->first();
+            
+            $this->membershipCache[$user->id] = $membership?->pivot;
+        }
+        
+        return $this->membershipCache[$user->id];
+    }
+
     public function isAdmin(User $user): bool
     {
-        return $this->memberships()
-                    ->where('user_id', $user->id)
-                    ->wherePivot('role', 'admin')
-                    ->wherePivot('status', 'hoat_dong')
-                    ->exists();
+        $membership = $this->getUserMembership($user);
+        return $membership && $membership->role === 'admin';
     }
 
     public function isModerator(User $user): bool
     {
-        return $this->memberships()
-                    ->where('user_id', $user->id)
-                    ->wherePivot('role', 'moderator')
-                    ->wherePivot('status', 'hoat_dong')
-                    ->exists();
+        $membership = $this->getUserMembership($user);
+        return $membership && $membership->role === 'moderator';
     }
 
     public function isMember(User $user): bool
     {
-        return $this->memberships()
-                    ->where('user_id', $user->id)
-                    ->wherePivot('status', 'hoat_dong')
-                    ->exists();
+        return $this->getUserMembership($user) !== null;
     }
 
     public function canManage(User $user): bool
@@ -245,20 +292,17 @@ class Group extends Model
     }
 
     /**
-     * Get user's role in this group
+     * Get user's role in this group (optimized with caching)
      */
     public function getUserRole(User $user): ?GroupRole
     {
-        $membership = $this->memberships()
-            ->where('user_id', $user->id)
-            ->wherePivot('status', 'hoat_dong')
-            ->first();
+        $membership = $this->getUserMembership($user);
 
         if (!$membership) {
             return null;
         }
 
-        return GroupRole::from($membership->pivot->role);
+        return GroupRole::from($membership->role);
     }
 
     /**
@@ -337,6 +381,9 @@ class Group extends Model
 
         // Update member count
         $this->increment('current_members');
+        
+        // Clear membership cache for the creator
+        $this->clearMembershipCache($this->creator_id);
     }
 
     /**
@@ -365,6 +412,9 @@ class Group extends Model
         if ($changedBy) {
             $this->logRoleChange($user, $newRole, $changedBy);
         }
+
+        // Clear membership cache for the user whose role was changed
+        $this->clearMembershipCache($user->id);
 
         return true;
     }

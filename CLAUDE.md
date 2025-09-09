@@ -220,7 +220,7 @@ In God Mode, the dev agent works continuously without stopping until explicitly 
 ### **THE ETERNAL LOOP**:
 
 ```
-1. PICK TASK → 2. IMPLEMENT → 3. ANALYZE & FIX → 4. BUILD & VALIDATE → 5. COMMIT → REPEAT
+1. PICK TASK → 2. IMPLEMENT → 3. ANALYZE & FIX → 4. BUILD & VALIDATE → 5. COMMIT → BACK TO STEP 1
 ```
 
 #### **STEP 1: PICK TASK**
