@@ -215,6 +215,97 @@ class AuthController extends Controller
     }
 
     /**
+     * Login user with SMS verification code
+     */
+    public function loginWithSMS(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => [
+                'required',
+                'string',
+                new VietnamesePhoneRule(),
+            ],
+            'verification_id' => 'required|string',
+            'sms_code' => 'required|string|size:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dữ liệu không hợp lệ',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $phone = User::formatVietnamesePhone($request->phone);
+        
+        // Find user by phone number
+        $user = User::findByPhone($phone);
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy tài khoản với số điện thoại này',
+            ], 404);
+        }
+
+        // Verify SMS code with Firebase
+        try {
+            $isValid = $this->firebaseAuth->verifyPhoneAuthToken(
+                $request->verification_id,
+                $request->sms_code
+            );
+
+            if (!$isValid) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mã xác thực SMS không hợp lệ',
+                ], 401);
+            }
+        } catch (\Exception $e) {
+            Log::error('SMS verification failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể xác thực mã SMS',
+            ], 500);
+        }
+
+        // Check user status
+        if ($user->status !== 'active') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tài khoản đã bị vô hiệu hóa',
+            ], 403);
+        }
+
+        // Update phone verification if not already verified
+        if (!$user->isPhoneVerified()) {
+            $user->phone_verified_at = now();
+            $user->save();
+        }
+
+        // Revoke existing tokens for security
+        $user->tokens()->delete();
+
+        // Create new token with 7-day expiration
+        $token = $user->createToken('mobile-app', ['*'], now()->addDays(7))->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Đăng nhập bằng SMS thành công',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'phone' => $user->phone,
+                'phone_verified' => $user->isPhoneVerified(),
+                'preferred_sports' => $user->preferred_sports,
+                'preferences' => $user->preferences,
+            ],
+            'token' => $token,
+            'expires_in' => 7 * 24 * 60 * 60, // 7 days in seconds
+        ]);
+    }
+
+    /**
      * Logout user (revoke token)
      */
     public function logout(Request $request): JsonResponse

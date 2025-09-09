@@ -57,6 +57,7 @@ Route::prefix('auth')->group(function () {
     // Simple authentication with Firebase SMS verification
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login'])->middleware('rate_limit_login');
+    Route::post('/login-sms', [AuthController::class, 'loginWithSMS'])->middleware('rate_limit_login');
 });
 
 // Protected routes (authentication required)
