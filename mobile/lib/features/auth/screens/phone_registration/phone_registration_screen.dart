@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'package:auto_route/auto_route.dart';
 import '../../../../core/dependency_injection/injection_container.dart';
 import '../../../../core/utils/phone_validator.dart';
@@ -63,12 +63,12 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
     }
 
     if (_nameController.text.trim().isEmpty) {
-      _showError(AppLocalizations.of(context).errorEnterName);
+      _showError(AppLocalizations.of(context)!.errorEnterName);
       return;
     }
 
     if (_passwordController.text != _confirmPasswordController.text) {
-      _showError(AppLocalizations.of(context).errorPasswordMismatch);
+      _showError(AppLocalizations.of(context)!.errorPasswordMismatch);
       return;
     }
 
@@ -113,7 +113,7 @@ class _PhoneRegistrationViewState extends State<_PhoneRegistrationView> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     
     return BlocConsumer<PhoneRegistrationViewModel, PhoneRegistrationState>(
       listener: (context, state) {

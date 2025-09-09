@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_sport_app/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_sport_app/features/auth/screens/phone_registration/phone_registration_screen.dart';
 import 'package:go_sport_app/features/auth/screens/sms_verification/sms_verification_screen.dart';

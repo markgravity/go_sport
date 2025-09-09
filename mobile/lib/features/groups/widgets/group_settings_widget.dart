@@ -98,7 +98,9 @@ class _GroupSettingsWidgetState extends State<GroupSettingsWidget> {
                   title: const Text('Công khai'),
                   subtitle: const Text('Mọi người có thể tìm thấy và tham gia nhóm'),
                   value: 'cong_khai',
+                  // ignore: deprecated_member_use
                   groupValue: widget.privacy,
+                  // ignore: deprecated_member_use
                   onChanged: (value) => widget.onPrivacyChanged(value!),
                   contentPadding: EdgeInsets.zero,
                 ),
@@ -106,7 +108,9 @@ class _GroupSettingsWidgetState extends State<GroupSettingsWidget> {
                   title: const Text('Riêng tư'),
                   subtitle: const Text('Chỉ có thể tham gia bằng lời mời hoặc yêu cầu'),
                   value: 'rieng_tu',
+                  // ignore: deprecated_member_use
                   groupValue: widget.privacy,
+                  // ignore: deprecated_member_use
                   onChanged: (value) => widget.onPrivacyChanged(value!),
                   contentPadding: EdgeInsets.zero,
                 ),

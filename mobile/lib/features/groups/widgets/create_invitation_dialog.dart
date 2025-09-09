@@ -39,7 +39,9 @@ class _CreateInvitationDialogState extends State<CreateInvitationDialog> {
             return RadioListTile<int?>(
               title: Text(_getExpirationText(days)),
               value: days,
+              // ignore: deprecated_member_use
               groupValue: _selectedDays,
+              // ignore: deprecated_member_use
               onChanged: (value) {
                 setState(() {
                   _selectedDays = value;

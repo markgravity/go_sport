@@ -119,8 +119,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get codeValidInfo =>
-      'The verification code is valid for 5 minutes. Check your spam folder if you don\'t see the message.';
+  String get codeValidInfo => 'The verification code is valid for 5 minutes. Check your spam folder if you don\'t see the message.';
 
   @override
   String carrier(String carrier) {
@@ -140,8 +139,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorPhoneTooLong => 'Phone number is too long';
 
   @override
-  String get errorInvalidVietnamesePhone =>
-      'Phone number is not in Vietnamese format';
+  String get errorInvalidVietnamesePhone => 'Phone number is not in Vietnamese format';
 
   @override
   String get errorEnterPassword => 'Please enter password';
@@ -167,8 +165,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get successVerificationCodeSent =>
-      'New verification code has been sent';
+  String get successVerificationCodeSent => 'New verification code has been sent';
 
   @override
   String get login => 'Login';
@@ -198,15 +195,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logoutConfirmation => 'Logout Confirmation';
 
   @override
-  String get logoutConfirmationMessage =>
-      'Are you sure you want to logout from your account?';
+  String get logoutConfirmationMessage => 'Are you sure you want to logout from your account?';
 
   @override
   String get sessionTimeout => 'Session Timeout';
 
   @override
-  String get sessionTimeoutMessage =>
-      'Your session will expire soon due to inactivity. Would you like to extend your session?';
+  String get sessionTimeoutMessage => 'Your session will expire soon due to inactivity. Would you like to extend your session?';
 
   @override
   String get logoutNow => 'Logout Now';
@@ -221,8 +216,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetPassword => 'Reset Password';
 
   @override
-  String get enterPhoneToReset =>
-      'Enter your phone number to reset your password';
+  String get enterPhoneToReset => 'Enter your phone number to reset your password';
 
   @override
   String get sendResetCode => 'Send Reset Code';
@@ -243,8 +237,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updatePassword => 'Update Password';
 
   @override
-  String get passwordResetSuccess =>
-      'Password reset successful! Please login with your new password.';
+  String get passwordResetSuccess => 'Password reset successful! Please login with your new password.';
 
   @override
   String get backToLogin => 'Back to Login';
@@ -415,28 +408,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get groupCreationWelcome => 'Welcome to your new group!';
 
   @override
-  String get helpGroupName =>
-      'Group name will be displayed to all members. Choose a recognizable name that fits the sport.';
+  String get helpGroupName => 'Group name will be displayed to all members. Choose a recognizable name that fits the sport.';
 
   @override
-  String get helpGroupDescription =>
-      'Brief description of the group, its goals and characteristics.';
+  String get helpGroupDescription => 'Brief description of the group, its goals and characteristics.';
 
   @override
-  String get helpSkillLevel =>
-      'Choose appropriate skill level to attract players of similar level.';
+  String get helpSkillLevel => 'Choose appropriate skill level to attract players of similar level.';
 
   @override
-  String get helpLocation =>
-      'Main location where the group usually plays. Can be changed later.';
+  String get helpLocation => 'Main location where the group usually plays. Can be changed later.';
 
   @override
-  String get helpMembershipFee =>
-      'Monthly membership fee (if any). Leave blank if group is free.';
+  String get helpMembershipFee => 'Monthly membership fee (if any). Leave blank if group is free.';
 
   @override
-  String get helpPrivacy =>
-      'Public group: Anyone can find and join\nPrivate group: Join by invitation only';
+  String get helpPrivacy => 'Public group: Anyone can find and join\nPrivate group: Join by invitation only';
 
   @override
   String groupNameSuggestionSport(String sport, String city) {
@@ -460,22 +447,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nameSuggestions => 'Name Suggestions';
 
   @override
-  String get errorGroupCreationFailed =>
-      'Group creation failed. Please try again.';
+  String get errorGroupCreationFailed => 'Group creation failed. Please try again.';
 
   @override
   String get errorInvalidSportSelection => 'Please select a valid sport';
 
   @override
-  String get errorNetworkConnection =>
-      'Network connection error. Please check your connection and try again.';
+  String get errorNetworkConnection => 'Network connection error. Please check your connection and try again.';
 
   @override
   String get errorServerError => 'Server error. Please try again later.';
 
   @override
-  String get errorPermissionDenied =>
-      'You don\'t have permission to perform this action';
+  String get errorPermissionDenied => 'You don\'t have permission to perform this action';
 
   @override
   String get errorGroupNotFound => 'Group not found';

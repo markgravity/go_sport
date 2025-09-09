@@ -61,7 +61,9 @@ class _RoleManagementWidgetState extends State<RoleManagementWidget> {
                 title: Text(role.vietnamese),
                 subtitle: Text(role.description),
                 value: role,
+                // ignore: deprecated_member_use
                 groupValue: currentRole,
+                // ignore: deprecated_member_use
                 onChanged: (GroupRole? value) {
                   if (value != null) {
                     Navigator.of(context).pop(value);

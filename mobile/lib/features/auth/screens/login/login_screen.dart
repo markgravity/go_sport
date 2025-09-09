@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'package:auto_route/auto_route.dart';
 import '../../../../core/dependency_injection/injection_container.dart';
 import '../../../../core/utils/phone_validator.dart';
@@ -197,7 +197,7 @@ class _LoginViewState extends State<_LoginView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final size = MediaQuery.of(context).size;
     
     return BlocConsumer<LoginViewModel, LoginState>(
@@ -470,7 +470,7 @@ class _LoginViewState extends State<_LoginView> with TickerProviderStateMixin {
         ),
         onChanged: _onPhoneNumberChanged,
         validator: (value) {
-          return VietnamesePhoneValidator.getValidationErrorWithContext(value ?? '', AppLocalizations.of(context));
+          return VietnamesePhoneValidator.getValidationErrorWithContext(value ?? '', AppLocalizations.of(context)!);
         },
       ),
     );
@@ -495,9 +495,9 @@ class _LoginViewState extends State<_LoginView> with TickerProviderStateMixin {
           ),
           const SizedBox(width: 8),
           Text(
-            AppLocalizations.of(context).carrier(
+            AppLocalizations.of(context)!.carrier(
               VietnamesePhoneValidator.getCarrierName(_phoneNumber) ?? 
-              AppLocalizations.of(context).unknownCarrier
+              AppLocalizations.of(context)!.unknownCarrier
             ),
             style: const TextStyle(
               fontSize: 13,

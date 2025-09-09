@@ -119,8 +119,7 @@ class AppLocalizationsVi extends AppLocalizations {
   }
 
   @override
-  String get codeValidInfo =>
-      'Mã xác thực có hiệu lực trong 5 phút. Kiểm tra hộp thư spam nếu không thấy tin nhắn.';
+  String get codeValidInfo => 'Mã xác thực có hiệu lực trong 5 phút. Kiểm tra hộp thư spam nếu không thấy tin nhắn.';
 
   @override
   String carrier(String carrier) {
@@ -140,8 +139,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get errorPhoneTooLong => 'Số điện thoại quá dài';
 
   @override
-  String get errorInvalidVietnamesePhone =>
-      'Số điện thoại không đúng định dạng Việt Nam';
+  String get errorInvalidVietnamesePhone => 'Số điện thoại không đúng định dạng Việt Nam';
 
   @override
   String get errorEnterPassword => 'Vui lòng nhập mật khẩu';
@@ -197,15 +195,13 @@ class AppLocalizationsVi extends AppLocalizations {
   String get logoutConfirmation => 'Xác nhận đăng xuất';
 
   @override
-  String get logoutConfirmationMessage =>
-      'Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?';
+  String get logoutConfirmationMessage => 'Bạn có chắc chắn muốn đăng xuất khỏi tài khoản?';
 
   @override
   String get sessionTimeout => 'Phiên làm việc hết hạn';
 
   @override
-  String get sessionTimeoutMessage =>
-      'Phiên làm việc của bạn sẽ hết hạn do không hoạt động. Bạn có muốn gia hạn phiên làm việc?';
+  String get sessionTimeoutMessage => 'Phiên làm việc của bạn sẽ hết hạn do không hoạt động. Bạn có muốn gia hạn phiên làm việc?';
 
   @override
   String get logoutNow => 'Đăng xuất ngay';
@@ -226,8 +222,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get sendResetCode => 'Gửi Mã Đặt Lại';
 
   @override
-  String get resetCodeSent =>
-      'Mã đặt lại mật khẩu đã được gửi đến số điện thoại của bạn';
+  String get resetCodeSent => 'Mã đặt lại mật khẩu đã được gửi đến số điện thoại của bạn';
 
   @override
   String get enterResetCode => 'Nhập Mã Đặt Lại';
@@ -242,8 +237,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get updatePassword => 'Cập Nhật Mật Khẩu';
 
   @override
-  String get passwordResetSuccess =>
-      'Đặt lại mật khẩu thành công! Vui lòng đăng nhập với mật khẩu mới.';
+  String get passwordResetSuccess => 'Đặt lại mật khẩu thành công! Vui lòng đăng nhập với mật khẩu mới.';
 
   @override
   String get backToLogin => 'Trở Về Đăng Nhập';
@@ -327,8 +321,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get publicGroupDesc => 'Mọi người có thể tìm thấy và tham gia nhóm';
 
   @override
-  String get privateGroupDesc =>
-      'Chỉ có thể tham gia bằng lời mời hoặc yêu cầu';
+  String get privateGroupDesc => 'Chỉ có thể tham gia bằng lời mời hoặc yêu cầu';
 
   @override
   String get groupRules => 'Nội quy nhóm';
@@ -415,28 +408,22 @@ class AppLocalizationsVi extends AppLocalizations {
   String get groupCreationWelcome => 'Chào mừng bạn đến với nhóm mới!';
 
   @override
-  String get helpGroupName =>
-      'Tên nhóm sẽ hiển thị cho tất cả thành viên. Hãy chọn tên dễ nhận biết và phù hợp với môn thể thao.';
+  String get helpGroupName => 'Tên nhóm sẽ hiển thị cho tất cả thành viên. Hãy chọn tên dễ nhận biết và phù hợp với môn thể thao.';
 
   @override
-  String get helpGroupDescription =>
-      'Mô tả ngắn gọn về nhóm, mục tiêu và đặc điểm của nhóm.';
+  String get helpGroupDescription => 'Mô tả ngắn gọn về nhóm, mục tiêu và đặc điểm của nhóm.';
 
   @override
-  String get helpSkillLevel =>
-      'Chọn trình độ phù hợp để thu hút những người chơi cùng trình độ.';
+  String get helpSkillLevel => 'Chọn trình độ phù hợp để thu hút những người chơi cùng trình độ.';
 
   @override
-  String get helpLocation =>
-      'Địa điểm chính nơi nhóm thường hoạt động. Có thể thay đổi sau này.';
+  String get helpLocation => 'Địa điểm chính nơi nhóm thường hoạt động. Có thể thay đổi sau này.';
 
   @override
-  String get helpMembershipFee =>
-      'Phí thành viên hàng tháng (nếu có). Để trống nếu nhóm miễn phí.';
+  String get helpMembershipFee => 'Phí thành viên hàng tháng (nếu có). Để trống nếu nhóm miễn phí.';
 
   @override
-  String get helpPrivacy =>
-      'Nhóm công khai: Ai cũng có thể tìm thấy và tham gia\nNhóm riêng tư: Chỉ tham gia qua lời mời';
+  String get helpPrivacy => 'Nhóm công khai: Ai cũng có thể tìm thấy và tham gia\nNhóm riêng tư: Chỉ tham gia qua lời mời';
 
   @override
   String groupNameSuggestionSport(String sport, String city) {
@@ -463,19 +450,16 @@ class AppLocalizationsVi extends AppLocalizations {
   String get errorGroupCreationFailed => 'Tạo nhóm thất bại. Vui lòng thử lại.';
 
   @override
-  String get errorInvalidSportSelection =>
-      'Vui lòng chọn một môn thể thao hợp lệ';
+  String get errorInvalidSportSelection => 'Vui lòng chọn một môn thể thao hợp lệ';
 
   @override
-  String get errorNetworkConnection =>
-      'Lỗi kết nối mạng. Vui lòng kiểm tra kết nối và thử lại.';
+  String get errorNetworkConnection => 'Lỗi kết nối mạng. Vui lòng kiểm tra kết nối và thử lại.';
 
   @override
   String get errorServerError => 'Lỗi máy chủ. Vui lòng thử lại sau.';
 
   @override
-  String get errorPermissionDenied =>
-      'Bạn không có quyền thực hiện hành động này';
+  String get errorPermissionDenied => 'Bạn không có quyền thực hiện hành động này';
 
   @override
   String get errorGroupNotFound => 'Không tìm thấy nhóm';

@@ -69,6 +69,7 @@ void main() {
         (radio) => radio.value == 30,
       );
 
+      // ignore: deprecated_member_use
       expect(thirtyDaysRadio.groupValue, equals(30));
     });
 
@@ -167,6 +168,7 @@ void main() {
         (radio) => radio.value == 7,
       );
 
+      // ignore: deprecated_member_use
       expect(sevenDaysRadio.groupValue, equals(7));
     });
 
@@ -238,6 +240,7 @@ void main() {
         (radio) => radio.value == null,
       );
 
+      // ignore: deprecated_member_use
       expect(permanentRadio.groupValue, isNull);
     });
   });

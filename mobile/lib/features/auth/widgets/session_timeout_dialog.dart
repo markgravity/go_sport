@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SessionTimeoutDialog extends StatefulWidget {
   final int remainingMinutes;
@@ -58,7 +58,7 @@ class _SessionTimeoutDialogState extends State<SessionTimeoutDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return PopScope(
       canPop: false, // Prevent dismissal by back button
