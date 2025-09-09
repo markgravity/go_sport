@@ -9,6 +9,7 @@ use App\Enums\GroupRole;
 use App\Enums\GroupPermission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class GroupTest extends TestCase
 {
@@ -25,7 +26,7 @@ class GroupTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-    /** @test */
+    #[Test]
     public function it_can_create_a_group_with_valid_data()
     {
         $group = Group::create([
@@ -49,7 +50,7 @@ class GroupTest extends TestCase
         $this->assertEquals($this->creator->id, $group->creator_id);
     }
 
-    /** @test */
+    #[Test]
     public function it_validates_required_fields()
     {
         $this->expectException(\Illuminate\Database\QueryException::class);
@@ -59,7 +60,7 @@ class GroupTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_validates_sport_type()
     {
         $validSportTypes = ['football', 'badminton', 'tennis', 'pickleball'];
@@ -78,7 +79,7 @@ class GroupTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_validates_vietnamese_name_pattern()
     {
         $validNames = [
@@ -103,7 +104,7 @@ class GroupTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_correct_sport_name_attribute()
     {
         $sportNames = [
@@ -119,7 +120,7 @@ class GroupTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_calculates_fee_per_member_correctly()
     {
         $group = Group::factory()->create([
@@ -130,7 +131,7 @@ class GroupTest extends TestCase
         $this->assertEquals(30000, $group->fee_per_member);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_zero_fee_per_member_when_no_members()
     {
         $group = Group::factory()->create([
@@ -141,7 +142,7 @@ class GroupTest extends TestCase
         $this->assertEquals(0.0, $group->fee_per_member);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_correct_privacy_name_attribute()
     {
         $privacyNames = [
@@ -155,7 +156,7 @@ class GroupTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_correct_status_name_attribute()
     {
         $statusNames = [
@@ -170,7 +171,7 @@ class GroupTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_sport_specific_default_settings()
     {
         $sportDefaults = [
@@ -190,7 +191,7 @@ class GroupTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_can_add_and_check_level_requirements()
     {
         $group = Group::factory()->create(['sport_type' => 'badminton']);
@@ -204,7 +205,7 @@ class GroupTest extends TestCase
         $this->assertEquals(['Trung bình'], $group->fresh()->level_requirement_names);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_determine_user_roles()
     {
         $group = Group::factory()->create(['creator_id' => $this->creator->id]);
@@ -231,7 +232,7 @@ class GroupTest extends TestCase
         $this->assertTrue($group->canManage($this->user));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_user_role_enum()
     {
         $group = Group::factory()->create(['creator_id' => $this->creator->id]);
@@ -242,7 +243,7 @@ class GroupTest extends TestCase
         $this->assertEquals(GroupRole::ADMIN, $role);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_check_user_permissions()
     {
         $group = Group::factory()->create(['creator_id' => $this->creator->id]);
@@ -266,7 +267,7 @@ class GroupTest extends TestCase
         $this->assertTrue($group->userHasPermission($this->user, GroupPermission::VIEW_GROUP));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_change_user_roles()
     {
         $group = Group::factory()->create(['creator_id' => $this->creator->id]);
@@ -290,7 +291,7 @@ class GroupTest extends TestCase
         $this->assertEquals(GroupRole::MODERATOR, $group->getUserRole($this->user));
     }
 
-    /** @test */
+    #[Test]
     public function it_validates_role_assignment_permissions()
     {
         $group = Group::factory()->create(['creator_id' => $this->creator->id]);
@@ -313,7 +314,7 @@ class GroupTest extends TestCase
         $this->assertTrue($group->userCanAssignRole($this->creator, GroupRole::MEMBER));
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_correct_sport_specific_validation_rules()
     {
         $footballRules = Group::getSportSpecificValidationRules('football');
@@ -329,7 +330,7 @@ class GroupTest extends TestCase
         $this->assertEquals('nullable|integer|min:2|max:2', $pickleballRules['min_players']);
     }
 
-    /** @test */
+    #[Test]
     public function it_assigns_creator_as_admin_automatically()
     {
         $group = Group::factory()->create([
@@ -346,7 +347,7 @@ class GroupTest extends TestCase
         $this->assertEquals(1, $group->fresh()->current_members);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_existing_membership_when_assigning_creator()
     {
         $group = Group::factory()->create(['creator_id' => $this->creator->id]);
@@ -370,7 +371,7 @@ class GroupTest extends TestCase
         $this->assertEquals(GroupRole::ADMIN, $group->getUserRole($this->creator));
     }
 
-    /** @test */
+    #[Test]
     public function it_logs_role_changes_in_member_notes()
     {
         $group = Group::factory()->create(['creator_id' => $this->creator->id]);
